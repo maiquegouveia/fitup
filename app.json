@@ -5,6 +5,14 @@
       "bundler": "metro"
     },
     "name": "fitup",
-    "slug": "fitup"
+    "slug": "fitup",
+    "extra": {
+      "eas": {
+        "projectId": "f08bdc5d-d6d7-4ff3-9e0a-a0d5d0bc3596"
+      }
+    },
+    "android": {
+      "package": "com.maiquegouveia.fitup"
+    }
   }
 }
