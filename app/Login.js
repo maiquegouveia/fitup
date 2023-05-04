@@ -16,7 +16,8 @@ import { leftArrow, view, hide } from "../constants/icons";
 import { useHeaderHeight } from "@react-navigation/elements";
 import Logo from "./components/UI/Logo";
 import Button from "./components/UI/Button";
-import Input from "./components/UI/Input";
+import Input from "./components/UI/InputEmail";
+import { TextInput } from "react-native-paper";
 
 const Login = () => {
   const router = useRouter();
@@ -45,31 +46,27 @@ const Login = () => {
         <Logo style={{ marginTop: headerHeight }} />
         <View style={styles.formContainer}>
           <View style={styles.form}>
-            <Input
-              place="E-mail"
-              placeColor="rgba(255, 255, 255, 1)"
-              style={styles.inputContainer}
+            <TextInput
+              underlineStyle={{ width: 0 }}
+              mode="flat"
+              label="Email"
+              style={styles.input}
             />
-            <Input
-              place="Senha"
-              placeColor="rgba(255, 255, 255, 1)"
-              hidePassword={hidePassword}
-              style={[styles.inputContainer, { marginTop: 30 }]}
-            >
-              <TouchableOpacity
-                onPress={() =>
-                  setHidePassword((prev) => {
-                    return !prev;
-                  })
-                }
-              >
-                <Image
-                  source={hidePassword ? view : hide}
-                  resizeMode="contain"
-                  style={styles.icon}
+            <TextInput
+              underlineStyle={{ width: 0 }}
+              mode="flat"
+              label="Senha"
+              style={[styles.input, { marginTop: 10 }]}
+              secureTextEntry={hidePassword}
+              right={
+                <TextInput.Icon
+                  onPress={() => {
+                    setHidePassword((prev) => !prev);
+                  }}
+                  icon={hidePassword ? "eye" : "eye-off"}
                 />
-              </TouchableOpacity>
-            </Input>
+              }
+            />
             <View style={styles.esqueceuContainer}>
               <Text style={styles.esqueceuText}>Esqueceu a senha?</Text>
             </View>
@@ -103,11 +100,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: 20,
   },
-
-  icon: {
-    width: 20,
-    height: 16,
-  },
   esqueceuContainer: {
     marginTop: 20,
     marginBottom: 30,
@@ -116,8 +108,10 @@ const styles = StyleSheet.create({
     color: "rgba(255, 255, 255, 1)",
     fontSize: 16,
   },
-  inputContainer: {
-    borderBottomWidth: 1,
-    borderColor: "rgba(255, 255, 255, 1)",
+  input: {
+    width: 250,
+    borderTopStartRadius: 10,
+    borderTopEndRadius: 10,
+    borderRadius: 10,
   },
 });

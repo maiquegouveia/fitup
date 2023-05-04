@@ -20,7 +20,6 @@ const styles = StyleSheet.create({
   form: {
     width: 315,
     height: 336,
-    backgroundColor: "rgba(255, 255, 255, 0.34)",
     borderRadius: 10,
     alignItems: "center",
     justifyContent: "center",

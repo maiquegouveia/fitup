@@ -13,6 +13,13 @@
     },
     "android": {
       "package": "com.maiquegouveia.fitup"
-    }
+    },
+    "runtimeVersion": {
+      "policy": "sdkVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/f08bdc5d-d6d7-4ff3-9e0a-a0d5d0bc3596"
+    },
+    "ios": {}
   }
 }
