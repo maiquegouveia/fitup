@@ -45,12 +45,16 @@ const Login = () => {
         <Logo style={{ marginTop: headerHeight }} />
         <View style={styles.formContainer}>
           <View style={styles.form}>
-            <Input place="E-mail" placeColor="rgba(255, 255, 255, 1)" />
+            <Input
+              place="E-mail"
+              placeColor="rgba(255, 255, 255, 1)"
+              style={styles.inputContainer}
+            />
             <Input
               place="Senha"
               placeColor="rgba(255, 255, 255, 1)"
               hidePassword={hidePassword}
-              style={{ marginTop: 30 }}
+              style={[styles.inputContainer, { marginTop: 30 }]}
             >
               <TouchableOpacity
                 onPress={() =>
@@ -111,5 +115,9 @@ const styles = StyleSheet.create({
   esqueceuText: {
     color: "rgba(255, 255, 255, 1)",
     fontSize: 16,
+  },
+  inputContainer: {
+    borderBottomWidth: 1,
+    borderColor: "rgba(255, 255, 255, 1)",
   },
 });
