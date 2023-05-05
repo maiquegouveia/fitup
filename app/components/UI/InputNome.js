@@ -2,16 +2,9 @@ import React from "react";
 import { StyleSheet } from "react-native";
 import { TextInput } from "react-native-paper";
 
-const isValidEmail = function (email) {
-  const regex =
-    /^(?=.{1,254}$)[A-Za-z0-9._%+-]+@(?!.*\.{2})[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
-
-  return regex.test(email);
-};
-
-const InputEmail = (props) => {
+const InputNome = (props) => {
   const onChangeTextHandler = function (text) {
-    if (!isValidEmail(text)) {
+    if (text.length === 0) {
       props.setState({
         value: text,
         valid: false,
@@ -26,7 +19,6 @@ const InputEmail = (props) => {
 
   return (
     <TextInput
-      keyboardType="email-address"
       value={props.state.value}
       contentStyle={{
         borderBottomColor: props.state.valid ? "rgba(81, 242, 5, 1)" : "red",
@@ -34,19 +26,20 @@ const InputEmail = (props) => {
       }}
       underlineStyle={styles.underlineStyle}
       mode="flat"
-      label="E-mail"
+      label={props.label}
       style={styles.input}
       onChangeText={onChangeTextHandler}
     />
   );
 };
 
-export default InputEmail;
+export default InputNome;
 
 const styles = StyleSheet.create({
   input: {
     width: 250,
     marginTop: 20,
+    backgroundColor: "white",
   },
 
   underlineStyle: {
