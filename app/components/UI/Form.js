@@ -16,10 +16,9 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor: "green",
   },
   form: {
-    width: 315,
-    height: 336,
     borderRadius: 10,
     alignItems: "center",
     justifyContent: "center",

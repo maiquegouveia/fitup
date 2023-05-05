@@ -10,38 +10,15 @@ import {
 import { useState, useRef, useEffect } from "react";
 import { Stack } from "expo-router";
 import { leftArrow } from "../constants/icons";
-import background from "../assets/home-img-3.png";
-import Logo from "./components/UI/Logo";
+
 import Form from "./components/UI/Form";
 import { MaterialIcons } from "@expo/vector-icons";
 import DatePicker from "./components/UI/DatePicker";
-import InputEmail from "./components/UI/InputEmail";
-import InputNome from "./components/UI/InputNome";
-import InputNumber from "./components/UI/InputNumber";
+import Input from "./components/UI/Input";
+import Button from "./components/UI/Button";
+import { RadioButton } from "react-native-paper";
 
 const Cadastro = () => {
-  const [date, setDate] = useState(new Date());
-
-  const [nome, setNome] = useState({
-    value: "",
-    valid: false,
-  });
-  const [sobrenome, setSobrenome] = useState({
-    value: "",
-    valid: false,
-  });
-  const [telefone, setTelefone] = useState({
-    value: "",
-    valid: false,
-  });
-  const [peso, setPeso] = useState({
-    value: "",
-    valid: false,
-  });
-  const [altura, setAltura] = useState({
-    value: "",
-    valid: false,
-  });
   const [email, setEmail] = useState({
     value: "",
     valid: false,
@@ -51,17 +28,37 @@ const Cadastro = () => {
     valid: false,
   });
 
-  const [confSenha, setConfSenha] = useState("");
+  const [confSenha, setConfSenha] = useState({
+    value: "",
+    valid: false,
+  });
 
-  const [data, setData] = useState({});
-
-  const [currentPage, setCurrentPage] = useState(0);
-
-  const onNextHandler = function () {
-    if (currentPage < 2) {
-      setCurrentPage((prev) => prev + 1);
-    }
+  const onChangeEmailHandler = function (text) {
+    setEmail((prev) => {
+      return {
+        ...prev,
+        value: text,
+      };
+    });
   };
+  const onChangeSenhaHandler = function (text) {
+    setSenha((prev) => {
+      return {
+        ...prev,
+        value: text,
+      };
+    });
+  };
+  const onChangeConfSenhaHandler = function (text) {
+    setConfSenha((prev) => {
+      return {
+        ...prev,
+        value: text,
+      };
+    });
+  };
+
+  const registerBtnHandler = function () {};
 
   return (
     <SafeAreaView style={styles.mainContainer}>
@@ -73,63 +70,38 @@ const Cadastro = () => {
           headerTintColor: "rgba(81, 242, 5, 1)",
         }}
       />
-      <ImageBackground
-        source={background}
-        resizeMode="cover"
-        style={styles.background}
-      >
-        <Logo />
-        <Form style={{ backgroundColor: "rgba(255, 255, 255, 0.7)" }}>
-          {currentPage === 0 && (
-            <>
-              <InputNome
-                label="Primeiro nome"
-                setState={setNome}
-                state={nome}
-              />
-              <InputNome
-                label="Sobrenome"
-                setState={setSobrenome}
-                state={sobrenome}
-              />
-              <DatePicker state={date} setState={setDate} />
-            </>
-          )}
 
-          {currentPage === 1 && (
-            <>
-              <InputNumber
-                label="Telefone"
-                setState={setTelefone}
-                state={telefone}
-                allowedLength={11}
-                icon="phone"
-              />
-              <InputNumber
-                label="Altura"
-                setState={setAltura}
-                state={altura}
-                allowedLength={1}
-                icon="inches"
-              />
-              <InputNumber
-                label="Peso"
-                setState={setPeso}
-                state={peso}
-                allowedLength={1}
-                icon="weight"
-              />
-            </>
-          )}
-
-          {/* <InputEmail setState={setEmail} state={email} /> */}
-        </Form>
-        <View style={styles.nextBtnContainer}>
-          <TouchableOpacity style={styles.nextBtn} onPress={onNextHandler}>
-            <MaterialIcons name="navigate-next" size={70} color="black" />
-          </TouchableOpacity>
+      <Form style={{ backgroundColor: "#ccc" }}>
+        <Input
+          label="Email"
+          state={email.value}
+          icon="email"
+          onChangeTextHandler={onChangeEmailHandler}
+        />
+        <Input
+          label="Senha"
+          state={senha.value}
+          icon="key"
+          onChangeTextHandler={onChangeSenhaHandler}
+          secureTextEntry={true}
+        />
+        <Input
+          label="Confirmação de Senha"
+          state={confSenha.value}
+          icon="lock"
+          onChangeTextHandler={onChangeConfSenhaHandler}
+          secureTextEntry={true}
+        />
+        <View style={styles.radioContainer}>
+          <RadioButton value="Test" />
+          <Text style={styles.termoText}>
+            Eu concordo com os Termos & Condições
+          </Text>
         </View>
-      </ImageBackground>
+        <View style={styles.nextBtnContainer}>
+          <Button title="Registrar" onPress={registerBtnHandler} />
+        </View>
+      </Form>
     </SafeAreaView>
   );
 };
@@ -160,11 +132,14 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(81, 242, 5, 1)",
     padding: 5,
   },
-  nextBtnContainer: {
-    width: 315,
-    alignItems: "flex-end",
-    paddingRight: 20,
-    paddingBottom: 20,
+  nextBtnContainer: {},
+  radioContainer: {
+    marginVertical: 10,
+    flexDirection: "row",
+    alignItems: "center",
   },
-  input: {},
+  termoText: {
+    fontSize: 12,
+    fontWeight: "bold",
+  },
 });
