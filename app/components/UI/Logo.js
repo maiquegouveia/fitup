@@ -1,11 +1,16 @@
 import { ImageBackground, StyleSheet, Text, View } from "react-native";
 import React from "react";
-import { logo } from "../../../constants/images";
 
 const Logo = ({ style }) => {
   return (
     <View style={[styles.logoContainer, style]}>
-      <ImageBackground source={logo} resizeMode="contain" style={styles.logo} />
+      <ImageBackground
+        source={{
+          uri: "https://i.ibb.co/sWXJ5tm/logo.png",
+        }}
+        resizeMode="contain"
+        style={styles.logo}
+      />
     </View>
   );
 };

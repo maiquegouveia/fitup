@@ -48,7 +48,7 @@ const ProfileImage = () => {
 
   return (
     <View style={styles.profileImageContainer}>
-      <Button onPress={postImage}>Test</Button>
+      <Button onPress={requestFoodInfo}>Test</Button>
       <View style={styles.imageContainer}>
         <TouchableOpacity onPress={pickImage}>
           <Image
