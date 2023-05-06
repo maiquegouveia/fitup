@@ -1,12 +1,4 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  SafeAreaView,
-  ImageBackground,
-  TouchableOpacity,
-  Image,
-} from "react-native";
+import { StyleSheet, Text, View, SafeAreaView, Image } from "react-native";
 import { useState, useRef, useEffect } from "react";
 import { Stack } from "expo-router";
 import { leftArrow } from "../constants/icons";
@@ -17,8 +9,16 @@ import DatePicker from "./components/UI/DatePicker";
 import Input from "./components/UI/Input";
 import Button from "./components/UI/Button";
 import { RadioButton } from "react-native-paper";
+import ProfileImage from "./components/UI/ProfileImage";
 
 const Cadastro = () => {
+  const [termoStatus, setTermoStatus] = useState("unchecked");
+
+  const termoStatusHandler = function () {
+    if (termoStatus === "unchecked") setTermoStatus("checked");
+    else setTermoStatus("unchecked");
+  };
+
   const [email, setEmail] = useState({
     value: "",
     valid: false,
@@ -65,11 +65,13 @@ const Cadastro = () => {
       <Stack.Screen
         options={{
           headerTitle: "",
-          headerTransparent: true,
+          headerTransparent: false,
           headerBackImageSource: leftArrow,
           headerTintColor: "rgba(81, 242, 5, 1)",
         }}
       />
+
+      <ProfileImage />
 
       <Form style={{ backgroundColor: "#ccc" }}>
         <Input
@@ -93,7 +95,11 @@ const Cadastro = () => {
           secureTextEntry={true}
         />
         <View style={styles.radioContainer}>
-          <RadioButton value="Test" />
+          <RadioButton
+            status={termoStatus}
+            onPress={termoStatusHandler}
+            color="#0094E6"
+          />
           <Text style={styles.termoText}>
             Eu concordo com os Termos & Condições
           </Text>
@@ -111,6 +117,7 @@ export default Cadastro;
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
+    backgroundColor: "white",
   },
   background: {
     flex: 1,
