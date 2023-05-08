@@ -2,25 +2,10 @@ import { StyleSheet, Image, View, TouchableOpacity, Alert } from "react-native";
 import { useState, useEffect } from "react";
 import * as ImagePicker from "expo-image-picker";
 import { Button } from "react-native-paper";
+import requestFoodInfo from "./RequestFatsecret";
 
-const ProfileImage = () => {
+const ProfileImage = ({image, setImage}) => {
   const defaultImage = "https://i.ibb.co/k3F3bq4/default.png";
-  const [image, setImage] = useState({
-    uri: defaultImage,
-    base64: "",
-  });
-
-  const postImage = async () => {
-    let body = new FormData();
-    body.append("key", "f0fbe7cb625f524b53d190796b79cbc3");
-    body.append("image", image.base64);
-    const response = await fetch("https://api.imgbb.com/1/upload", {
-      method: "POST",
-      body: body,
-    });
-    const data = await response.json();
-    console.log(data);
-  };
 
   const pickImage = async () => {
     const permissionResult =

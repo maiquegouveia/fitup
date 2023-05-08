@@ -21,7 +21,7 @@ const requestFatsecretAuth = async () => {
     }
   };
 
-  const requestFoodInfo = async () => {
+   const requestFoodInfo = async () => {
     await requestFatsecretAuth()
     try {
       const response = await fetch(
@@ -41,3 +41,5 @@ const requestFatsecretAuth = async () => {
       console.log(error);
     }
   };
+
+  export default requestFoodInfo

@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, SafeAreaView, Image } from "react-native";
 import { useState, useRef, useEffect } from "react";
-import { Stack } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import { leftArrow } from "../constants/icons";
 
 import Form from "./components/UI/Form";
@@ -12,6 +12,7 @@ import { RadioButton } from "react-native-paper";
 import ProfileImage from "./components/UI/ProfileImage";
 
 const Cadastro = () => {
+  const router = useRouter()
   const [termoStatus, setTermoStatus] = useState("unchecked");
 
   const termoStatusHandler = function () {
@@ -32,6 +33,30 @@ const Cadastro = () => {
     value: "",
     valid: false,
   });
+
+  const [image, setImage] = useState({
+    uri: "https://i.ibb.co/k3F3bq4/default.png",
+    base64: "",
+  });
+
+
+  const postImage = async () => {
+    let imageUrl
+    try{
+      let body = new FormData();
+      body.append("key", "f0fbe7cb625f524b53d190796b79cbc3");
+      body.append("image", image.base64);
+      const response = await fetch("https://api.imgbb.com/1/upload", {
+        method: "POST",
+        body: body,
+      });
+      const data = await response.json();
+      imageUrl = data.data.display_url
+    } catch(error){
+      console.log(error)
+    }
+    return imageUrl
+  };
 
   const onChangeEmailHandler = function (text) {
     setEmail((prev) => {
@@ -58,7 +83,18 @@ const Cadastro = () => {
     });
   };
 
-  const registerBtnHandler = function () {};
+  const registerBtnHandler = async function () {
+    const profileImageURL = await postImage()
+    const imageUrl = profileImageURL.replace('https://i.ibb.co/', '')
+    router.push({
+      pathname: '/Home',
+      params: {
+        email: email.value,
+        senha: senha.value,
+        profileImage: imageUrl
+      }
+    })
+  };
 
   return (
     <SafeAreaView style={styles.mainContainer}>
@@ -71,7 +107,7 @@ const Cadastro = () => {
         }}
       />
 
-      <ProfileImage />
+      <ProfileImage image={image} setImage={setImage}/>
 
       <Form style={{ backgroundColor: "#ccc" }}>
         <Input
