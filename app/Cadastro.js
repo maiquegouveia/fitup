@@ -12,7 +12,7 @@ import { RadioButton } from "react-native-paper";
 import ProfileImage from "./components/UI/ProfileImage";
 
 const Cadastro = () => {
-  const router = useRouter()
+  const router = useRouter();
   const [termoStatus, setTermoStatus] = useState("unchecked");
 
   const termoStatusHandler = function () {
@@ -24,6 +24,7 @@ const Cadastro = () => {
     value: "",
     valid: false,
   });
+
   const [senha, setSenha] = useState({
     value: "",
     valid: false,
@@ -39,10 +40,9 @@ const Cadastro = () => {
     base64: "",
   });
 
-
   const postImage = async () => {
-    let imageUrl
-    try{
+    let imageUrl;
+    try {
       let body = new FormData();
       body.append("key", "f0fbe7cb625f524b53d190796b79cbc3");
       body.append("image", image.base64);
@@ -51,11 +51,11 @@ const Cadastro = () => {
         body: body,
       });
       const data = await response.json();
-      imageUrl = data.data.display_url
-    } catch(error){
-      console.log(error)
+      imageUrl = data.data.display_url;
+    } catch (error) {
+      console.log(error);
     }
-    return imageUrl
+    return imageUrl;
   };
 
   const onChangeEmailHandler = function (text) {
@@ -66,6 +66,7 @@ const Cadastro = () => {
       };
     });
   };
+
   const onChangeSenhaHandler = function (text) {
     setSenha((prev) => {
       return {
@@ -74,6 +75,7 @@ const Cadastro = () => {
       };
     });
   };
+
   const onChangeConfSenhaHandler = function (text) {
     setConfSenha((prev) => {
       return {
@@ -83,17 +85,35 @@ const Cadastro = () => {
     });
   };
 
+  const postUserFirebase = async (dataUser) => {
+    try {
+      const response = await fetch(
+        "https://fitup-b9b55-default-rtdb.firebaseio.com/users.json",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(dataUser),
+        }
+      );
+
+      if (!response.ok) throw new Error("ERROR_POST_FIREBASE");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  //Botão de registro
   const registerBtnHandler = async function () {
-    const profileImageURL = await postImage()
-    const imageUrl = profileImageURL.replace('https://i.ibb.co/', '')
-    router.push({
-      pathname: '/Home',
-      params: {
-        email: email.value,
-        senha: senha.value,
-        profileImage: imageUrl
-      }
-    })
+    const profileImageURL = await postImage();
+    const imageUrl = profileImageURL.replace("https://i.ibb.co/", "");
+
+    await postUserFirebase({
+      email: email.value,
+      senha: senha.value,
+      profileImage: imageUrl,
+    });
+    router.replace("/Login");
   };
 
   return (
@@ -107,7 +127,7 @@ const Cadastro = () => {
         }}
       />
 
-      <ProfileImage image={image} setImage={setImage}/>
+      <ProfileImage image={image} setImage={setImage} />
 
       <Form style={{ backgroundColor: "#ccc" }}>
         <Input

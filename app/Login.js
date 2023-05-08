@@ -21,11 +21,49 @@ import { TextInput } from "react-native-paper";
 
 const Login = () => {
   const router = useRouter();
+
   const [hidePassword, setHidePassword] = useState(true);
   const headerHeight = useHeaderHeight();
 
-  const onEntrarHandler = function () {
-    router.push("/Home");
+  const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
+
+  const onChangeEmail = function (text) {
+    setEmail(text);
+  };
+  const onChangeSenha = function (text) {
+    setSenha(text);
+  };
+
+  const getDataFirebase = async () => {
+    try {
+      const options = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+      ///'https://dinosaur-facts.firebaseio.com/dinosaurs.json?orderBy="weight"&equalTo='
+      //Conectando com o banco de dados do firebase, selecionando o email como chave para consulta
+      const response = await fetch(
+        `https://fitup-b9b55-default-rtdb.firebaseio.com/users.json?orderBy="email"&equalTo="${email}"`,
+        options
+      );
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const onEntrarHandler = async () => {
+    let dataUser = Object.values(await getDataFirebase());
+    dataUser = dataUser[0];
+    if (dataUser.email && dataUser.senha === senha) {
+      router.replace({ pathname: "/Home", params: dataUser });
+    } else {
+      console.log("ERROR");
+    }
   };
 
   return (
@@ -51,6 +89,8 @@ const Login = () => {
               mode="flat"
               label="Email"
               style={styles.input}
+              value={email}
+              onChangeText={onChangeEmail}
             />
             <TextInput
               underlineStyle={{ width: 0 }}
@@ -58,6 +98,8 @@ const Login = () => {
               label="Senha"
               style={[styles.input, { marginTop: 10 }]}
               secureTextEntry={hidePassword}
+              value={senha}
+              onChangeText={onChangeSenha}
               right={
                 <TextInput.Icon
                   onPress={() => {
