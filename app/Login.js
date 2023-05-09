@@ -1,23 +1,22 @@
 import {
   View,
   Text,
-  TouchableOpacity,
   SafeAreaView,
-  Image,
   ImageBackground,
   StyleSheet,
+  Alert,
 } from "react-native";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Stack, useRouter } from "expo-router";
 
 import background from "../assets/home-img-2.png";
-import { leftArrow, view, hide } from "../constants/icons";
+import { leftArrow } from "../constants/icons";
 
 import { useHeaderHeight } from "@react-navigation/elements";
 import Logo from "./components/UI/Logo";
 import Button from "./components/UI/Button";
-import Input from "./components/UI/InputEmail";
 import { TextInput } from "react-native-paper";
+import isValidEmail from "../utilities/isValidEmail";
 
 const Login = () => {
   const router = useRouter();
@@ -25,15 +24,86 @@ const Login = () => {
   const [hidePassword, setHidePassword] = useState(true);
   const headerHeight = useHeaderHeight();
 
-  const [email, setEmail] = useState("");
-  const [senha, setSenha] = useState("");
+  const emailRef = useRef();
+
+  const [email, setEmail] = useState({
+    value: "",
+    isValid: false,
+  });
+
+  const senhaRef = useRef();
+
+  const [senha, setSenha] = useState({
+    value: "",
+    isValid: false,
+  });
+
+  const [formIsValid, setFormIsValid] = useState(false);
 
   const onChangeEmail = function (text) {
-    setEmail(text);
+    setEmail((prev) => {
+      return {
+        ...prev,
+        value: text,
+      };
+    });
   };
+
   const onChangeSenha = function (text) {
-    setSenha(text);
+    setSenha((prev) => {
+      return {
+        ...prev,
+        value: text,
+      };
+    });
   };
+
+  useEffect(() => {
+    /// Este useEffect será executado toda vez que "email.value" sofrer alteração
+    /// Define se "email.value" é uma valor válido
+
+    if (isValidEmail(email.value)) {
+      setEmail((prev) => {
+        return {
+          ...prev,
+          isValid: true,
+        };
+      });
+    } else {
+      setEmail((prev) => {
+        return {
+          ...prev,
+          isValid: false,
+        };
+      });
+    }
+  }, [email.value]);
+
+  useEffect(() => {
+    /// Este useEffect será executado toda vez que "senha.value" sofrer alteração
+    /// Define se "senha.value" é uma valor válido
+    if (senha.value.length > 8) {
+      setSenha((prev) => {
+        return {
+          ...prev,
+          isValid: true,
+        };
+      });
+    } else {
+      setSenha((prev) => {
+        return {
+          ...prev,
+          isValid: false,
+        };
+      });
+    }
+  }, [senha.value]);
+
+  useEffect(() => {
+    /// Este useEffect será executado toda vez que "email.isValid" ou "senha.isValid" sofrer alteração
+    /// Define se o formulário é válido
+    setFormIsValid(email.isValid && senha.isValid);
+  }, [email.isValid, senha.isValid]);
 
   const getDataFirebase = async () => {
     try {
@@ -43,10 +113,9 @@ const Login = () => {
           "Content-Type": "application/json",
         },
       };
-      ///'https://dinosaur-facts.firebaseio.com/dinosaurs.json?orderBy="weight"&equalTo='
       //Conectando com o banco de dados do firebase, selecionando o email como chave para consulta
       const response = await fetch(
-        `https://fitup-b9b55-default-rtdb.firebaseio.com/users.json?orderBy="email"&equalTo="${email}"`,
+        `https://fitup-b9b55-default-rtdb.firebaseio.com/users.json?orderBy="email"&equalTo="${email.value}"`,
         options
       );
       const data = await response.json();
@@ -57,12 +126,32 @@ const Login = () => {
   };
 
   const onEntrarHandler = async () => {
-    let dataUser = Object.values(await getDataFirebase());
-    dataUser = dataUser[0];
-    if (dataUser.email && dataUser.senha === senha) {
-      router.replace({ pathname: "/Home", params: dataUser });
+    if (formIsValid) {
+      const data = await getDataFirebase();
+      let dataUser = Object.values(data);
+      dataUser = dataUser[0];
+      if (dataUser && dataUser.senha === senha.value) {
+        router.replace({ pathname: "/Home", params: dataUser });
+      } else {
+        Alert.alert(
+          "Email ou senha inválidos!",
+          "Verifique os campos de email e senha e tente novamente."
+        );
+      }
     } else {
-      console.log("ERROR");
+      let errorTitle;
+      let errorMsg;
+      if (email.isValid === false && senha.isValid === false) {
+        errorTitle = "Email e senha inválidos!";
+        errorMsg = "Digite um email válido e uma senha maior que 8 digitos.";
+      } else if (!email.isValid) {
+        errorTitle = "Email inválido!";
+        errorMsg = "Digite um email válido para fazer login.";
+      } else {
+        errorTitle = "Senha inválida!";
+        errorMsg = "A senha deve ser maior que 8 digitos.";
+      }
+      Alert.alert(errorTitle, errorMsg);
     }
   };
 
@@ -85,20 +174,22 @@ const Login = () => {
         <View style={styles.formContainer}>
           <View style={styles.form}>
             <TextInput
+              ref={emailRef}
               underlineStyle={{ width: 0 }}
               mode="flat"
               label="Email"
               style={styles.input}
-              value={email}
+              value={email.value}
               onChangeText={onChangeEmail}
             />
             <TextInput
+              ref={senhaRef}
               underlineStyle={{ width: 0 }}
               mode="flat"
               label="Senha"
               style={[styles.input, { marginTop: 10 }]}
               secureTextEntry={hidePassword}
-              value={senha}
+              value={senha.value}
               onChangeText={onChangeSenha}
               right={
                 <TextInput.Icon

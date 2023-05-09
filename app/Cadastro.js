@@ -1,15 +1,13 @@
-import { StyleSheet, Text, View, SafeAreaView, Image } from "react-native";
-import { useState, useRef, useEffect } from "react";
+import { StyleSheet, Text, View, SafeAreaView, Alert } from "react-native";
+import { useState, useEffect } from "react";
 import { Stack, useRouter } from "expo-router";
 import { leftArrow } from "../constants/icons";
-
 import Form from "./components/UI/Form";
-import { MaterialIcons } from "@expo/vector-icons";
-import DatePicker from "./components/UI/DatePicker";
 import Input from "./components/UI/Input";
 import Button from "./components/UI/Button";
 import { RadioButton } from "react-native-paper";
 import ProfileImage from "./components/UI/ProfileImage";
+import isValidEmail from "../utilities/isValidEmail";
 
 const Cadastro = () => {
   const router = useRouter();
@@ -22,23 +20,96 @@ const Cadastro = () => {
 
   const [email, setEmail] = useState({
     value: "",
-    valid: false,
+    isValid: false,
   });
 
   const [senha, setSenha] = useState({
     value: "",
-    valid: false,
+    isValid: false,
   });
 
   const [confSenha, setConfSenha] = useState({
     value: "",
-    valid: false,
+    isValid: false,
   });
 
   const [image, setImage] = useState({
     uri: "https://i.ibb.co/k3F3bq4/default.png",
     base64: "",
   });
+
+  const [formIsValid, setFormIsValid] = useState(false);
+
+  useEffect(() => {
+    /// Este useEffect será executado toda vez que "email.value" sofrer alteração
+    /// Define se "email.value" é uma valor válido
+    if (isValidEmail(email.value)) {
+      setEmail((prev) => {
+        return {
+          ...prev,
+          isValid: true,
+        };
+      });
+    } else {
+      setEmail((prev) => {
+        return {
+          ...prev,
+          isValid: false,
+        };
+      });
+    }
+  }, [email.value]);
+
+  useEffect(() => {
+    /// Este useEffect será executado toda vez que "senha.value" sofrer alteração
+    /// Define se "senha.value" é uma valor válido
+    if (senha.value.length > 8) {
+      setSenha((prev) => {
+        return {
+          ...prev,
+          isValid: true,
+        };
+      });
+    } else {
+      setSenha((prev) => {
+        return {
+          ...prev,
+          isValid: false,
+        };
+      });
+    }
+  }, [senha.value]);
+
+  useEffect(() => {
+    /// Este useEffect será executado toda vez que "confSenha.value" sofrer alteração
+    /// Define se "confSenha.value" é uma valor válido
+    if (confSenha.value === senha.value) {
+      setConfSenha((prev) => {
+        return {
+          ...prev,
+          isValid: true,
+        };
+      });
+    } else {
+      setConfSenha((prev) => {
+        return {
+          ...prev,
+          isValid: false,
+        };
+      });
+    }
+  }, [confSenha.value]);
+
+  useEffect(() => {
+    /// Este useEffect será executado toda vez que "email.isValid","senha.isValid","confSenha.isValid" ou "termoStatus" sofrer alteração
+    /// Define se o formulário é válido
+    setFormIsValid(
+      email.isValid &&
+        senha.isValid &&
+        confSenha.isValid &&
+        termoStatus === "checked"
+    );
+  }, [email.isValid, senha.isValid, confSenha.isValid, termoStatus]);
 
   const postImage = async () => {
     let imageUrl;
@@ -105,15 +176,44 @@ const Cadastro = () => {
   };
   //Botão de registro
   const registerBtnHandler = async function () {
-    const profileImageURL = await postImage();
-    const imageUrl = profileImageURL.replace("https://i.ibb.co/", "");
+    if (formIsValid) {
+      const profileImageURL = await postImage();
+      const imageUrl = profileImageURL.replace("https://i.ibb.co/", "");
 
-    await postUserFirebase({
-      email: email.value,
-      senha: senha.value,
-      profileImage: imageUrl,
-    });
-    router.replace("/Login");
+      await postUserFirebase({
+        email: email.value,
+        senha: senha.value,
+        profileImage: imageUrl,
+      });
+      router.replace("/Login");
+    } else {
+      let errorTitle;
+      let errorMsg;
+      if (
+        email.isValid === false &&
+        senha.isValid === false &&
+        confSenha.isValid === false
+      ) {
+        errorTitle = "Campos inválidos!";
+        errorMsg =
+          "Digite um email válido, uma senha maior que 8 digitos e repita senha para confirmação.";
+      } else if (!email.isValid) {
+        errorTitle = "Email inválido!";
+        errorMsg = "Digite um email válido para fazer o cadastro.";
+      } else if (!senha.isValid) {
+        errorTitle = "Senha inválida!";
+        errorMsg = "A senha deve ser maior que 8 digitos.";
+      } else if (!confSenha.isValid) {
+        errorTitle = "Confirmação de senha inválida!";
+        errorMsg =
+          "A confirmação de senha deve ser igual a senha digitada anteriormente.";
+      } else {
+        errorTitle = "Aceitação de Termos & Condições!";
+        errorMsg =
+          "Você precisa concordar com os temos e condições para criar uma conta.";
+      }
+      Alert.alert(errorTitle, errorMsg);
+    }
   };
 
   return (
