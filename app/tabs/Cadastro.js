@@ -1,13 +1,13 @@
 import { StyleSheet, Text, View, SafeAreaView, Alert } from "react-native";
 import { useState, useEffect } from "react";
 import { Stack, useRouter } from "expo-router";
-import { leftArrow } from "../constants/icons";
-import Form from "./components/UI/Form";
-import Input from "./components/UI/Input";
-import Button from "./components/UI/Button";
+import { leftArrow } from "../../constants/icons";
+import Form from "../components/UI/Form";
+import Input from "../components/UI/Input";
+import Button from "../components/UI/Button";
 import { RadioButton } from "react-native-paper";
-import ProfileImage from "./components/UI/ProfileImage";
-import isValidEmail from "../utilities/isValidEmail";
+import ProfileImage from "../components/UI/ProfileImage";
+import isValidEmail from "../../utilities/isValidEmail";
 
 const Cadastro = () => {
   const router = useRouter();
