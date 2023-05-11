@@ -1,15 +1,25 @@
-# Expo Router Example
+# FitUp
 
-Use [`expo-router`](https://expo.github.io/router) to build native navigation using files in the `app/` directory.
+This application is implemented using the following tools: [`react`](https://react.dev/), [`react-native`](https://reactnative.dev/docs/getting-started), [`expo`](https://docs.expo.dev/) and [`expo-router`](https://expo.github.io/router).
 
-## 🚀 How to use
+## 🚀 How to run
 
+Clone this repository and move into the new created folder.
 ```sh
-npx create-react-native-app -t with-router
+git clone https://github.com/maiquegouveia/fitup.git
+```
+Install the necessary dependences for running the application.
+```sh
+npm install
+```
+Run the application using the following command.
+```sh
+npm start
 ```
 
-## 📝 Notes
 
+## 📝 Notes
+- [React: Docs](https://react.dev/)
+- [React Native: Docs](https://reactnative.dev/docs/getting-started)
+- [Expo: Docs](https://docs.expo.dev/)
 - [Expo Router: Docs](https://expo.github.io/router)
-- [Expo Router: Repo](https://github.com/expo/router)
-- [Request for Comments](https://github.com/expo/router/discussions/1)
