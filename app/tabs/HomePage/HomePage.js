@@ -19,8 +19,6 @@ const HomePage = () => {
         const data = await AsyncStorage.getItem('userData');
         if (data !== null) {
           router.push({ pathname: '/Home', params: JSON.parse(data) });
-        } else {
-          console.log('Not logged');
         }
       } catch (e) {
         console.log(e);

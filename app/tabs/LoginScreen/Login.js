@@ -1,21 +1,31 @@
 import { View, Text, SafeAreaView, ImageBackground, Alert } from 'react-native';
 import { useEffect, useState } from 'react';
 import { Stack, useRouter } from 'expo-router';
-import background from '../../assets/home-img-2.png';
-import { leftArrow } from '../../constants/icons';
+import background from '../../../assets/home-img-2.png';
+import { leftArrow } from '../../../constants/icons';
 import { useHeaderHeight } from '@react-navigation/elements';
-import Logo from '../components/UI/Logo';
-import { TextInput, Button } from 'react-native-paper';
-import isValidEmail from '../../utilities/isValidEmail';
-import getDataFirebase from '../../utilities/getDataFirebase';
+import Logo from '../../components/UI/Logo';
+import { TextInput, Button, Provider } from 'react-native-paper';
+import isValidEmail from '../../../utilities/isValidEmail';
+import getDataFirebase from '../../../utilities/getDataFirebase';
 import styles from './Login.style';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Dialog from '../../components/UI/Dialog';
 
 const Login = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [hidePassword, setHidePassword] = useState(true);
   const headerHeight = useHeaderHeight();
+
+  const [visible, setVisible] = useState(false);
+  const [dialog, setDialog] = useState({
+    title: '',
+    content: '',
+  });
+  const showDialog = () => setVisible(true);
+
+  const hideDialog = () => setVisible(false);
 
   const [email, setEmail] = useState({
     value: '',
@@ -120,19 +130,23 @@ const Login = () => {
         Alert.alert('Email ou senha inválidos!', 'Verifique os campos de email e senha e tente novamente.');
       }
     } else {
-      let errorTitle;
-      let errorMsg;
       if (email.isValid === false && senha.isValid === false) {
-        errorTitle = 'Email e senha inválidos!';
-        errorMsg = 'Digite um email válido e uma senha maior que 8 digitos.';
+        setDialog({
+          title: 'Email e senha inválidos!',
+          content: 'Digite um email válido e uma senha maior que 8 digitos.',
+        });
       } else if (!email.isValid) {
-        errorTitle = 'Email inválido!';
-        errorMsg = 'Digite um email válido para fazer login.';
+        setDialog({
+          title: 'Email inválido!',
+          content: 'Digite um email válido para fazer login.',
+        });
       } else {
-        errorTitle = 'Senha inválida!';
-        errorMsg = 'A senha deve ser maior que 8 digitos.';
+        setDialog({
+          title: 'Senha inválida!',
+          content: 'A senha deve ser maior que 8 digitos.',
+        });
       }
-      Alert.alert(errorTitle, errorMsg);
+      showDialog();
     }
   };
 
@@ -143,46 +157,48 @@ const Login = () => {
           headerTitle: '',
           headerBackImageSource: leftArrow,
           headerTintColor: 'rgba(81, 242, 5, 1)',
-          headerTransparent: true,
         }}
       />
       <ImageBackground source={background} resizeMode="cover" style={styles.background}>
-        <Logo style={{ marginTop: headerHeight }} />
-        <View style={styles.formContainer}>
-          <View style={styles.form}>
-            <TextInput
-              underlineStyle={{ width: 0 }}
-              mode="flat"
-              label="Email"
-              style={styles.input}
-              value={email.value}
-              onChangeText={onChangeEmail}
-            />
-            <TextInput
-              underlineStyle={{ width: 0 }}
-              mode="flat"
-              label="Senha"
-              style={[styles.input, { marginTop: 10 }]}
-              secureTextEntry={hidePassword}
-              value={senha.value}
-              onChangeText={onChangeSenha}
-              right={
-                <TextInput.Icon
-                  onPress={() => {
-                    setHidePassword(prev => !prev);
-                  }}
-                  icon={hidePassword ? 'eye' : 'eye-off'}
-                />
-              }
-            />
-            <View style={styles.esqueceuContainer}>
-              <Text style={styles.esqueceuText}>Esqueceu a senha?</Text>
+        <Provider>
+          <Dialog visible={visible} title={dialog.title} content={dialog.content} hideDialog={hideDialog} />
+          <Logo style={{ marginTop: headerHeight }} />
+          <View style={styles.formContainer}>
+            <View style={styles.form}>
+              <TextInput
+                underlineStyle={{ width: 0 }}
+                mode="flat"
+                label="Email"
+                style={styles.input}
+                value={email.value}
+                onChangeText={onChangeEmail}
+              />
+              <TextInput
+                underlineStyle={{ width: 0 }}
+                mode="flat"
+                label="Senha"
+                style={[styles.input, { marginTop: 10 }]}
+                secureTextEntry={hidePassword}
+                value={senha.value}
+                onChangeText={onChangeSenha}
+                right={
+                  <TextInput.Icon
+                    onPress={() => {
+                      setHidePassword(prev => !prev);
+                    }}
+                    icon={hidePassword ? 'eye' : 'eye-off'}
+                  />
+                }
+              />
+              <View style={styles.esqueceuContainer}>
+                <Text style={styles.esqueceuText}>Esqueceu a senha?</Text>
+              </View>
+              <Button loading={isLoading} style={styles.btn} labelStyle={styles.btnText} onPress={onEntrarHandler}>
+                {isLoading ? '' : 'Entrar'}
+              </Button>
             </View>
-            <Button loading={isLoading} style={styles.btn} labelStyle={styles.btnText} onPress={onEntrarHandler}>
-              Entrar
-            </Button>
           </View>
-        </View>
+        </Provider>
       </ImageBackground>
     </SafeAreaView>
   );

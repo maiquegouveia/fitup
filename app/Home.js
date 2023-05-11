@@ -4,11 +4,21 @@ import { useNavigation, useRouter, useSearchParams } from 'expo-router';
 import { Stack } from 'expo-router';
 import { Button } from 'react-native-paper';
 import { useHeaderHeight } from '@react-navigation/elements';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Home = () => {
   const router = useRouter();
   const params = useSearchParams();
   const headerHeight = useHeaderHeight();
+
+  const removeData = async () => {
+    try {
+      await AsyncStorage.removeItem('userData');
+      router.back();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <SafeAreaView style={styles.mainContainer}>
@@ -31,11 +41,7 @@ const Home = () => {
       </View>
       <View style={{ flex: 0.5, alignItems: 'center' }}>
         <Text>EMAIL: {params.email}</Text>
-        <Button
-          textColor="white"
-          style={{ width: 100, backgroundColor: 'green', marginTop: 20 }}
-          onPress={() => router.back()}
-        >
+        <Button textColor="white" style={{ width: 100, backgroundColor: 'green', marginTop: 20 }} onPress={removeData}>
           Sair
         </Button>
       </View>
