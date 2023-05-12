@@ -1,4 +1,4 @@
-import { Text, View, SafeAreaView, Animated, Keyboard } from 'react-native';
+import { Text, View, SafeAreaView } from 'react-native';
 import { useState, useEffect } from 'react';
 import { Stack, useRouter } from 'expo-router';
 import { leftArrow } from '../../../constants/icons';

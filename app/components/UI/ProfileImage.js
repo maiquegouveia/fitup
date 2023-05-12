@@ -1,13 +1,25 @@
-import { StyleSheet, Image, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Image, View, TouchableOpacity, Animated, Keyboard, Easing } from 'react-native';
 import getImageAndPermissions from '../../../utilities/getImageAndPermissions';
 import { useHeaderHeight } from '@react-navigation/elements';
 
 const ProfileImage = ({ image, setImage }) => {
-  const defaultImage = 'https://i.ibb.co/k3F3bq4/default.png';
   const headerHeight = useHeaderHeight();
+  const viewScale = new Animated.Value(1);
+
+  const keyboardWillShow = e => {
+    Animated.timing(viewScale, { duration: 100, toValue: 0.7, useNativeDriver: true, easing: Easing.ease }).start();
+  };
+
+  const keyboardWillHide = e => {
+    Animated.timing(viewScale, { duration: 100, toValue: 1, useNativeDriver: true, easing: Easing.ease }).start();
+  };
+
+  Keyboard.addListener('keyboardDidShow', keyboardWillShow);
+  Keyboard.addListener('keyboardDidHide', keyboardWillHide);
+
   return (
     <View style={[styles.profileImageContainer, { marginTop: headerHeight }]}>
-      <View style={styles.imageContainer}>
+      <Animated.View style={[styles.imageContainer, { transform: [{ scale: viewScale }] }]}>
         <TouchableOpacity onPress={() => getImageAndPermissions(setImage)}>
           <Image
             style={styles.image}
@@ -17,7 +29,7 @@ const ProfileImage = ({ image, setImage }) => {
             }}
           />
         </TouchableOpacity>
-      </View>
+      </Animated.View>
     </View>
   );
 };
@@ -30,10 +42,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  imageContainer: {},
-  image: {
+  imageContainer: {
     width: 200,
     height: 200,
+  },
+  image: {
+    width: '100%',
+    height: '100%',
     backgroundColor: 'white',
     borderRadius: 100,
     borderWidth: 2,

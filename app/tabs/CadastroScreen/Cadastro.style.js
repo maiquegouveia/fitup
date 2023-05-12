@@ -44,4 +44,18 @@ export default styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
   },
+  profileImageContainer: {
+    flex: 0.6,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  imageContainer: {},
+  image: {
+    width: 200,
+    height: 200,
+    backgroundColor: 'white',
+    borderRadius: 100,
+    borderWidth: 2,
+    borderColor: '#ccc',
+  },
 });
