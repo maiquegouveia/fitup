@@ -8,12 +8,15 @@ const EditInputProfile = props => {
       <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{props.label}</Text>
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <TextInput
+          onChange={props.onChange}
           secureTextEntry={props?.showText}
           style={{ width: '100%' }}
           mode="outlined"
-          value={' ' + props.value}
-          disabled={true}
-          right={<TextInput.Icon icon="square-edit-outline" iconColor="black" size={20} onPress={props.onPress} />}
+          value={props.value}
+          disabled={false}
+          right={
+            <TextInput.Icon icon="square-edit-outline" iconColor="black" size={20} disabled={props?.valueChanged} />
+          }
         ></TextInput>
       </View>
     </View>
