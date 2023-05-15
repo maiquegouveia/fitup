@@ -125,7 +125,7 @@ const Login = () => {
 
       if (userData && userData[0].senha === senha.value) {
         const success = await storeData(JSON.stringify(userData[0]));
-        if (success) router.replace({ pathname: '/Home', params: userData[0] });
+        if (success) router.replace({ pathname: '/tabs/ProfileScreen/ProfileScreen', params: userData[0] });
       } else {
         Alert.alert('Email ou senha inválidos!', 'Verifique os campos de email e senha e tente novamente.');
       }

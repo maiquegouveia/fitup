@@ -18,7 +18,7 @@ const HomePage = () => {
       try {
         const data = await AsyncStorage.getItem('userData');
         if (data !== null) {
-          router.push({ pathname: '/Home', params: JSON.parse(data) });
+          router.push({ pathname: '/tabs/ProfileScreen/ProfileScreen', params: JSON.parse(data) });
         }
       } catch (e) {
         console.log(e);
