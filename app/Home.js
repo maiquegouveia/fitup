@@ -32,15 +32,12 @@ const Home = () => {
       />
       <View style={[styles.container, { marginTop: headerHeight }]}>
         <View style={styles.profileImageContainer}>
-          <Image
-            source={{ uri: `https://i.ibb.co/${params.profileImage}` }}
-            resizeMode="contain"
-            style={styles.image}
-          />
+          <Image source={{ uri: `https://i.ibb.co/${params.foto_perfil}` }} resizeMode="contain" style={styles.image} />
         </View>
       </View>
       <View style={{ flex: 0.5, alignItems: 'center' }}>
-        <Text>EMAIL: {params.email}</Text>
+        <Text style={{ fontSize: 24, fontWeight: 'bold' }}>Olá,</Text>
+        <Text>{params.email}</Text>
         <Button textColor="white" style={{ width: 100, backgroundColor: 'green', marginTop: 20 }} onPress={removeData}>
           Sair
         </Button>

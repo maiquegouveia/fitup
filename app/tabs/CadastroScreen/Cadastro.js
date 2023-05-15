@@ -8,7 +8,7 @@ import { Button, RadioButton, Provider } from 'react-native-paper';
 import ProfileImage from '../../components/UI/ProfileImage';
 import isValidEmail from '../../../utilities/isValidEmail';
 import postImage from '../../../utilities/postImage';
-import postUserFirebase from '../../../utilities/postUserFirebase';
+import postUser from '../../../utilities/postUser';
 import Dialog from '../../components/UI/Dialog';
 import styles from './Cadastro.style';
 
@@ -151,11 +151,13 @@ const Cadastro = () => {
       const profileImageURL = await postImage(image.base64);
       const imageUrl = profileImageURL.replace('https://i.ibb.co/', '');
 
-      await postUserFirebase({
+      await postUser({
         email: email.value,
-        senha: senha.value,
-        profileImage: imageUrl,
+        password: senha.value,
+        profile_image: imageUrl,
+        type: 1,
       });
+
       router.replace('/tabs/LoginScreen/Login');
     } else {
       if (email.isValid === false && senha.isValid === false && confSenha.isValid === false) {

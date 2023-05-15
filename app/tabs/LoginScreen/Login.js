@@ -1,5 +1,5 @@
 import { View, Text, SafeAreaView, ImageBackground, Alert } from 'react-native';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Stack, useRouter } from 'expo-router';
 import background from '../../../assets/home-img-2.png';
 import { leftArrow } from '../../../constants/icons';
@@ -7,7 +7,7 @@ import { useHeaderHeight } from '@react-navigation/elements';
 import Logo from '../../components/UI/Logo';
 import { TextInput, Button, Provider } from 'react-native-paper';
 import isValidEmail from '../../../utilities/isValidEmail';
-import getDataFirebase from '../../../utilities/getDataFirebase';
+import getUserData from '../../../utilities/getUserData';
 import styles from './Login.style';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Dialog from '../../components/UI/Dialog';
@@ -119,13 +119,13 @@ const Login = () => {
   const onEntrarHandler = async () => {
     if (formIsValid) {
       setIsLoading(true);
-      const data = await getDataFirebase(email.value);
+      const data = await getUserData(email.value);
+      const userData = data?.data;
       setIsLoading(false);
-      let dataUser = Object.values(data);
-      dataUser = dataUser[0];
-      if (dataUser && dataUser.senha === senha.value) {
-        const success = await storeData(JSON.stringify(dataUser));
-        if (success) router.replace({ pathname: '/Home', params: dataUser });
+
+      if (userData && userData[0].senha === senha.value) {
+        const success = await storeData(JSON.stringify(userData[0]));
+        if (success) router.replace({ pathname: '/Home', params: userData[0] });
       } else {
         Alert.alert('Email ou senha inválidos!', 'Verifique os campos de email e senha e tente novamente.');
       }
