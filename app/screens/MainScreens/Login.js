@@ -1,8 +1,7 @@
 import { View, Text, SafeAreaView, ImageBackground, Alert } from 'react-native';
-import { useEffect, useRef, useState } from 'react';
-import { Stack, useRouter } from 'expo-router';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'expo-router';
 import background from '../../../assets/home-img-2.png';
-import { leftArrow } from '../../../constants/icons';
 import { useHeaderHeight } from '@react-navigation/elements';
 import Logo from '../../components/UI/Logo';
 import { TextInput, Button, Provider } from 'react-native-paper';
@@ -125,7 +124,7 @@ const Login = () => {
 
       if (userData && userData[0].senha === senha.value) {
         const success = await storeData(JSON.stringify(userData[0]));
-        if (success) router.replace({ pathname: '/tabs/ProfileScreen/ProfileScreen', params: userData[0] });
+        if (success) router.replace({ pathname: '/screens/HomeScreens/Home', params: userData[0] });
       } else {
         Alert.alert('Email ou senha inválidos!', 'Verifique os campos de email e senha e tente novamente.');
       }
@@ -152,13 +151,6 @@ const Login = () => {
 
   return (
     <SafeAreaView style={styles.mainContainer}>
-      <Stack.Screen
-        options={{
-          headerTitle: '',
-          headerBackImageSource: leftArrow,
-          headerTintColor: 'rgba(81, 242, 5, 1)',
-        }}
-      />
       <ImageBackground source={background} resizeMode="cover" style={styles.background}>
         <Provider>
           <Dialog visible={visible} title={dialog.title} content={dialog.content} hideDialog={hideDialog} />

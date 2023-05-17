@@ -1,10 +1,10 @@
-import { StyleSheet, SafeAreaView, ImageBackground } from 'react-native';
+import { SafeAreaView, ImageBackground } from 'react-native';
 import { Stack } from 'expo-router';
 import image from '../../../assets/home-img-1.png';
 import Logo from '../../components/UI/Logo';
 import { useHeaderHeight } from '@react-navigation/elements';
 import HomeButtons from '../../components/HomeButtons';
-import styles from './HomePage.style';
+import styles from './InitialScreen.style';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect } from 'react';
 import { useRouter } from 'expo-router';
@@ -18,7 +18,7 @@ const HomePage = () => {
       try {
         const data = await AsyncStorage.getItem('userData');
         if (data !== null) {
-          router.push({ pathname: '/tabs/ProfileScreen/ProfileScreen', params: JSON.parse(data) });
+          router.push({ pathname: '/screens/HomeScreens/Home', params: JSON.parse(data) });
         }
       } catch (e) {
         console.log(e);

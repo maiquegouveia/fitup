@@ -1,8 +1,7 @@
-import React from "react";
-import HomePage from "./tabs/HomePage/HomePage";
+import { Redirect } from 'expo-router';
 
-const index = () => {
-  return <HomePage />;
+const Index = () => {
+  return <Redirect href="/screens/MainScreens/InitialScreen" />;
 };
 
-export default index;
+export default Index;

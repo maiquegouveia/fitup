@@ -1,7 +1,6 @@
 import { Text, View, SafeAreaView } from 'react-native';
 import { useState, useEffect } from 'react';
-import { Stack, useRouter } from 'expo-router';
-import { leftArrow } from '../../../constants/icons';
+import { useRouter } from 'expo-router';
 import Form from '../../components/UI/Form';
 import Input from '../../components/UI/Input';
 import { Button, RadioButton, Provider } from 'react-native-paper';
@@ -158,7 +157,7 @@ const Cadastro = () => {
         type: 1,
       });
 
-      router.replace('/tabs/LoginScreen/Login');
+      router.replace('/Login');
     } else {
       if (email.isValid === false && senha.isValid === false && confSenha.isValid === false) {
         setDialog({
@@ -193,13 +192,6 @@ const Cadastro = () => {
 
   return (
     <SafeAreaView style={styles.mainContainer}>
-      <Stack.Screen
-        options={{
-          headerTitle: '',
-          headerBackImageSource: leftArrow,
-          headerTintColor: 'rgba(81, 242, 5, 1)',
-        }}
-      />
       <Provider>
         <Dialog visible={visible} title={dialog.title} content={dialog.content} hideDialog={hideDialog} />
         <ProfileImage image={image} setImage={setImage} />

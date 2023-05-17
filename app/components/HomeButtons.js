@@ -8,14 +8,14 @@ const HomeButtons = () => {
   const router = useRouter();
   return (
     <View style={styles.btnsContainer}>
-      <Button style={styles.btn} labelStyle={styles.btnText} onPress={() => router.push('/tabs/LoginScreen/Login')}>
+      <Button style={styles.btn} labelStyle={styles.btnText} onPress={() => router.push('/screens/MainScreens/Login')}>
         Entrar
       </Button>
 
       <Button
         style={styles.btn}
         labelStyle={styles.btnText}
-        onPress={() => router.push('/tabs/CadastroScreen/Cadastro')}
+        onPress={() => router.push('/screens/MainScreens/Cadastro')}
       >
         Cadastrar-se
       </Button>
