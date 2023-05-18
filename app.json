@@ -1,25 +1,30 @@
 {
   "expo": {
-    "scheme": "acme",
-    "web": {
-      "bundler": "metro"
+    "name": "tryNavigation",
+    "slug": "tryNavigation",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
     },
-    "name": "fitup",
-    "slug": "fitup",
-    "extra": {
-      "eas": {
-        "projectId": "f08bdc5d-d6d7-4ff3-9e0a-a0d5d0bc3596"
-      }
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
     },
     "android": {
-      "package": "com.maiquegouveia.fitup"
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      }
     },
-    "runtimeVersion": {
-      "policy": "sdkVersion"
-    },
-    "updates": {
-      "url": "https://u.expo.dev/f08bdc5d-d6d7-4ff3-9e0a-a0d5d0bc3596"
-    },
-    "ios": {}
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
   }
 }

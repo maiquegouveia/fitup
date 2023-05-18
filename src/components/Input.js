@@ -1,18 +1,18 @@
-import { useState } from 'react';
-import { StyleSheet } from 'react-native';
-import { TextInput } from 'react-native-paper';
+import { useState } from "react";
+import { TextInput } from "react-native-paper";
+import styles from "../styles/Input.style";
 
-const Input = props => {
+const Input = (props) => {
   const [isFocused, setIsFocused] = useState(false);
   return (
     <TextInput
       onFocus={() => {
-        setIsFocused(prev => {
+        setIsFocused((prev) => {
           return !prev;
         });
       }}
       onBlur={() => {
-        setIsFocused(prev => {
+        setIsFocused((prev) => {
           return !prev;
         });
       }}
@@ -24,21 +24,15 @@ const Input = props => {
       label={props.label}
       style={styles.input}
       onChangeText={props.onChangeTextHandler}
-      left={<TextInput.Icon icon={props.icon} iconColor={isFocused ? '#0094E6' : 'black'} />}
+      left={
+        <TextInput.Icon
+          icon={props.icon}
+          iconColor={isFocused ? "#0094E6" : "black"}
+        />
+      }
       secureTextEntry={props.secureTextEntry}
     />
   );
 };
 
 export default Input;
-
-const styles = StyleSheet.create({
-  input: {
-    width: 270,
-    borderTopLeftRadius: 100,
-    borderTopRightRadius: 100,
-    borderRadius: 100,
-    backgroundColor: 'transparent',
-    paddingBottom: 5,
-  },
-});

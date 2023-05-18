@@ -1,10 +1,10 @@
-import { Text, View } from 'react-native';
-import { useEffect, useState } from 'react';
-import EditInputProfile from './UI/EditInputProfile';
-import styles from './EditProfileContainer.style';
-import ButtonComponent from './UI/ButtonComponent';
+import { Text, View } from "react-native";
+import { useState } from "react";
+import EditInputProfile from "../components/EditInputProfile";
+import styles from "./EditProfileContainer.style";
+import ButtonComponent from "./ButtonComponent";
 
-const EditProfileContainer = props => {
+const EditProfileContainer = (props) => {
   const [name, setName] = useState({
     value: props.userData.nome,
     notChanged: true,
@@ -30,7 +30,7 @@ const EditProfileContainer = props => {
     notChanged: true,
   });
 
-  const onChangeNameHandler = text => {
+  const onChangeNameHandler = (text) => {
     if (text !== props.userData.nome) {
       setName({
         value: text,
@@ -44,7 +44,7 @@ const EditProfileContainer = props => {
     }
   };
 
-  const onChangePhoneHandler = text => {
+  const onChangePhoneHandler = (text) => {
     if (text !== props.userData.telefone) {
       setPhone({
         value: text,
@@ -58,7 +58,7 @@ const EditProfileContainer = props => {
     }
   };
 
-  const onChangeBodyWeightHandler = text => {
+  const onChangeBodyWeightHandler = (text) => {
     if (text !== props.userData.peso) {
       setBodyWeight({
         value: text,
@@ -72,7 +72,7 @@ const EditProfileContainer = props => {
     }
   };
 
-  const onChangeHeightHandler = text => {
+  const onChangeHeightHandler = (text) => {
     if (text !== props.userData.altura) {
       setHeight({
         value: text,
@@ -86,7 +86,7 @@ const EditProfileContainer = props => {
     }
   };
 
-  const onChangeEmailHandler = text => {
+  const onChangeEmailHandler = (text) => {
     if (text !== props.userData.email) {
       setEmail({
         value: text,
@@ -100,7 +100,7 @@ const EditProfileContainer = props => {
     }
   };
 
-  const onChangePasswordHandler = text => {
+  const onChangePasswordHandler = (text) => {
     if (text !== props.userData.senha) {
       setPassword({
         value: text,
@@ -128,7 +128,7 @@ const EditProfileContainer = props => {
 
   return (
     <>
-      <View style={{ alignItems: 'center' }}>
+      <View style={{ alignItems: "center" }}>
         <Text style={styles.title}>Editar Perfil</Text>
       </View>
       <View style={styles.container}>
@@ -173,8 +173,12 @@ const EditProfileContainer = props => {
           hideText={true}
           onChange={onChangePasswordHandler}
         />
-        <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-          <ButtonComponent styles={{ marginRight: 20 }} btnText="Salvar" onPress={onSaveHandler} />
+        <View style={{ flexDirection: "row", justifyContent: "center" }}>
+          <ButtonComponent
+            styles={{ marginRight: 20 }}
+            btnText="Salvar"
+            onPress={onSaveHandler}
+          />
           <ButtonComponent btnText="Cancelar" onPress={props.onCancelEdit} />
         </View>
       </View>

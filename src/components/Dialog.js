@@ -1,7 +1,8 @@
-import * as React from 'react';
-import { Text } from 'react-native';
-import { Button, Dialog, Portal } from 'react-native-paper';
-import styles from './Dialog.style.js';
+import * as React from "react";
+import { Text } from "react-native";
+import { Button, Dialog, Portal } from "react-native-paper";
+import styles from "../styles/Dialog.style";
+
 export default ({ visible, title, content, hideDialog }) => {
   return (
     <Portal>
