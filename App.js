@@ -16,6 +16,7 @@ import InitialScreen from './src/screens/InitialScreen';
 import Cadastro from './src/screens/Cadastro';
 import Help from './src/screens/Help';
 import { leftArrow } from './constants/icons';
+import SearchFood from './src/screens/SearchFood';
 
 function RootStack() {
   const [params, setParams] = useState({});
@@ -92,6 +93,13 @@ function DrawerStack() {
         component={Help}
         options={{
           title: 'Ajuda',
+        }}
+      />
+      <Drawer.Screen
+        name="SearchFood"
+        component={SearchFood}
+        options={{
+          title: 'Buscar Alimento',
         }}
       />
     </Drawer.Navigator>
