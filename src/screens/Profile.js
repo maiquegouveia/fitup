@@ -1,12 +1,14 @@
-import { View, SafeAreaView, Image, ScrollView } from "react-native";
-import { Provider, Text } from "react-native-paper";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useState, useContext } from "react";
-import EditProfileContainer from "../components/EditProfileContainer";
-import styles from "../styles/ProfileScreen.style";
-import ButtonComponent from "../components/ButtonComponent";
-import Dialog from "../components/Dialog";
-import AppContext from "../../AppContext";
+import { View, SafeAreaView, Image, ScrollView } from 'react-native';
+import { Provider, Text } from 'react-native-paper';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useState, useContext } from 'react';
+import EditProfileContainer from '../components/EditProfileContainer';
+import styles from '../styles/ProfileScreen.style';
+import ButtonComponent from '../components/ButtonComponent';
+import Dialog from '../components/Dialog';
+import AppContext from '../../AppContext';
+import { useNavigation } from '@react-navigation/native';
+
 const ProfileScreen = () => {
   // const removeData = async () => {
   //   try {
@@ -16,17 +18,23 @@ const ProfileScreen = () => {
   //     console.log(error);
   //   }
   // };
-  const { params } = useContext(AppContext);
+  const { params, setUserIsAuthenticated } = useContext(AppContext);
   const [visibleDialog, setVisibleDialog] = useState(false);
   const [showEditContainer, setShowEditContainer] = useState(false);
+  const navigation = useNavigation();
 
   const onCancelEditHandler = () => {
-    setShowEditContainer((prev) => !prev);
+    setShowEditContainer(prev => !prev);
   };
 
-  const onSaveEditHandler = (data) => {
-    setShowEditContainer((prev) => !prev);
+  const onSaveEditHandler = data => {
+    setShowEditContainer(prev => !prev);
     console.log(data);
+  };
+
+  const onLogoutHandler = () => {
+    setUserIsAuthenticated(false);
+    navigation.replace('InitialScreen');
   };
 
   return (
@@ -48,24 +56,24 @@ const ProfileScreen = () => {
               />
             </View>
           </View>
-          <View style={{ flex: 0.5, alignItems: "center" }}>
+          <View style={{ flex: 0.5, alignItems: 'center' }}>
             {!showEditContainer && (
               <>
                 <View
                   style={{
-                    width: "70%",
-                    alignItems: "center",
+                    width: '70%',
+                    alignItems: 'center',
                     marginBottom: 40,
                   }}
                 >
                   <Text
                     style={{
                       fontSize: 20,
-                      fontWeight: "bold",
-                      flexWrap: "wrap",
+                      fontWeight: 'bold',
+                      flexWrap: 'wrap',
                     }}
                   >
-                    Maique Gouveia de Souza
+                    USER_NAME_HERE
                   </Text>
                 </View>
                 <ButtonComponent
@@ -73,11 +81,11 @@ const ProfileScreen = () => {
                   btnText="Editar Perfil"
                   onPress={() => setShowEditContainer(true)}
                 />
-                <ButtonComponent btnText="Sair" onPress={() => {}} />
+                <ButtonComponent btnText="Sair" onPress={onLogoutHandler} />
               </>
             )}
             {showEditContainer && (
-              <View style={{ width: "100%", padding: 20 }}>
+              <View style={{ width: '100%', padding: 20 }}>
                 <EditProfileContainer
                   userData={{ ...params }}
                   onCancelEdit={onCancelEditHandler}

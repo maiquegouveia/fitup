@@ -1,22 +1,48 @@
-import { View, Text, SafeAreaView, ImageBackground, Alert } from "react-native";
-import { useEffect, useState } from "react";
-import background from "../../assets/home-img-2.png";
-import { useHeaderHeight } from "@react-navigation/elements";
-import Logo from "../components/Logo";
-import { TextInput, Button, Provider } from "react-native-paper";
-import isValidEmail from "../../utilities/isValidEmail";
-import getUserData from "../../utilities/getUserData";
-import styles from "../styles/Login.style";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import Dialog from "../components/Dialog";
-import { useNavigation } from "@react-navigation/native";
+import { View, Text, SafeAreaView, ImageBackground, Alert } from 'react-native';
+import { useEffect, useState, useContext } from 'react';
+import background from '../../assets/home-img-2.png';
+import { useHeaderHeight } from '@react-navigation/elements';
+import Logo from '../components/Logo';
+import { TextInput, Button, Provider } from 'react-native-paper';
+import isValidEmail from '../../utilities/isValidEmail';
+import getUserData from '../../utilities/getUserData';
+import styles from '../styles/Login.style';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Dialog from '../components/Dialog';
+import { useNavigation } from '@react-navigation/native';
+import AppContext from '../../AppContext';
+import CustomBackButtonHeader from '../components/CustomBackButtonHeader';
 
-const Login = ({ setParams }) => {
+const Login = () => {
   const navigation = useNavigation();
+  const { setParams, userIsAuthenticated, setUserIsAuthenticated } = useContext(AppContext);
 
-  const navigateToDrawerScreen = (data) => {
-    setParams(data);
-    navigation.navigate("DrawerStack", { screen: "Home" });
+  useEffect(() => {
+    navigation.setOptions({
+      headerTitle: '',
+      headerLeft: () => <CustomBackButtonHeader navigation={navigation} screenName="InitialScreen" />,
+    });
+  }, []);
+
+  useEffect(() => {
+    // const getData = async () => {
+    //   try {
+    //     const userCredentials = await AsyncStorage.getItem("userCredentials");
+    //     if (data !== null) {
+    //       router.push({ pathname: '/screens/HomeScreens/Home', params: JSON.parse(data) });
+    //     }
+    //   } catch (e) {
+    //     console.log(e);
+    //   }
+    // };
+    // getData();
+    if (userIsAuthenticated) navigation.replace('DrawerStack', { screen: 'Home' });
+  }, []);
+
+  const navigateToDrawerScreen = userCredentials => {
+    setParams(userCredentials);
+    setUserIsAuthenticated(true);
+    navigation.replace('DrawerStack', { screen: 'Home' });
   };
 
   const [isLoading, setIsLoading] = useState(false);
@@ -25,27 +51,27 @@ const Login = ({ setParams }) => {
 
   const [visible, setVisible] = useState(false);
   const [dialog, setDialog] = useState({
-    title: "",
-    content: "",
+    title: '',
+    content: '',
   });
   const showDialog = () => setVisible(true);
 
   const hideDialog = () => setVisible(false);
 
   const [email, setEmail] = useState({
-    value: "",
+    value: '',
     isValid: false,
   });
 
   const [senha, setSenha] = useState({
-    value: "",
+    value: '',
     isValid: false,
   });
 
   const [formIsValid, setFormIsValid] = useState(false);
 
   const onChangeEmail = function (text) {
-    setEmail((prev) => {
+    setEmail(prev => {
       return {
         ...prev,
         value: text,
@@ -54,7 +80,7 @@ const Login = ({ setParams }) => {
   };
 
   const onChangeSenha = function (text) {
-    setSenha((prev) => {
+    setSenha(prev => {
       return {
         ...prev,
         value: text,
@@ -62,31 +88,31 @@ const Login = ({ setParams }) => {
     });
   };
 
-  const storeData = async (data) => {
-    let success;
-    try {
-      await AsyncStorage.setItem("userData", data);
-      success = true;
-    } catch (error) {
-      success = false;
-      Alert.alert("ERROR!", "Erro no login!");
-    }
-    return success;
-  };
+  // const storeData = async data => {
+  //   let success;
+  //   try {
+  //     await AsyncStorage.setItem('userData', data);
+  //     success = true;
+  //   } catch (error) {
+  //     success = false;
+  //     Alert.alert('ERROR!', 'Erro no login!');
+  //   }
+  //   return success;
+  // };
 
   useEffect(() => {
     /// Este useEffect será executado toda vez que "email.value" sofrer alteração
     /// Define se "email.value" é uma valor válido
 
     if (isValidEmail(email.value)) {
-      setEmail((prev) => {
+      setEmail(prev => {
         return {
           ...prev,
           isValid: true,
         };
       });
     } else {
-      setEmail((prev) => {
+      setEmail(prev => {
         return {
           ...prev,
           isValid: false,
@@ -99,14 +125,14 @@ const Login = ({ setParams }) => {
     /// Este useEffect será executado toda vez que "senha.value" sofrer alteração
     /// Define se "senha.value" é uma valor válido
     if (senha.value.length > 8) {
-      setSenha((prev) => {
+      setSenha(prev => {
         return {
           ...prev,
           isValid: true,
         };
       });
     } else {
-      setSenha((prev) => {
+      setSenha(prev => {
         return {
           ...prev,
           isValid: false,
@@ -129,29 +155,25 @@ const Login = ({ setParams }) => {
       setIsLoading(false);
 
       if (userData && userData[0].senha === senha.value) {
-        const success = await storeData(JSON.stringify(userData[0]));
-        if (success) navigateToDrawerScreen(userData[0]);
+        navigateToDrawerScreen(userData[0]);
       } else {
-        Alert.alert(
-          "Email ou senha inválidos!",
-          "Verifique os campos de email e senha e tente novamente."
-        );
+        Alert.alert('Email ou senha inválidos!', 'Verifique os campos de email e senha e tente novamente.');
       }
     } else {
       if (email.isValid === false && senha.isValid === false) {
         setDialog({
-          title: "Email e senha inválidos!",
-          content: "Digite um email válido e uma senha maior que 8 digitos.",
+          title: 'Email e senha inválidos!',
+          content: 'Digite um email válido e uma senha maior que 8 digitos.',
         });
       } else if (!email.isValid) {
         setDialog({
-          title: "Email inválido!",
-          content: "Digite um email válido para fazer login.",
+          title: 'Email inválido!',
+          content: 'Digite um email válido para fazer login.',
         });
       } else {
         setDialog({
-          title: "Senha inválida!",
-          content: "A senha deve ser maior que 8 digitos.",
+          title: 'Senha inválida!',
+          content: 'A senha deve ser maior que 8 digitos.',
         });
       }
       showDialog();
@@ -160,18 +182,9 @@ const Login = ({ setParams }) => {
 
   return (
     <SafeAreaView style={styles.mainContainer}>
-      <ImageBackground
-        source={background}
-        resizeMode="cover"
-        style={styles.background}
-      >
+      <ImageBackground source={background} resizeMode="cover" style={styles.background}>
         <Provider>
-          <Dialog
-            visible={visible}
-            title={dialog.title}
-            content={dialog.content}
-            hideDialog={hideDialog}
-          />
+          <Dialog visible={visible} title={dialog.title} content={dialog.content} hideDialog={hideDialog} />
           <Logo style={{ marginTop: headerHeight }} />
           <View style={styles.formContainer}>
             <View style={styles.form}>
@@ -194,22 +207,17 @@ const Login = ({ setParams }) => {
                 right={
                   <TextInput.Icon
                     onPress={() => {
-                      setHidePassword((prev) => !prev);
+                      setHidePassword(prev => !prev);
                     }}
-                    icon={hidePassword ? "eye" : "eye-off"}
+                    icon={hidePassword ? 'eye' : 'eye-off'}
                   />
                 }
               />
               <View style={styles.esqueceuContainer}>
                 <Text style={styles.esqueceuText}>Esqueceu a senha?</Text>
               </View>
-              <Button
-                loading={isLoading}
-                style={styles.btn}
-                labelStyle={styles.btnText}
-                onPress={onEntrarHandler}
-              >
-                {isLoading ? "" : "Entrar"}
+              <Button loading={isLoading} style={styles.btn} labelStyle={styles.btnText} onPress={onEntrarHandler}>
+                {isLoading ? '' : 'Entrar'}
               </Button>
             </View>
           </View>
