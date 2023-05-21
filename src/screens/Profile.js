@@ -1,6 +1,5 @@
-import { View, SafeAreaView, Image, ScrollView } from 'react-native';
+import { View, SafeAreaView, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { Provider, Text } from 'react-native-paper';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useState, useContext } from 'react';
 import EditProfileContainer from '../components/EditProfileContainer';
 import styles from '../styles/ProfileScreen.style';
@@ -8,19 +7,18 @@ import ButtonComponent from '../components/ButtonComponent';
 import Dialog from '../components/Dialog';
 import AppContext from '../../AppContext';
 import { useNavigation } from '@react-navigation/native';
+import getImageAndPermissions from '../../utilities/getImageAndPermissions';
+import removeUserCredentialsFromStorage from '../../utilities/removeUserCredentialsFromStorage';
 
 const ProfileScreen = () => {
-  // const removeData = async () => {
-  //   try {
-  //     await AsyncStorage.removeItem('userData');
-  //     router.back();
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
   const { params, setUserIsAuthenticated } = useContext(AppContext);
   const [visibleDialog, setVisibleDialog] = useState(false);
   const [showEditContainer, setShowEditContainer] = useState(false);
+
+  const [image, setImage] = useState({
+    base64: '',
+  });
+
   const navigation = useNavigation();
 
   const onCancelEditHandler = () => {
@@ -34,6 +32,7 @@ const ProfileScreen = () => {
 
   const onLogoutHandler = () => {
     setUserIsAuthenticated(false);
+    removeUserCredentialsFromStorage();
     navigation.replace('InitialScreen');
   };
 
@@ -49,11 +48,13 @@ const ProfileScreen = () => {
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={[styles.container]}>
             <View style={styles.profileImageContainer}>
-              <Image
-                source={{ uri: `https://i.ibb.co/${params.foto_perfil}` }}
-                resizeMode="contain"
-                style={styles.image}
-              />
+              <TouchableOpacity onPress={() => getImageAndPermissions()}>
+                <Image
+                  source={{ uri: `https://i.ibb.co/${params.foto_perfil}` }}
+                  resizeMode="contain"
+                  style={styles.image}
+                />
+              </TouchableOpacity>
             </View>
           </View>
           <View style={{ flex: 0.5, alignItems: 'center' }}>
@@ -73,7 +74,7 @@ const ProfileScreen = () => {
                       flexWrap: 'wrap',
                     }}
                   >
-                    USER_NAME_HERE
+                    {params.nome}
                   </Text>
                 </View>
                 <ButtonComponent

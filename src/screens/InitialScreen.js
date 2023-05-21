@@ -4,13 +4,19 @@ import Logo from '../components/Logo';
 import HomeButtons from '../components/HomeButtons';
 import { useHeaderHeight } from '@react-navigation/elements';
 import styles from '../styles/InitialScreen.style';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import getUserCredentials from '../../utilities/getUserCredentials';
 import { useEffect, useContext } from 'react';
 import AppContext from '../../AppContext';
 import { useNavigation } from '@react-navigation/native';
 
 const HomePage = () => {
   const headerHeight = useHeaderHeight();
+  const { setParams, setUserIsAuthenticated } = useContext(AppContext);
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    getUserCredentials(setParams, setUserIsAuthenticated, navigation);
+  }, []);
 
   return (
     <SafeAreaView style={styles.mainContainer}>

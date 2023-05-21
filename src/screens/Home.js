@@ -8,7 +8,7 @@ const Home = () => {
   return (
     <View>
       <Text>Home Test</Text>
-      <Button title="Teste" onPress={() => console.log(params)} />
+      <Button title="Teste" onPress={() => console.log('Limpa')} />
     </View>
   );
 };

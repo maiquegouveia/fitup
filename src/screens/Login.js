@@ -25,23 +25,13 @@ const Login = () => {
   }, []);
 
   useEffect(() => {
-    // const getData = async () => {
-    //   try {
-    //     const userCredentials = await AsyncStorage.getItem("userCredentials");
-    //     if (data !== null) {
-    //       router.push({ pathname: '/screens/HomeScreens/Home', params: JSON.parse(data) });
-    //     }
-    //   } catch (e) {
-    //     console.log(e);
-    //   }
-    // };
-    // getData();
     if (userIsAuthenticated) navigation.replace('DrawerStack', { screen: 'Home' });
   }, []);
 
-  const navigateToDrawerScreen = userCredentials => {
+  const navigateToDrawerScreen = async userCredentials => {
     setParams(userCredentials);
     setUserIsAuthenticated(true);
+    await storeData(JSON.stringify(userCredentials));
     navigation.replace('DrawerStack', { screen: 'Home' });
   };
 
@@ -88,17 +78,17 @@ const Login = () => {
     });
   };
 
-  // const storeData = async data => {
-  //   let success;
-  //   try {
-  //     await AsyncStorage.setItem('userData', data);
-  //     success = true;
-  //   } catch (error) {
-  //     success = false;
-  //     Alert.alert('ERROR!', 'Erro no login!');
-  //   }
-  //   return success;
-  // };
+  const storeData = async data => {
+    let success;
+    try {
+      await AsyncStorage.setItem('userCredentials', data);
+      success = true;
+    } catch (error) {
+      success = false;
+      Alert.alert('ERROR!', 'Erro no login!');
+    }
+    return success;
+  };
 
   useEffect(() => {
     /// Este useEffect será executado toda vez que "email.value" sofrer alteração

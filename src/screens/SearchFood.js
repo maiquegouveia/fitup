@@ -1,17 +1,20 @@
-import { StyleSheet, Text, View, SafeAreaView, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, ScrollView, KeyboardAvoidingView } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
 import { useEffect, useState, useCallback } from 'react';
 import SearchFoodListItem from '../components/SearchFoodListItem';
 import { useFocusEffect } from '@react-navigation/native';
-import requestFoodInfo from '../../utilities/RequestFatsecret';
+import getFoodByName from '../../utilities/getFoodByName';
 
 const SearchFood = () => {
   const [inputValue, setInputValue] = useState('');
   const [showResults, setShowResults] = useState(false);
+  const [results, setResults] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const resetStates = () => {
     setInputValue('');
     setShowResults('');
+    setResults([]);
   };
 
   useFocusEffect(useCallback(resetStates, []));
@@ -21,14 +24,16 @@ const SearchFood = () => {
   };
 
   const onSubmitInputHandler = async () => {
-    const data = await requestFoodInfo(inputValue);
-    console.log(data);
+    setIsLoading(true);
+    const data = await getFoodByName(inputValue);
+    setIsLoading(false);
+    setResults(data);
     setShowResults(true);
   };
 
   return (
     <SafeAreaView style={styles.mainContainer}>
-      <View style={styles.searchContainer}>
+      <KeyboardAvoidingView style={styles.searchContainer} behavior="padding">
         <Text style={styles.inputLabel}>Buscar Alimento</Text>
         <TextInput
           onChangeText={onChangeInputHandler}
@@ -37,36 +42,33 @@ const SearchFood = () => {
           mode="outlined"
           style={styles.input}
         />
-        <Button textColor="white" style={styles.inputBtn} onPress={onSubmitInputHandler}>
+        <Button loading={isLoading} textColor="white" style={styles.inputBtn} onPress={onSubmitInputHandler}>
           Buscar
         </Button>
-        {showResults && (
+        {showResults && results?.error_message && <Text>{results.error_message}</Text>}
+        {showResults && results?.length > 0 && (
           <ScrollView
             style={{
+              marginTop: 10,
               borderRadius: 10,
-              backgroundColor: 'green',
+              backgroundColor: 'orange',
               width: '100%',
-              height: 300,
-              padding: 10,
-              marginVertical: 10,
+              height: 250,
+              paddingHorizontal: 10,
             }}
             showsVerticalScrollIndicator={false}
           >
             <View style={{ alignItems: 'center' }}>
-              <Text style={{ fontSize: 18, fontWeight: 'bold', marginVertical: 10, color: 'white' }}>Resultado</Text>
+              <Text style={{ fontSize: 18, fontWeight: 'bold', marginVertical: 10, color: 'white' }}>
+                {results.length > 1 ? `Resultados (${results.length})` : `Resultado (1)`}
+              </Text>
             </View>
-            <SearchFoodListItem foodName={inputValue} />
-            <SearchFoodListItem foodName={inputValue} />
-            <SearchFoodListItem foodName={inputValue} />
-            <SearchFoodListItem foodName={inputValue} />
-            <SearchFoodListItem foodName={inputValue} />
-            <SearchFoodListItem foodName={inputValue} />
-            <SearchFoodListItem foodName={inputValue} />
-            <SearchFoodListItem foodName={inputValue} />
-            <SearchFoodListItem foodName={inputValue} />
+            {results.map(food => (
+              <SearchFoodListItem key={food.alimento_id} foodName={food.nome} category={food.categoria} />
+            ))}
           </ScrollView>
         )}
-      </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
@@ -80,9 +82,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   searchContainer: {
-    backgroundColor: '#ccc',
-    width: '90%',
-    padding: 20,
+    width: '100%',
+    padding: 10,
     alignItems: 'center',
     borderRadius: 10,
   },

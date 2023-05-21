@@ -72,7 +72,12 @@ function RootStack() {
 
 function DrawerStack() {
   return (
-    <Drawer.Navigator>
+    <Drawer.Navigator
+      screenOptions={{
+        headerStyle: { backgroundColor: 'orange' },
+        headerTitleAlign: 'center',
+      }}
+    >
       <Drawer.Screen name="Home" component={Home} />
       <Drawer.Screen
         name="Profile"
@@ -99,7 +104,7 @@ function DrawerStack() {
         name="SearchFood"
         component={SearchFood}
         options={{
-          title: 'Buscar Alimento',
+          title: 'Alimentos',
         }}
       />
     </Drawer.Navigator>

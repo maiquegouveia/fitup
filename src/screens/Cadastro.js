@@ -1,4 +1,4 @@
-import { Text, View, SafeAreaView } from 'react-native';
+import { Text, View, SafeAreaView, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { useState, useEffect } from 'react';
 import Form from '../components/Form';
 import Input from '../components/Input';
@@ -198,40 +198,45 @@ const Cadastro = () => {
       showDialog();
     }
   };
+  const hideKeyboard = () => {
+    Keyboard.dismiss();
+  };
 
   return (
-    <SafeAreaView style={styles.mainContainer}>
-      <Provider>
-        <Dialog visible={visible} title={dialog.title} content={dialog.content} hideDialog={hideDialog} />
-        <ProfileImage image={image} setImage={setImage} />
+    <TouchableWithoutFeedback onPress={hideKeyboard}>
+      <SafeAreaView style={styles.mainContainer}>
+        <Provider>
+          <Dialog visible={visible} title={dialog.title} content={dialog.content} hideDialog={hideDialog} />
+          <ProfileImage image={image} setImage={setImage} />
 
-        <Form style={{ backgroundColor: '#ccc' }}>
-          <Input label="Email" state={email.value} icon="email" onChangeTextHandler={onChangeEmailHandler} />
-          <Input
-            label="Senha"
-            state={senha.value}
-            icon="key"
-            onChangeTextHandler={onChangeSenhaHandler}
-            secureTextEntry={true}
-          />
-          <Input
-            label="Confirmação de Senha"
-            state={confSenha.value}
-            icon="lock"
-            onChangeTextHandler={onChangeConfSenhaHandler}
-            secureTextEntry={true}
-          />
-          <View style={styles.radioContainer}>
-            <RadioButton status={termoStatus} onPress={termoStatusHandler} color="#0094E6" />
-            <Text style={styles.termoText}>Eu concordo com os Termos & Condições</Text>
-          </View>
+          <Form style={{ backgroundColor: '#ccc' }}>
+            <Input label="Email" state={email.value} icon="email" onChangeTextHandler={onChangeEmailHandler} />
+            <Input
+              label="Senha"
+              state={senha.value}
+              icon="key"
+              onChangeTextHandler={onChangeSenhaHandler}
+              secureTextEntry={true}
+            />
+            <Input
+              label="Confirmação de Senha"
+              state={confSenha.value}
+              icon="lock"
+              onChangeTextHandler={onChangeConfSenhaHandler}
+              secureTextEntry={true}
+            />
+            <View style={styles.radioContainer}>
+              <RadioButton status={termoStatus} onPress={termoStatusHandler} color="#0094E6" />
+              <Text style={styles.termoText}>Eu concordo com os Termos & Condições</Text>
+            </View>
 
-          <Button style={styles.btn} labelStyle={styles.btnText} onPress={registerBtnHandler}>
-            Registrar
-          </Button>
-        </Form>
-      </Provider>
-    </SafeAreaView>
+            <Button style={styles.btn} labelStyle={styles.btnText} onPress={registerBtnHandler}>
+              Registrar
+            </Button>
+          </Form>
+        </Provider>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 };
 
