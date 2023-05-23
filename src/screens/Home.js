@@ -1,26 +1,53 @@
-import { useContext } from 'react';
-import { View, Text, SafeAreaView, StyleSheet, ScrollView } from 'react-native';
-import { Button } from 'react-native';
+import { useContext, useEffect } from 'react';
+import { View, Text, SafeAreaView, StyleSheet, ScrollView, Button, TouchableOpacity } from 'react-native';
 import AppContext from '../../AppContext';
 import CardFeature from '../components/CardFeature';
 import { cardAguaFeature, cardAliments, cardPratos } from '../../constants/images';
-import { ProgressBar, MD3Colors } from 'react-native-paper';
+import { ProgressBar, Avatar } from 'react-native-paper';
+import CalculateRegistrationProgress from '../../utilities/CalculateRegistrationProgress';
+import { useNavigation } from '@react-navigation/native';
+import { Ionicons } from '@expo/vector-icons';
 
 const Home = () => {
   const { params, userIsAuthenticated } = useContext(AppContext);
+  const progressBar = CalculateRegistrationProgress(params);
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerTitle: 'Home',
+      headerRight: () => (
+        <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+          <Avatar.Image
+            style={{ marginRight: 10 }}
+            size={38}
+            source={{ uri: `https://i.ibb.co/${params.foto_perfil}` }}
+          />
+        </TouchableOpacity>
+      ),
+    });
+  }, []);
+
   return (
     <ScrollView style={styles.mainContainer} showsVerticalScrollIndicator={false}>
       <View style={styles.welcomeContainer}>
-        <Text style={styles.welcomeText}>Olá, {params.nome}!</Text>
-        <View style={styles.registrationProgressContainer}>
-          <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Complete o seu cadastro...</Text>
-          <ProgressBar progress={0.5} color="orange" />
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+          <Text style={styles.welcomeText}>Funcionalidades</Text>
+          <TouchableOpacity>
+            <Ionicons name="notifications" size={26} color="black" />
+          </TouchableOpacity>
         </View>
+        {progressBar !== 1 && (
+          <View style={styles.registrationProgressContainer}>
+            <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Complete o seu cadastro...</Text>
+            <ProgressBar progress={progressBar} color="orange" />
+          </View>
+        )}
       </View>
       <CardFeature title="Alimentos Favoritos" cardBackground={cardAliments} />
       <CardFeature title="Água Diária" cardBackground={cardAguaFeature} />
       <CardFeature title="Pratos Favoritos" cardBackground={cardPratos} />
-      <Button title="Teste" onPress={() => console.log('Clean...')} />
+      <Button title="Teste" onPress={() => console.log(params)} />
     </ScrollView>
   );
 };

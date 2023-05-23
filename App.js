@@ -14,7 +14,6 @@ import Profile from './src/screens/Profile';
 import Settings from './src/screens/Settings';
 import InitialScreen from './src/screens/InitialScreen';
 import Cadastro from './src/screens/Cadastro';
-import Help from './src/screens/Help';
 import { leftArrow } from './constants/icons';
 import SearchFood from './src/screens/SearchFood';
 
@@ -77,13 +76,7 @@ function DrawerStack() {
         headerStyle: { backgroundColor: 'orange' },
       }}
     >
-      <Drawer.Screen
-        name="Home"
-        component={Home}
-        options={{
-          title: 'Home',
-        }}
-      />
+      <Drawer.Screen name="Home" component={Home} />
       <Drawer.Screen
         name="Profile"
         component={Profile}
@@ -98,13 +91,7 @@ function DrawerStack() {
           title: 'Configurações',
         }}
       />
-      <Drawer.Screen
-        name="Help"
-        component={Help}
-        options={{
-          title: 'Ajuda',
-        }}
-      />
+
       <Drawer.Screen
         name="SearchFood"
         component={SearchFood}

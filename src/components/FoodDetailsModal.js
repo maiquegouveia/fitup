@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Button, Dialog, Portal, Text } from 'react-native-paper';
+import { MaterialIcons } from '@expo/vector-icons';
 
 const FoodDetailsModal = props => {
   return (
@@ -66,13 +67,25 @@ const FoodDetailsModal = props => {
           </View>
         </Dialog.Content>
         <Dialog.Actions>
-          <Button
-            textColor="white"
-            style={{ backgroundColor: 'green', borderRadius: 10, width: '100%' }}
-            onPress={props.onDismiss}
-          >
-            Fechar
-          </Button>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Button
+              textColor="white"
+              style={{ backgroundColor: 'green', borderRadius: 5, width: '85%' }}
+              onPress={props.onDismiss}
+            >
+              Fechar
+            </Button>
+            <MaterialIcons
+              name="favorite"
+              size={24}
+              color="white"
+              style={{
+                padding: 5,
+                backgroundColor: 'green',
+                borderRadius: 5,
+              }}
+            />
+          </View>
         </Dialog.Actions>
       </Dialog>
     </Portal>

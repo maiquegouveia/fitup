@@ -5,11 +5,14 @@ import SearchFoodListItem from '../components/SearchFoodListItem';
 import { useFocusEffect } from '@react-navigation/native';
 import getFoodByName from '../../utilities/getFoodByName';
 import FoodDetailsModal from '../components/FoodDetailsModal';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import MenuCategory from '../components/MenuCategory';
 
 const SearchFood = () => {
   const [inputValue, setInputValue] = useState('');
   const [showResults, setShowResults] = useState(false);
   const [results, setResults] = useState([]);
+  const [resultsCat, setResultsCat] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showFoodDetailsModal, setShowFoodDetailsModal] = useState(false);
   const [modalDetails, setModalDetails] = useState({});
@@ -74,10 +77,17 @@ const SearchFood = () => {
               }}
               showsVerticalScrollIndicator={false}
             >
-              <View style={{ alignItems: 'center' }}>
+              <View
+                style={{
+                  alignItems: 'center',
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                }}
+              >
                 <Text style={{ fontSize: 18, fontWeight: 'bold', marginVertical: 10, color: 'white' }}>
                   {results.length > 1 ? `Resultados (${results.length})` : `Resultado (1)`}
                 </Text>
+                <MenuCategory />
               </View>
               {results.map(food => (
                 <SearchFoodListItem key={food.alimento_id} food={food} onPress={onShowModalDetails} />
