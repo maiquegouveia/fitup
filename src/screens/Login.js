@@ -31,7 +31,7 @@ const Login = () => {
   const navigateToDrawerScreen = async userCredentials => {
     setParams(userCredentials);
     setUserIsAuthenticated(true);
-    await storeData(JSON.stringify(userCredentials));
+    await storeData(userCredentials.usuario_id);
     navigation.replace('DrawerStack', { screen: 'Home' });
   };
 
@@ -78,10 +78,10 @@ const Login = () => {
     });
   };
 
-  const storeData = async data => {
+  const storeData = async userId => {
     let success;
     try {
-      await AsyncStorage.setItem('userCredentials', data);
+      await AsyncStorage.setItem('fitUpUserId', JSON.stringify(userId));
       success = true;
     } catch (error) {
       success = false;

@@ -75,10 +75,15 @@ function DrawerStack() {
     <Drawer.Navigator
       screenOptions={{
         headerStyle: { backgroundColor: 'orange' },
-        headerTitleAlign: 'center',
       }}
     >
-      <Drawer.Screen name="Home" component={Home} />
+      <Drawer.Screen
+        name="Home"
+        component={Home}
+        options={{
+          title: 'Home',
+        }}
+      />
       <Drawer.Screen
         name="Profile"
         component={Profile}

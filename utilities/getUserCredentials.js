@@ -1,11 +1,12 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import updateUserCredentials from './updateUserCredentials';
 
 export default async (setParams, setUserIsAuthenticated, navigation) => {
   try {
-    const data = await AsyncStorage.getItem('userCredentials');
-    if (data !== null) {
-      const userData = JSON.parse(data);
-      setParams(userData);
+    const userId = await AsyncStorage.getItem('fitUpUserId');
+    if (userId !== null) {
+      const updatedCredentials = await updateUserCredentials(JSON.parse(userId));
+      setParams(updatedCredentials);
       setUserIsAuthenticated(true);
       navigation.replace('DrawerStack', { screen: 'Home' });
     }
