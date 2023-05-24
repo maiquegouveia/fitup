@@ -12,10 +12,23 @@ const SearchFood = () => {
   const [inputValue, setInputValue] = useState('');
   const [showResults, setShowResults] = useState(false);
   const [results, setResults] = useState([]);
-  const [resultsCat, setResultsCat] = useState([]);
+  const [filteredResults, setFilteredResults] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState('Todas');
+  const [categoryModalVisible, setCategoryModalVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showFoodDetailsModal, setShowFoodDetailsModal] = useState(false);
   const [modalDetails, setModalDetails] = useState({});
+
+  const handleCategoryPress = value => {
+    setSelectedCategory(value);
+    setCategoryModalVisible(false);
+    if (value === 'Todas') {
+      setFilteredResults(results);
+    } else {
+      setFilteredResults(results.filter(curr => curr.categoria === value));
+    }
+  };
 
   const resetStates = () => {
     setInputValue('');
@@ -34,6 +47,15 @@ const SearchFood = () => {
     const data = await getFoodByName(inputValue);
     setIsLoading(false);
     setResults(data);
+    setFilteredResults(data);
+
+    const categories = [...new Set(data.map(curr => curr.categoria))];
+    setCategories(
+      categories.map(curr => {
+        return { name: curr, active: false };
+      })
+    );
+
     setShowResults(true);
   };
 
@@ -51,7 +73,7 @@ const SearchFood = () => {
   return (
     <Provider>
       <SafeAreaView style={styles.mainContainer}>
-        <KeyboardAvoidingView style={styles.searchContainer} behavior="padding">
+        <View style={styles.searchContainer}>
           <FoodDetailsModal food={modalDetails} visible={showFoodDetailsModal} onDismiss={onDismissModal} />
           <Text style={styles.inputLabel}>Buscar Alimento</Text>
           <TextInput
@@ -85,16 +107,23 @@ const SearchFood = () => {
                 }}
               >
                 <Text style={{ fontSize: 18, fontWeight: 'bold', marginVertical: 10, color: 'white' }}>
-                  {results.length > 1 ? `Resultados (${results.length})` : `Resultado (1)`}
+                  {filteredResults.length > 1 ? `Resultados (${filteredResults.length})` : `Resultado (1)`}
                 </Text>
-                <MenuCategory />
+                <MenuCategory
+                  categories={categories}
+                  handleCategoryPress={handleCategoryPress}
+                  selectedCategory={selectedCategory}
+                  setCategoryModalVisible={setCategoryModalVisible}
+                  categoryModalVisible={categoryModalVisible}
+                />
               </View>
-              {results.map(food => (
+
+              {filteredResults.map(food => (
                 <SearchFoodListItem key={food.alimento_id} food={food} onPress={onShowModalDetails} />
               ))}
             </ScrollView>
           )}
-        </KeyboardAvoidingView>
+        </View>
       </SafeAreaView>
     </Provider>
   );

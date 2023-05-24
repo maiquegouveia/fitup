@@ -1,39 +1,75 @@
-import * as React from 'react';
-import { View, TouchableOpacity } from 'react-native';
-import { Button, Menu, Divider } from 'react-native-paper';
-import { FontAwesome5 } from '@expo/vector-icons';
+import React, { useState } from 'react';
+import { View, Modal, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-const MyComponent = () => {
-  const [visible, setVisible] = React.useState(false);
-
-  const openMenu = () => setVisible(true);
-
-  const closeMenu = () => setVisible(false);
-
+const MyDropdownMenu = ({
+  categories,
+  categoryModalVisible,
+  handleCategoryPress,
+  selectedCategory,
+  setCategoryModalVisible,
+}) => {
   return (
-    <View
-      style={{
-        flexDirection: 'row',
-        justifyContent: 'center',
-      }}
-    >
-      <Menu
-        anchorPosition="bottom"
-        visible={visible}
-        onDismiss={closeMenu}
-        anchor={
-          <TouchableOpacity onPress={openMenu}>
-            <FontAwesome5 name="filter" size={20} color="white" style={{ marginLeft: 20 }} />
-          </TouchableOpacity>
-        }
-      >
-        <Menu.Item onPress={() => {}} title="Item 1" />
-        <Menu.Item onPress={() => {}} title="Item 2" />
-        <Divider />
-        <Menu.Item onPress={() => {}} title="Item 3" />
-      </Menu>
+    <View style={styles.container}>
+      <TouchableOpacity style={styles.dropdownButton} onPress={() => setCategoryModalVisible(true)}>
+        <FontAwesome name="filter" size={24} color="white" />
+      </TouchableOpacity>
+      <Modal visible={categoryModalVisible} animationType="fade" transparent>
+        <TouchableOpacity style={styles.overlay} activeOpacity={1} onPress={() => setCategoryModalVisible(false)}>
+          <View style={styles.dropdownMenu}>
+            <TouchableOpacity style={styles.optionButton} onPress={() => handleCategoryPress('Todas')}>
+              <MaterialCommunityIcons
+                name={'Todas' === selectedCategory ? 'checkbox-marked-outline' : 'checkbox-blank-outline'}
+                size={24}
+                color="black"
+              />
+              <Text>Todas</Text>
+            </TouchableOpacity>
+            {categories.map(option => (
+              <TouchableOpacity
+                key={option.name}
+                style={styles.optionButton}
+                onPress={() => handleCategoryPress(option.name)}
+              >
+                <MaterialCommunityIcons
+                  name={option.name === selectedCategory ? 'checkbox-marked-outline' : 'checkbox-blank-outline'}
+                  size={24}
+                  color="black"
+                />
+                <Text>{option.name}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </TouchableOpacity>
+      </Modal>
     </View>
   );
 };
 
-export default MyComponent;
+const styles = StyleSheet.create({
+  container: {
+    borderWidth: 0,
+    overflow: 'hidden',
+    marginLeft: '5%',
+  },
+  dropdownButton: {},
+  overlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  dropdownMenu: {
+    backgroundColor: 'white',
+    borderRadius: 4,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+  },
+  optionButton: {
+    flexDirection: 'row',
+    paddingVertical: 8,
+  },
+});
+
+export default MyDropdownMenu;
