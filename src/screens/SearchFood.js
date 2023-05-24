@@ -5,7 +5,7 @@ import SearchFoodListItem from '../components/SearchFoodListItem';
 import { useFocusEffect } from '@react-navigation/native';
 import getFoodByName from '../../utilities/getFoodByName';
 import FoodDetailsModal from '../components/FoodDetailsModal';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+
 import MenuCategory from '../components/MenuCategory';
 
 const SearchFood = () => {

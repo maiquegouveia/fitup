@@ -1,15 +1,15 @@
-import { StyleSheet, Text, View, ImageBackground } from 'react-native';
+import { StyleSheet, Text, View, ImageBackground, TouchableOpacity } from 'react-native';
 import React from 'react';
 
 const CardFeature = props => {
   return (
-    <View style={styles.cardFeature}>
+    <TouchableOpacity style={styles.cardFeature} activeOpacity={0.8} onPress={props.onPress}>
       <ImageBackground resizeMode="cover" source={props.cardBackground} style={styles.image}>
         <View style={styles.cardInside}>
           <Text style={styles.title}>{props.title}</Text>
         </View>
       </ImageBackground>
-    </View>
+    </TouchableOpacity>
   );
 };
 

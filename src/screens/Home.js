@@ -7,9 +7,10 @@ import { ProgressBar, Avatar } from 'react-native-paper';
 import CalculateRegistrationProgress from '../../utilities/CalculateRegistrationProgress';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
+import getUserFavoriteFoods from '../../utilities/getUserFavoriteFoods';
 
 const Home = () => {
-  const { params, userIsAuthenticated } = useContext(AppContext);
+  const { params, userIsAuthenticated, setParams } = useContext(AppContext);
   const progressBar = CalculateRegistrationProgress(params);
   const navigation = useNavigation();
 
@@ -26,6 +27,16 @@ const Home = () => {
         </TouchableOpacity>
       ),
     });
+    const getData = async () => {
+      const data = await getUserFavoriteFoods(params.usuario_id);
+      setParams(prev => {
+        return {
+          ...prev,
+          favoriteList: data,
+        };
+      });
+    };
+    getData();
   }, []);
 
   return (
@@ -44,9 +55,21 @@ const Home = () => {
           </View>
         )}
       </View>
-      <CardFeature title="Alimentos Favoritos" cardBackground={cardAliments} />
-      <CardFeature title="Água Diária" cardBackground={cardAguaFeature} />
-      <CardFeature title="Pratos Favoritos" cardBackground={cardPratos} />
+      <CardFeature
+        title="Alimentos Favoritos"
+        cardBackground={cardAliments}
+        onPress={() => navigation.navigate('FavoriteFoods')}
+      />
+      <CardFeature
+        title="Água Diária"
+        cardBackground={cardAguaFeature}
+        onPress={() => navigation.navigate('WaterAmount')}
+      />
+      <CardFeature
+        title="Pratos Favoritos"
+        cardBackground={cardPratos}
+        onPress={() => navigation.navigate('FavoriteDishes')}
+      />
       <Button title="Teste" onPress={() => console.log(params)} />
     </ScrollView>
   );

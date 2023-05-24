@@ -16,6 +16,9 @@ import InitialScreen from './src/screens/InitialScreen';
 import Cadastro from './src/screens/Cadastro';
 import { leftArrow } from './constants/icons';
 import SearchFood from './src/screens/SearchFood';
+import FavoriteFoods from './src/screens/FavoriteFoods';
+import FavoriteDishes from './src/screens/FavoriteDishes';
+import WaterAmount from './src/screens/WaterAmount';
 
 function RootStack() {
   const [params, setParams] = useState({});
@@ -96,7 +99,28 @@ function DrawerStack() {
         name="SearchFood"
         component={SearchFood}
         options={{
-          title: 'Alimentos',
+          title: 'Buscar Alimentos',
+        }}
+      />
+      <Drawer.Screen
+        name="FavoriteFoods"
+        component={FavoriteFoods}
+        options={{
+          title: 'Alimentos Favoritos',
+        }}
+      />
+      <Drawer.Screen
+        name="FavoriteDishes"
+        component={FavoriteDishes}
+        options={{
+          title: 'Pratos Favoritos',
+        }}
+      />
+      <Drawer.Screen
+        name="WaterAmount"
+        component={WaterAmount}
+        options={{
+          title: 'Água Diária',
         }}
       />
     </Drawer.Navigator>
