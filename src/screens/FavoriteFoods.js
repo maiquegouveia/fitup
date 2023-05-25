@@ -8,7 +8,7 @@ import { ActivityIndicator } from 'react-native-paper';
 
 const FavoriteFoods = () => {
   const { params, setParams } = useContext(AppContext);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
   const getData = async () => {
@@ -39,7 +39,10 @@ const FavoriteFoods = () => {
 
   return (
     <SafeAreaView style={styles.mainContainer}>
-      <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+      >
         <View style={styles.listContainer}>
           {!isLoading && params.favoriteList?.length > 0 && (
             <Text style={{ fontSize: 18, fontWeight: 'bold', marginVertical: 10, color: 'white' }}>

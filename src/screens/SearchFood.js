@@ -1,14 +1,18 @@
 import { StyleSheet, Text, View, SafeAreaView, ScrollView, KeyboardAvoidingView } from 'react-native';
 import { TextInput, Button, Provider } from 'react-native-paper';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useContext } from 'react';
 import SearchFoodListItem from '../components/SearchFoodListItem';
 import { useFocusEffect } from '@react-navigation/native';
 import getFoodByName from '../../utilities/getFoodByName';
 import FoodDetailsModal from '../components/FoodDetailsModal';
-
+import AppContext from '../../AppContext';
 import MenuCategory from '../components/MenuCategory';
 
 const SearchFood = () => {
+  const { params } = useContext(AppContext);
+
+  const favoriteFoodsId = params?.favoriteList?.map(food => food?.alimento_id);
+
   const [inputValue, setInputValue] = useState('');
   const [showResults, setShowResults] = useState(false);
   const [results, setResults] = useState([]);
@@ -46,8 +50,16 @@ const SearchFood = () => {
     setIsLoading(true);
     const data = await getFoodByName(inputValue);
     setIsLoading(false);
+    if (data.error_message) return;
     setResults(data);
-    setFilteredResults(data);
+    setFilteredResults(
+      data.map(food => {
+        return {
+          ...food,
+          isFavorite: favoriteFoodsId.includes(food.alimento_id),
+        };
+      })
+    );
 
     const categories = [...new Set(data.map(curr => curr.categoria))];
     setCategories(
@@ -74,7 +86,13 @@ const SearchFood = () => {
     <Provider>
       <SafeAreaView style={styles.mainContainer}>
         <View style={styles.searchContainer}>
-          <FoodDetailsModal food={modalDetails} visible={showFoodDetailsModal} onDismiss={onDismissModal} />
+          <FoodDetailsModal
+            filteredResults={filteredResults}
+            setFilteredResults={setFilteredResults}
+            food={modalDetails}
+            visible={showFoodDetailsModal}
+            onDismiss={onDismissModal}
+          />
           <Text style={styles.inputLabel}>Buscar Alimento</Text>
           <TextInput
             onChangeText={onChangeInputHandler}
