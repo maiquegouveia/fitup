@@ -1,31 +1,20 @@
-import { useContext } from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { Button, Dialog, Portal, Text } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
-import changeFavoriteStatus from '../../utilities/changeFavoriteStatus';
-import AppContext from '../../AppContext';
 
 const FoodDetailsModal = props => {
-  const { params } = useContext(AppContext);
-
   const onPressFavorite = () => {
-    const updatedResults = props.filteredResults;
-    const index = updatedResults.findIndex(curr => curr.alimento_id === props.food.alimento_id);
-    if (index === -1) return;
-    if (index !== -1) updatedResults[index].isFavorite = !updatedResults[index].isFavorite;
-    props.setFilteredResults(updatedResults);
-  };
-
-  const onDismiss = () => {
-    props.onDismiss();
-    if (props.food.isFavorite) {
-      // changeFavoriteStatus(params.usuario_id, props.food.alimento_id);
-    }
+    props.setModalDetails(prev => {
+      return {
+        ...prev,
+        isFavorite: !prev.isFavorite,
+      };
+    });
   };
 
   return (
     <Portal>
-      <Dialog style={styles.dialog} visible={props.visible} onDismiss={onDismiss}>
+      <Dialog style={styles.dialog} visible={props.visible} onDismiss={props.onDismiss}>
         <Dialog.Title style={styles.title}>{props.food.nome}</Dialog.Title>
         <Dialog.Content>
           <View style={styles.contentTopic}>
@@ -86,18 +75,18 @@ const FoodDetailsModal = props => {
           </View>
         </Dialog.Content>
         <Dialog.Actions>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
             <Button
               textColor="white"
               style={{ backgroundColor: 'green', borderRadius: 5, width: '85%' }}
-              onPress={onDismiss}
+              onPress={props.onDismiss}
             >
               Fechar
             </Button>
             <TouchableOpacity activeOpacity={0.7} onPress={onPressFavorite}>
               <MaterialIcons
                 name="favorite"
-                size={24}
+                size={28}
                 color={props.food.isFavorite ? 'black' : 'white'}
                 style={{
                   padding: 5,

@@ -7,12 +7,10 @@ import getFoodByName from '../../utilities/getFoodByName';
 import FoodDetailsModal from '../components/FoodDetailsModal';
 import AppContext from '../../AppContext';
 import MenuCategory from '../components/MenuCategory';
+import changeFavoriteStatus from '../../utilities/changeFavoriteStatus';
 
 const SearchFood = () => {
   const { params } = useContext(AppContext);
-
-  const favoriteFoodsId = params?.favoriteList?.map(food => food?.alimento_id);
-
   const [inputValue, setInputValue] = useState('');
   const [showResults, setShowResults] = useState(false);
   const [results, setResults] = useState([]);
@@ -47,6 +45,7 @@ const SearchFood = () => {
   };
 
   const onSubmitInputHandler = async () => {
+    const favoriteFoodsId = params?.favoriteList?.map(food => food?.alimento_id);
     setIsLoading(true);
     const data = await getFoodByName(inputValue);
     setIsLoading(false);
@@ -75,11 +74,26 @@ const SearchFood = () => {
     setModalDetails({
       ...food,
     });
+
     setShowFoodDetailsModal(true);
   };
 
-  const onDismissModal = () => {
+  const onDismissModal = async () => {
     setShowFoodDetailsModal(false);
+    const updatedFilteredResults = [...filteredResults];
+    const currentFoodIndex = updatedFilteredResults.findIndex(curr => curr.alimento_id === modalDetails.alimento_id);
+    if (modalDetails.isFavorite !== updatedFilteredResults[currentFoodIndex].isFavorite) {
+      if (modalDetails.isFavorite) {
+        const result = await changeFavoriteStatus(params.usuario_id, modalDetails.alimento_id);
+        if (!result.error) {
+          updatedFilteredResults[currentFoodIndex].isFavorite = modalDetails.isFavorite;
+          setFilteredResults(updatedFilteredResults);
+          console.log('Saved food');
+        }
+      } else {
+        console.log('Removed food');
+      }
+    }
   };
 
   return (
@@ -87,8 +101,7 @@ const SearchFood = () => {
       <SafeAreaView style={styles.mainContainer}>
         <View style={styles.searchContainer}>
           <FoodDetailsModal
-            filteredResults={filteredResults}
-            setFilteredResults={setFilteredResults}
+            setModalDetails={setModalDetails}
             food={modalDetails}
             visible={showFoodDetailsModal}
             onDismiss={onDismissModal}
