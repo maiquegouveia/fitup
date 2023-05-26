@@ -4,6 +4,8 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import AppContext from './AppContext';
 import { useState } from 'react';
+import { Image } from 'react-native';
+import { header } from './constants/images';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -77,6 +79,7 @@ function DrawerStack() {
     <Drawer.Navigator
       screenOptions={{
         headerStyle: { backgroundColor: 'orange' },
+        // headerBackground: () => <Image source={header} style={{ width: '100%' }} resizeMode="cover" />,
       }}
     >
       <Drawer.Screen name="Home" component={Home} />

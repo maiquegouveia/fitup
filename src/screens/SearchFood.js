@@ -85,13 +85,18 @@ const SearchFood = () => {
     if (modalDetails.isFavorite !== updatedFilteredResults[currentFoodIndex].isFavorite) {
       if (modalDetails.isFavorite) {
         const result = await changeFavoriteStatus(params.usuario_id, modalDetails.alimento_id);
-        if (!result.error) {
+        if (!result?.error) {
           updatedFilteredResults[currentFoodIndex].isFavorite = modalDetails.isFavorite;
           setFilteredResults(updatedFilteredResults);
           console.log('Saved food');
         }
       } else {
-        console.log('Removed food');
+        const result = await changeFavoriteStatus(params.usuario_id, modalDetails.alimento_id, (operation = 'remove'));
+        if (!result?.error) {
+          updatedFilteredResults[currentFoodIndex].isFavorite = modalDetails.isFavorite;
+          setFilteredResults(updatedFilteredResults);
+          console.log('Removed food');
+        }
       }
     }
   };
@@ -108,6 +113,8 @@ const SearchFood = () => {
           />
           <Text style={styles.inputLabel}>Buscar Alimento</Text>
           <TextInput
+            cursorColor="green"
+            activeOutlineColor="green"
             onChangeText={onChangeInputHandler}
             value={inputValue}
             placeholder="Digite o nome do alimento..."
