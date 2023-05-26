@@ -84,8 +84,11 @@ const FavoriteFoods = () => {
               </Text>
             )}
             {isLoading && <ActivityIndicator animating={true} color="white" />}
-            {params.favoriteList.error && <Text>{params.favoriteList.error}</Text>}
+            {!isLoading && params.favoriteList?.error && (
+              <Text style={styles.textError}>{params.favoriteList.error}</Text>
+            )}
             {!isLoading &&
+              !params.favoriteList.error &&
               params.favoriteList.map(food => (
                 <SearchFoodListItem
                   isFavorite={true}
@@ -114,5 +117,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  textError: {
+    fontSize: 18,
+    color: 'white',
+    fontWeight: 'bold',
   },
 });

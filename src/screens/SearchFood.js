@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, SafeAreaView, ScrollView, KeyboardAvoidingView } from 'react-native';
 import { TextInput, Button, Provider } from 'react-native-paper';
-import { useEffect, useState, useCallback, useContext } from 'react';
+import { useState, useCallback, useContext } from 'react';
 import SearchFoodListItem from '../components/SearchFoodListItem';
 import { useFocusEffect } from '@react-navigation/native';
 import getFoodByName from '../../utilities/getFoodByName';
@@ -21,6 +21,7 @@ const SearchFood = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showFoodDetailsModal, setShowFoodDetailsModal] = useState(false);
   const [modalDetails, setModalDetails] = useState({});
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const handleCategoryPress = value => {
     setSelectedCategory(value);
@@ -35,7 +36,7 @@ const SearchFood = () => {
   const resetStates = () => {
     setInputValue('');
     setShowResults('');
-    setResults([]);
+    setFilteredResults([]);
   };
 
   useFocusEffect(useCallback(resetStates, []));
@@ -45,27 +46,37 @@ const SearchFood = () => {
   };
 
   const onSubmitInputHandler = async () => {
-    const favoriteFoodsId = params?.favoriteList?.map(food => food?.alimento_id);
+    setErrorMessage(null);
+    let favoriteFoodsId;
+    if (!params.favoriteList.error) {
+      favoriteFoodsId = params.favoriteList.map(food => food.alimento_id);
+    } else {
+      favoriteFoodsId = [];
+    }
+
     setIsLoading(true);
     const data = await getFoodByName(inputValue);
     setIsLoading(false);
-    if (data.error_message) return;
-    setResults(data);
-    setFilteredResults(
-      data.map(food => {
+
+    if (data.error_message) {
+      setErrorMessage(data.error_message);
+    } else {
+      const dataWithFavoriteStatus = data.map(food => {
         return {
           ...food,
-          isFavorite: favoriteFoodsId.includes(food.alimento_id),
+          isFavorite: favoriteFoodsId?.includes(food.alimento_id),
         };
-      })
-    );
+      });
+      setResults([...dataWithFavoriteStatus]);
+      setFilteredResults([...dataWithFavoriteStatus]);
 
-    const categories = [...new Set(data.map(curr => curr.categoria))];
-    setCategories(
-      categories.map(curr => {
-        return { name: curr, active: false };
-      })
-    );
+      const categories = [...new Set(data.map(curr => curr.categoria))];
+      setCategories(
+        categories.map(curr => {
+          return { name: curr, active: false };
+        })
+      );
+    }
 
     setShowResults(true);
   };
@@ -124,8 +135,8 @@ const SearchFood = () => {
           <Button loading={isLoading} textColor="white" style={styles.inputBtn} onPress={onSubmitInputHandler}>
             Buscar
           </Button>
-          {showResults && results?.error_message && <Text>{results.error_message}</Text>}
-          {showResults && results?.length > 0 && (
+          {showResults && errorMessage && <Text style={styles.errorText}>{errorMessage}</Text>}
+          {showResults && !errorMessage && filteredResults?.length > 0 && (
             <ScrollView
               style={{
                 marginTop: 10,
@@ -145,7 +156,7 @@ const SearchFood = () => {
                 }}
               >
                 <Text style={{ fontSize: 18, fontWeight: 'bold', marginVertical: 10, color: 'white' }}>
-                  {filteredResults.length > 1 ? `Resultados (${filteredResults.length})` : `Resultado (1)`}
+                  {filteredResults?.length > 1 ? `Resultados (${filteredResults?.length})` : `Resultado (1)`}
                 </Text>
                 <MenuCategory
                   categories={categories}
@@ -156,9 +167,10 @@ const SearchFood = () => {
                 />
               </View>
 
-              {filteredResults.map(food => (
-                <SearchFoodListItem key={food.alimento_id} food={food} onPress={onShowModalDetails} />
-              ))}
+              {!errorMessage &&
+                filteredResults?.map(food => (
+                  <SearchFoodListItem key={food.alimento_id} food={food} onPress={onShowModalDetails} />
+                ))}
             </ScrollView>
           )}
         </View>
@@ -192,5 +204,9 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     backgroundColor: 'green',
     borderRadius: 10,
+  },
+  errorText: {
+    color: 'red',
+    fontWeight: 'bold',
   },
 });

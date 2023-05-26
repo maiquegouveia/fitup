@@ -70,7 +70,7 @@ const Home = () => {
         cardBackground={cardPratos}
         onPress={() => navigation.navigate('FavoriteDishes')}
       />
-      <Button title="Teste" onPress={() => console.log(params)} />
+      <Button title="Teste" onPress={() => console.log('CLEAR')} />
     </ScrollView>
   );
 };

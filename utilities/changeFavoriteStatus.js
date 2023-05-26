@@ -22,8 +22,6 @@ export default async (userId, foodId, operation = 'add') => {
         }
       );
       if (!response.ok) return { error: 'Tente novamente mais tarde!' };
-      const data = await response.json();
-      return data;
     } catch (error) {
       console.log(error);
     }
