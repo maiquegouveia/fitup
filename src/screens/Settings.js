@@ -1,27 +1,28 @@
-import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity, } from 'react-native';
 import React from 'react';
+import { Ionicons, AntDesign, SimpleLineIcons, MaterialIcons } from '@expo/vector-icons';
 
 const Settings = () => {
   return (
     <View style={styles.body}>
       <View style={styles.container}>
         <TouchableOpacity>
-          <Text style={styles.textBtn}>Sobre</Text>
+          <Text style={styles.textBtn}><AntDesign name="questioncircle" size={15} color="black" />Sobre</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.container}>
         <TouchableOpacity>
-          <Text style={styles.textBtn}>Termo & Condições</Text>
+          <Text style={styles.textBtn}><Ionicons name="ios-document-text" size={24} color="black" />Termo & Condições</Text>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.container}>
+        <TouchableOpacity>
+          <Text style={styles.textBtn}><Ionicons name="color-fill" size={24} color="black" />Alterar cor de fundo</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.container}>
         <TouchableOpacity>
           <Text style={styles.textBtn}>Versão 1.0</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.container}>
-        <TouchableOpacity>
-          <Text style={styles.textBtn}>Alterar cor de fundo</Text>
         </TouchableOpacity>
       </View>
       <View
@@ -46,17 +47,17 @@ const styles = StyleSheet.create({
   body: {
     flex: 1,
     alignItems: 'center',
+    marginTop: 40
   },
   container: {
-    backgroundColor: 'rgb(130, 238, 93)',
-    marginTop: 40,
-    width: 320,
+    backgroundColor: '#FFFFFF',
+    width: '100%',
     height: 55,
-    borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
   },
   textBtn: {
+    fontSize: 15,
     color: 'black',
     fontWeight: 'bold',
   },
