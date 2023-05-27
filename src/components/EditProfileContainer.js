@@ -1,186 +1,68 @@
-import { Text, View } from "react-native";
-import { useState } from "react";
-import EditInputProfile from "../components/EditInputProfile";
-import styles from "./EditProfileContainer.style";
-import ButtonComponent from "./ButtonComponent";
+import { Text, View } from 'react-native';
+import { useState, useContext } from 'react';
+import EditInputProfile from '../components/EditInputProfile';
+import styles from './EditProfileContainer.style';
+import ButtonComponent from './ButtonComponent';
+import AppContext from '../../AppContext';
 
-const EditProfileContainer = (props) => {
-  const [name, setName] = useState({
-    value: props.userData.nome,
-    notChanged: true,
-  });
-  const [phone, setPhone] = useState({
-    value: props.userData.telefone,
-    notChanged: true,
-  });
-  const [bodyWeight, setBodyWeight] = useState({
-    value: props.userData.peso,
-    notChanged: true,
-  });
-  const [height, setHeight] = useState({
-    value: props.userData.altura,
-    notChanged: true,
-  });
-  const [email, setEmail] = useState({
-    value: props.userData.email,
-    notChanged: true,
-  });
-  const [password, setPassword] = useState({
-    value: props.userData.senha,
-    notChanged: true,
-  });
-
-  const onChangeNameHandler = (text) => {
-    if (text !== props.userData.nome) {
-      setName({
-        value: text,
-        notChanged: false,
-      });
-    } else {
-      setName({
-        value: text,
-        notChanged: true,
-      });
-    }
-  };
-
-  const onChangePhoneHandler = (text) => {
-    if (text !== props.userData.telefone) {
-      setPhone({
-        value: text,
-        notChanged: false,
-      });
-    } else {
-      setPhone({
-        value: text,
-        notChanged: true,
-      });
-    }
-  };
-
-  const onChangeBodyWeightHandler = (text) => {
-    if (text !== props.userData.peso) {
-      setBodyWeight({
-        value: text,
-        notChanged: false,
-      });
-    } else {
-      setBodyWeight({
-        value: text,
-        notChanged: true,
-      });
-    }
-  };
-
-  const onChangeHeightHandler = (text) => {
-    if (text !== props.userData.altura) {
-      setHeight({
-        value: text,
-        notChanged: false,
-      });
-    } else {
-      setHeight({
-        value: text,
-        notChanged: true,
-      });
-    }
-  };
-
-  const onChangeEmailHandler = (text) => {
-    if (text !== props.userData.email) {
-      setEmail({
-        value: text,
-        notChanged: false,
-      });
-    } else {
-      setEmail({
-        value: text,
-        notChanged: true,
-      });
-    }
-  };
-
-  const onChangePasswordHandler = (text) => {
-    if (text !== props.userData.senha) {
-      setPassword({
-        value: text,
-        notChanged: false,
-      });
-    } else {
-      setPassword({
-        value: text,
-        notChanged: true,
-      });
-    }
-  };
-
-  const onSaveHandler = () => {
-    props.setVisibleDialog(true);
-    props.onSaveEdit({
-      name: name,
-      phone: phone,
-      bodyWeight: bodyWeight,
-      height: height,
-      email: email,
-      password: password,
-    });
-  };
+const EditProfileContainer = props => {
+  const { params } = useContext(AppContext);
 
   return (
     <>
-      <View style={{ alignItems: "center" }}>
+      <View style={{ alignItems: 'center' }}>
         <Text style={styles.title}>Editar Perfil</Text>
       </View>
       <View style={styles.container}>
         <EditInputProfile
           label="Nome Completo"
-          value={name.value}
-          valueChanged={name.notChanged}
-          onChange={onChangeNameHandler}
+          value={params.nome}
+          onShowEditModal={props.onShowEditModal}
+          fieldName="nome"
+          fieldType="string"
         />
         <EditInputProfile
           keyboardType="numeric"
           label="Telefone"
-          value={phone.value}
-          valueChanged={phone.notChanged}
-          onChange={onChangePhoneHandler}
+          value={params.telefone}
+          onShowEditModal={props.onShowEditModal}
+          fieldName="telefone"
+          fieldType="string"
         />
         <EditInputProfile
           keyboardType="numeric"
           label="Peso"
-          value={bodyWeight.value}
-          valueChanged={bodyWeight.notChanged}
-          onChange={onChangeBodyWeightHandler}
+          value={params.peso}
+          onShowEditModal={props.onShowEditModal}
+          fieldName="peso"
+          fieldType="numeric"
         />
         <EditInputProfile
           keyboardType="numeric"
           label="Altura"
-          value={height.value}
-          valueChanged={height.notChanged}
-          onChange={onChangeHeightHandler}
+          value={params.altura}
+          onShowEditModal={props.onShowEditModal}
+          fieldName="altura"
+          fieldType="numeric"
         />
         <EditInputProfile
           keyboardType="email-address"
           label="Email"
-          value={email.value}
-          valueChanged={email.notChanged}
-          onChange={onChangeEmailHandler}
+          value={params.email}
+          onShowEditModal={props.onShowEditModal}
+          fieldName="email"
+          fieldType="string"
         />
         <EditInputProfile
           label="Senha"
-          value={password.value}
-          valueChanged={password.notChanged}
+          value={params.senha}
           hideText={true}
-          onChange={onChangePasswordHandler}
+          onShowEditModal={props.onShowEditModal}
+          fieldName="senha"
+          fieldType="string"
         />
-        <View style={{ flexDirection: "row", justifyContent: "center" }}>
-          <ButtonComponent
-            styles={{ marginRight: 20 }}
-            btnText="Salvar"
-            onPress={onSaveHandler}
-          />
-          <ButtonComponent btnText="Cancelar" onPress={props.onCancelEdit} />
-        </View>
+
+        <ButtonComponent btnText="Fechar" onPress={props.onCloseEditHandler} />
       </View>
     </>
   );

@@ -4,16 +4,21 @@ import { useState, useContext } from 'react';
 import EditProfileContainer from '../components/EditProfileContainer';
 import styles from '../styles/ProfileScreen.style';
 import ButtonComponent from '../components/ButtonComponent';
-import Dialog from '../components/Dialog';
 import AppContext from '../../AppContext';
 import { useNavigation } from '@react-navigation/native';
 import getImageAndPermissions from '../../utilities/getImageAndPermissions';
 import removeUserCredentialsFromStorage from '../../utilities/removeUserCredentialsFromStorage';
+import EditProfileModal from '../components/EditProfileModal';
+import { EditProfileContext } from '../../EditProfileContext';
+import editUserCredentials from '../../utilities/editUserCredentials';
 
 const ProfileScreen = () => {
-  const { params, setUserIsAuthenticated } = useContext(AppContext);
-  const [visibleDialog, setVisibleDialog] = useState(false);
+  const { params, setParams, setUserIsAuthenticated } = useContext(AppContext);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const { modalContent } = useContext(EditProfileContext);
   const [showEditContainer, setShowEditContainer] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const [image, setImage] = useState({
     base64: '',
@@ -21,13 +26,36 @@ const ProfileScreen = () => {
 
   const navigation = useNavigation();
 
-  const onCancelEditHandler = () => {
-    setShowEditContainer(prev => !prev);
+  const onShowEditModal = () => {
+    setErrorMessage('');
+    setShowEditModal(true);
   };
 
-  const onSaveEditHandler = data => {
+  const onCloseEditModal = () => {
+    setShowEditModal(false);
+  };
+
+  const onSaveEditModal = async () => {
+    setIsLoading(true);
+    const response = await editUserCredentials(
+      params.usuario_id,
+      modalContent.field.name,
+      modalContent.field.type,
+      modalContent.value
+    );
+    setIsLoading(false);
+    if (response.status === 204) {
+      const updatedParams = { ...params };
+      updatedParams[`${modalContent.field.name}`] = modalContent.value;
+      setParams(updatedParams);
+      setShowEditModal(false);
+    } else if (response.status === 500 && response?.errorCode === 'ER_DUP_ENTRY') {
+      setErrorMessage(`${modalContent.inputLabel} já cadastrado!`);
+    }
+  };
+
+  const onCloseEditHandler = () => {
     setShowEditContainer(prev => !prev);
-    console.log(data);
   };
 
   const onLogoutHandler = () => {
@@ -39,12 +67,6 @@ const ProfileScreen = () => {
   return (
     <SafeAreaView style={styles.mainContainer}>
       <Provider>
-        <Dialog
-          visible={visibleDialog}
-          hideDialog={() => setVisibleDialog(false)}
-          title="Dados alterados com sucesso!"
-          content="Suas informações cadastradas foram alteradas com sucesso."
-        />
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={[styles.container]}>
             <View style={styles.profileImageContainer}>
@@ -87,12 +109,14 @@ const ProfileScreen = () => {
             )}
             {showEditContainer && (
               <View style={{ width: '100%', padding: 20 }}>
-                <EditProfileContainer
-                  userData={{ ...params }}
-                  onCancelEdit={onCancelEditHandler}
-                  onSaveEdit={onSaveEditHandler}
-                  setVisibleDialog={setVisibleDialog}
+                <EditProfileModal
+                  isLoading={isLoading}
+                  errorMessage={errorMessage}
+                  showEditModal={showEditModal}
+                  onCloseEditModal={onCloseEditModal}
+                  onSaveEditModal={onSaveEditModal}
                 />
+                <EditProfileContainer onCloseEditHandler={onCloseEditHandler} onShowEditModal={onShowEditModal} />
               </View>
             )}
           </View>

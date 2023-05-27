@@ -3,6 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import AppContext from './AppContext';
+import { EditProfileProvider } from './EditProfileContext';
 import { useState } from 'react';
 import { Image } from 'react-native';
 import { header } from './constants/images';
@@ -85,11 +86,16 @@ function DrawerStack() {
       <Drawer.Screen name="Home" component={Home} />
       <Drawer.Screen
         name="Profile"
-        component={Profile}
         options={{
           title: 'Meu Perfil',
         }}
-      />
+      >
+        {() => (
+          <EditProfileProvider>
+            <Profile />
+          </EditProfileProvider>
+        )}
+      </Drawer.Screen>
       <Drawer.Screen
         name="Settings"
         component={Settings}

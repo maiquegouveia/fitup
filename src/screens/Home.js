@@ -18,7 +18,7 @@ const Home = () => {
     navigation.setOptions({
       headerTitle: 'Home',
       headerRight: () => (
-        <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+        <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate('Profile')}>
           <Avatar.Image
             style={{ marginRight: 10 }}
             size={38}
