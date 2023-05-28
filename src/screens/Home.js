@@ -16,7 +16,6 @@ const Home = () => {
 
   useEffect(() => {
     navigation.setOptions({
-      headerTitle: 'Home',
       headerRight: () => (
         <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate('Profile')}>
           <Avatar.Image
@@ -40,38 +39,40 @@ const Home = () => {
   }, []);
 
   return (
-    <ScrollView style={styles.mainContainer} showsVerticalScrollIndicator={false}>
-      <View style={styles.welcomeContainer}>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <Text style={styles.welcomeText}>Funcionalidades</Text>
-          <TouchableOpacity>
-            <Ionicons name="notifications" size={26} color="black" />
-          </TouchableOpacity>
-        </View>
-        {progressBar !== 1 && (
-          <View style={styles.registrationProgressContainer}>
-            <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Complete o seu cadastro...</Text>
-            <ProgressBar progress={progressBar} color="orange" />
+    <SafeAreaView style={{ flex: 1 }}>
+      <ScrollView style={styles.mainContainer} showsVerticalScrollIndicator={false}>
+        <View style={styles.welcomeContainer}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Text style={styles.welcomeText}>Funcionalidades</Text>
+            <TouchableOpacity>
+              <Ionicons name="notifications" size={26} color="black" />
+            </TouchableOpacity>
           </View>
-        )}
-      </View>
-      <CardFeature
-        title="Alimentos Favoritos"
-        cardBackground={cardAliments}
-        onPress={() => navigation.navigate('FavoriteFoods')}
-      />
-      <CardFeature
-        title="Água Diária"
-        cardBackground={cardAguaFeature}
-        onPress={() => navigation.navigate('WaterAmount')}
-      />
-      <CardFeature
-        title="Pratos Favoritos"
-        cardBackground={cardPratos}
-        onPress={() => navigation.navigate('FavoriteDishes')}
-      />
-      <Button title="Teste" onPress={() => console.log('CLEAR')} />
-    </ScrollView>
+          {progressBar !== 1 && (
+            <View style={styles.registrationProgressContainer}>
+              <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Complete o seu cadastro...</Text>
+              <ProgressBar progress={progressBar} color="#25A55A" style={{ height: 5 }} />
+            </View>
+          )}
+        </View>
+        <CardFeature
+          title="Alimentos Favoritos"
+          cardBackground={cardAliments}
+          onPress={() => navigation.navigate('FavoriteFoods')}
+        />
+        <CardFeature
+          title="Água Diária"
+          cardBackground={cardAguaFeature}
+          onPress={() => navigation.navigate('WaterAmount')}
+        />
+        <CardFeature
+          title="Pratos Favoritos"
+          cardBackground={cardPratos}
+          onPress={() => navigation.navigate('FavoriteDishes')}
+        />
+        <Button title="Teste" onPress={() => console.log('CLEAR')} />
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
@@ -81,6 +82,8 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     padding: 10,
+    height: '100%',
+    backgroundColor: 'white',
   },
   welcomeContainer: {
     padding: 5,

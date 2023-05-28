@@ -1,11 +1,11 @@
 import React from 'react';
-import { Button, Modal, FormControl, Input, Center, NativeBaseProvider, Text } from 'native-base';
+import { Button, Modal, FormControl, Center, NativeBaseProvider, Text } from 'native-base';
 import { useState, useContext } from 'react';
+import { TextInput } from 'react-native-paper';
 import { EditProfileContext } from '../../EditProfileContext';
 
 export default ({ isLoading, showEditModal, onCloseEditModal, onSaveEditModal, errorMessage }) => {
   const { modalContent, setModalContent } = useContext(EditProfileContext);
-
   const onChange = text => {
     setModalContent(prev => {
       return {
@@ -25,7 +25,14 @@ export default ({ isLoading, showEditModal, onCloseEditModal, onSaveEditModal, e
             <Modal.Body>
               <FormControl>
                 <FormControl.Label>{modalContent.inputLabel}</FormControl.Label>
-                <Input value={modalContent.value} onChangeText={onChange} />
+                <TextInput
+                  mode="outlined"
+                  keyboardType={modalContent.keyboardType}
+                  value={modalContent.value}
+                  onChangeText={onChange}
+                  activeOutlineColor="gray"
+                />
+
                 <Text color="red.500" fontWeight="semibold">
                   {errorMessage}
                 </Text>

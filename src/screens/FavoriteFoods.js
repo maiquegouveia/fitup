@@ -2,13 +2,14 @@ import { StyleSheet, Text, View, SafeAreaView, RefreshControl, ScrollView } from
 import { useContext, useState, useCallback } from 'react';
 import getUserFavoriteFoods from '../../utilities/getUserFavoriteFoods';
 import AppContext from '../../AppContext';
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import SearchFoodListItem from '../components/SearchFoodListItem';
-import { ActivityIndicator, Provider } from 'react-native-paper';
+import { ActivityIndicator, Provider, Button } from 'react-native-paper';
 import DeleteDialog from '../components/DeleteDialog';
 import changeFavoriteStatus from '../../utilities/changeFavoriteStatus';
 
 const FavoriteFoods = () => {
+  const navigation = useNavigation();
   const { params, setParams } = useContext(AppContext);
   const [isLoading, setIsLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -85,7 +86,16 @@ const FavoriteFoods = () => {
             )}
             {isLoading && <ActivityIndicator animating={true} color="white" />}
             {!isLoading && params.favoriteList?.error && (
-              <Text style={styles.textError}>{params.favoriteList.error}</Text>
+              <>
+                <Text style={styles.textError}>{params.favoriteList.error}</Text>
+                <Button
+                  textColor="black"
+                  style={{ marginVertical: 10, backgroundColor: 'white', borderRadius: 10 }}
+                  onPress={() => navigation.navigate('SearchFood')}
+                >
+                  Adicionar Alimentos
+                </Button>
+              </>
             )}
             {!isLoading &&
               !params.favoriteList.error &&

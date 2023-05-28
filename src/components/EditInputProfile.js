@@ -8,6 +8,7 @@ const EditInputProfile = props => {
 
   const onPress = () => {
     setModalContent({
+      keyboardType: props?.keyboardType,
       inputLabel: props?.label,
       value: props?.value,
       field: {
