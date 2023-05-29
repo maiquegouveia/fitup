@@ -7,113 +7,27 @@ const FavoriteDishes = () => {
   const [searchInput, setSearchInput] = useState('');
 
   const onChangeSearchInput = text => setSearchInput(text);
-  const dishesData = [
+
+  const [dishesData, setDishesData] = useState([
     {
-      name: 'Nome do Prato',
-      category: 'Categoria do Prato',
+      id: 1,
+      name: 'Meu Almoço',
+      category: 'Almoço',
       dishTotalCarbo: 100,
       dishTotalProtein: 100,
       dishTotalFat: 100,
+      dishTotalCalories: 1000,
+      foods: [
+        { name: 'Arroz', carb100: 28.1, pro100: 2.5, qnt: 100, kcal100: 1000 },
+        { name: 'Feijão', carb100: 28.1, pro100: 2.5, qnt: 20, kcal100: 1000 },
+        { name: 'Frango', carb100: 28.1, pro100: 2.5, qnt: 100, kcal100: 1000 },
+      ],
     },
-    {
-      name: 'Nome do Prato',
-      category: 'Categoria do Prato',
-      dishTotalCarbo: 100,
-      dishTotalProtein: 100,
-      dishTotalFat: 100,
-    },
-    {
-      name: 'Nome do Prato',
-      category: 'Categoria do Prato',
-      dishTotalCarbo: 100,
-      dishTotalProtein: 100,
-      dishTotalFat: 100,
-    },
-    {
-      name: 'Nome do Prato',
-      category: 'Categoria do Prato',
-      dishTotalCarbo: 100,
-      dishTotalProtein: 100,
-      dishTotalFat: 100,
-    },
-    {
-      name: 'Nome do Prato',
-      category: 'Categoria do Prato',
-      dishTotalCarbo: 100,
-      dishTotalProtein: 100,
-      dishTotalFat: 100,
-    },
-    {
-      name: 'Nome do Prato',
-      category: 'Categoria do Prato',
-      dishTotalCarbo: 100,
-      dishTotalProtein: 100,
-      dishTotalFat: 100,
-    },
-    {
-      name: 'Nome do Prato',
-      category: 'Categoria do Prato',
-      dishTotalCarbo: 100,
-      dishTotalProtein: 100,
-      dishTotalFat: 100,
-    },
-    {
-      name: 'Nome do Prato',
-      category: 'Categoria do Prato',
-      dishTotalCarbo: 100,
-      dishTotalProtein: 100,
-      dishTotalFat: 100,
-    },
-    {
-      name: 'Nome do Prato',
-      category: 'Categoria do Prato',
-      dishTotalCarbo: 100,
-      dishTotalProtein: 100,
-      dishTotalFat: 100,
-    },
-    {
-      name: 'Nome do Prato',
-      category: 'Categoria do Prato',
-      dishTotalCarbo: 100,
-      dishTotalProtein: 100,
-      dishTotalFat: 100,
-    },
-    {
-      name: 'Nome do Prato',
-      category: 'Categoria do Prato',
-      dishTotalCarbo: 100,
-      dishTotalProtein: 100,
-      dishTotalFat: 100,
-    },
-    {
-      name: 'Nome do Prato',
-      category: 'Categoria do Prato',
-      dishTotalCarbo: 100,
-      dishTotalProtein: 100,
-      dishTotalFat: 100,
-    },
-    {
-      name: 'Nome do Prato',
-      category: 'Categoria do Prato',
-      dishTotalCarbo: 100,
-      dishTotalProtein: 100,
-      dishTotalFat: 100,
-    },
-    {
-      name: 'Nome do Prato',
-      category: 'Categoria do Prato',
-      dishTotalCarbo: 100,
-      dishTotalProtein: 100,
-      dishTotalFat: 100,
-    },
-    {
-      name: 'Nome do Prato',
-      category: 'Categoria do Prato',
-      dishTotalCarbo: 100,
-      dishTotalProtein: 100,
-      dishTotalFat: 100,
-    },
-  ];
+  ]);
+
+  const onChangeDishesData = data => {
+    setDishesData(data);
+  };
 
   return (
     <View style={styles.mainContainer}>
@@ -134,13 +48,13 @@ const FavoriteDishes = () => {
           </View>
           {dishesData.map((dish, index) => (
             <DishCard
+              onChangeDishesData={onChangeDishesData}
+              id={dish.id}
               key={index}
               dishName={dish.name}
               dishCategory={dish.category}
-              dishTotalCarbo={dish.dishTotalCarbo}
-              dishTotalProtein={dish.dishTotalProtein}
-              dishTotalFat={dish.dishTotalFat}
               style={{ marginTop: 10 }}
+              foods={dish.foods}
             />
           ))}
         </ScrollView>

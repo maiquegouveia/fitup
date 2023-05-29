@@ -1,9 +1,13 @@
-import { StyleSheet, Text, View } from 'react-native';
-import React from 'react';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { useState } from 'react';
+import Stepper from './Stepper';
 
-const DishCard = ({ dishName, dishCategory, dishTotalCarbo, dishTotalProtein, dishTotalFat, style }) => {
+const DishCard = ({ dishId, dishName, dishCategory, style, foods, onChangeDishesData }) => {
+  const [showController, setShowController] = useState(false);
+  const onShowController = () => setShowController(prev => !prev);
+
   return (
-    <View style={[styles.dishContainer, style]}>
+    <TouchableOpacity onPress={onShowController} activeOpacity={1} style={[styles.dishContainer, style]}>
       <View style={{ paddingLeft: 5, paddingBottom: 5 }}>
         <Text style={styles.dishName}>{dishName}</Text>
       </View>
@@ -13,20 +17,32 @@ const DishCard = ({ dishName, dishCategory, dishTotalCarbo, dishTotalProtein, di
           <Text style={styles.dishDescription}>{dishCategory}</Text>
         </View>
         <View style={{ flexDirection: 'row' }}>
+          <Text style={styles.dishProperties}>Calorias: </Text>
+          <Text style={styles.dishDescription}>
+            {' '}
+            {foods.reduce((acc, curr) => acc + (curr.qnt * curr.kcal100) / 100, 0).toFixed(2)}kcal
+          </Text>
+        </View>
+        <View style={{ flexDirection: 'row' }}>
           <Text style={styles.dishProperties}>Carboidratos: </Text>
-          <Text style={styles.dishDescription}>{dishTotalCarbo}g</Text>
+          <Text style={styles.dishDescription}>
+            {foods.reduce((acc, curr) => acc + (curr.qnt * curr.carb100) / 100, 0).toFixed(2)}g
+          </Text>
         </View>
         <View style={{ flexDirection: 'row' }}>
           <Text style={styles.dishProperties}>Proteínas: </Text>
-          <Text style={styles.dishDescription}>{dishTotalProtein}g</Text>
-        </View>
-
-        <View style={{ flexDirection: 'row' }}>
-          <Text style={styles.dishProperties}>Gorduras: </Text>
-          <Text style={styles.dishDescription}>{dishTotalFat}g</Text>
+          <Text style={styles.dishDescription}>
+            {foods.reduce((acc, curr) => acc + (curr.qnt * curr.pro100) / 100, 0).toFixed(2)}g
+          </Text>
         </View>
       </View>
-    </View>
+      {showController && (
+        <View style={styles.dishControllerContainer}>
+          <Text>{foods[0].name}</Text>
+          <Stepper amount={foods[0].qnt} />
+        </View>
+      )}
+    </TouchableOpacity>
   );
 };
 
@@ -52,5 +68,10 @@ const styles = StyleSheet.create({
   dishDetails: {
     padding: 10,
     backgroundColor: '#ccc',
+  },
+  dishControllerContainer: {
+    marginTop: 10,
+    backgroundColor: '#ccc',
+    height: 100,
   },
 });
