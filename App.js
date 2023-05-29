@@ -5,9 +5,10 @@ import { NavigationContainer } from '@react-navigation/native';
 import AppContext from './AppContext';
 import { EditProfileProvider } from './EditProfileContext';
 import { useState } from 'react';
-import { Image, StatusBar } from 'react-native';
+import { Image, TouchableOpacity } from 'react-native';
 import { header } from './constants/images';
-
+import { Avatar } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
@@ -65,7 +66,7 @@ function RootStack() {
           >
             {() => (
               <AppContext.Provider value={{ params, setParams, userIsAuthenticated, setUserIsAuthenticated }}>
-                <DrawerStack />
+                <DrawerStack params={params} />
               </AppContext.Provider>
             )}
           </Stack.Screen>
@@ -75,13 +76,23 @@ function RootStack() {
   );
 }
 
-function DrawerStack() {
+function DrawerStack({ params }) {
+  const navigation = useNavigation();
   return (
     <Drawer.Navigator
       screenOptions={{
         headerTitle: '',
         headerBackgroundContainerStyle: { backgroundColor: '#1B818C' },
         headerBackground: () => <Image source={header} style={{ width: '100%', height: '100%' }} resizeMode="cover" />,
+        headerRight: () => (
+          <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate('Profile')}>
+            <Avatar.Image
+              style={{ marginRight: 10 }}
+              size={38}
+              source={{ uri: `https://i.ibb.co/${params.foto_perfil}` }}
+            />
+          </TouchableOpacity>
+        ),
       }}
     >
       <Drawer.Screen name="Home" component={Home} />

@@ -15,17 +15,6 @@ const Home = () => {
   const navigation = useNavigation();
 
   useEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate('Profile')}>
-          <Avatar.Image
-            style={{ marginRight: 10 }}
-            size={38}
-            source={{ uri: `https://i.ibb.co/${params.foto_perfil}` }}
-          />
-        </TouchableOpacity>
-      ),
-    });
     const getData = async () => {
       const data = await getUserFavoriteFoods(params.usuario_id);
       setParams(prev => {
