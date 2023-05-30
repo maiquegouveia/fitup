@@ -6,8 +6,7 @@ export default StyleSheet.create({
   },
   container: {
     paddingVertical: 30,
-    flexDirection: 'row',
-    backgroundColor: 'red',
+    backgroundColor: 'white',
     width: '100%',
     height: 200,
   },

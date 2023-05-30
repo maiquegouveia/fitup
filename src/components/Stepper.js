@@ -1,10 +1,10 @@
 import { StyleSheet, View } from 'react-native';
 import { useState } from 'react';
 import { AntDesign } from '@expo/vector-icons';
-import { TextInput } from 'react-native';
+import { TextInput, Text } from 'react-native';
+import checkNumericInput from '../../utilities/checkNumericInput';
 
 const Stepper = ({ amount, dishIndex, dishesData, foodIndex, onChangeDishesData }) => {
-  const [value, setValue] = useState(amount);
   let dishesUpdated = [...dishesData];
 
   const onIncrement = () => {
@@ -18,14 +18,19 @@ const Stepper = ({ amount, dishIndex, dishesData, foodIndex, onChangeDishesData 
   };
 
   const onChange = text => {
-    text = text.replaceAll(',', '.').replaceAll('..', '.').replaceAll('-', '').replaceAll(' ', '');
-    if (text.at(0) === ',' || text.at(0) === '.' || text.at(0) === ' ' || text.at(0) === '-') {
-      dishesUpdated[dishIndex].foods[foodIndex].qnt = text;
+    if (text.length === 0 || text[0] === ',' || text[0] === '-' || text[0] === ' ' || text[0] === '.') {
+      dishesUpdated[dishIndex].foods[foodIndex].qnt = '';
       onChangeDishesData(dishesUpdated);
       return;
     }
-    dishesUpdated[dishIndex].foods[foodIndex].qnt = text;
-    onChangeDishesData(dishesUpdated);
+    if (checkNumericInput(text)) {
+      dishesUpdated[dishIndex].foods[foodIndex].qnt = text;
+      onChangeDishesData(dishesUpdated);
+    } else {
+      const newText = text.slice(0, text.length - 1);
+      dishesUpdated[dishIndex].foods[foodIndex].qnt = newText;
+      onChangeDishesData(dishesUpdated);
+    }
   };
 
   return (
@@ -45,12 +50,15 @@ const Stepper = ({ amount, dishIndex, dishesData, foodIndex, onChangeDishesData 
           backgroundColor: '#E57A44',
         }}
       >
-        <TextInput
+        {/* <TextInput
           inputMode="numeric"
           style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 16, color: 'white' }}
           value={`${dishesData[dishIndex].foods[foodIndex].qnt}`}
           onChangeText={onChange}
-        />
+        /> */}
+        <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 14, color: 'white' }}>
+          {dishesData[dishIndex].foods[foodIndex].qnt}
+        </Text>
       </View>
       <AntDesign onPress={onIncrement} name="plussquareo" size={34} color="black" />
     </View>

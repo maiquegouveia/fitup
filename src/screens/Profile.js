@@ -63,13 +63,13 @@ const ProfileScreen = () => {
     removeUserCredentialsFromStorage();
     navigation.replace('InitialScreen');
   };
-
   return (
     <SafeAreaView style={styles.mainContainer}>
       <Provider>
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.container}>
             <Text
+              onPress={() => navigation.navigate('WaterAmount')}
               style={{
                 fontSize: 20,
                 fontWeight: 'bold',
