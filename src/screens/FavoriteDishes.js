@@ -13,14 +13,55 @@ const FavoriteDishes = () => {
       id: 1,
       name: 'Meu Almoço',
       category: 'Almoço',
-      dishTotalCarbo: 100,
-      dishTotalProtein: 100,
-      dishTotalFat: 100,
-      dishTotalCalories: 1000,
+
       foods: [
-        { name: 'Arroz', carb100: 28.1, pro100: 2.5, qnt: 100, kcal100: 1000 },
-        { name: 'Feijão', carb100: 28.1, pro100: 2.5, qnt: 20, kcal100: 1000 },
-        { name: 'Frango', carb100: 28.1, pro100: 2.5, qnt: 100, kcal100: 1000 },
+        { name: 'Arroz, tipo 1, cozido', carb100: 28.1, pro100: 2.5, qnt: 100, kcal100: 1000 },
+        { name: 'Feijão fradinho', carb100: 28.1, pro100: 2.5, qnt: 20, kcal100: 1000 },
+        { name: 'Frango, tipo 2, grelhado', carb100: 28.1, pro100: 2.5, qnt: 100, kcal100: 1000 },
+      ],
+    },
+    {
+      id: 2,
+      name: 'Meu Café da Manhã',
+      category: 'Café da Manhã',
+
+      foods: [
+        { name: 'Arroz, tipo 1, cozido', carb100: 28.1, pro100: 2.5, qnt: 100, kcal100: 1000 },
+        { name: 'Feijão fradinho', carb100: 28.1, pro100: 2.5, qnt: 20, kcal100: 1000 },
+        { name: 'Frango, tipo 2, grelhado', carb100: 28.1, pro100: 2.5, qnt: 100, kcal100: 1000 },
+      ],
+    },
+    {
+      id: 3,
+      name: 'Meu Café da Manhã',
+      category: 'Café da Manhã',
+
+      foods: [
+        { name: 'Arroz, tipo 1, cozido', carb100: 28.1, pro100: 2.5, qnt: 100, kcal100: 1000 },
+        { name: 'Feijão fradinho', carb100: 28.1, pro100: 2.5, qnt: 20, kcal100: 1000 },
+        { name: 'Frango, tipo 2, grelhado', carb100: 28.1, pro100: 2.5, qnt: 100, kcal100: 1000 },
+      ],
+    },
+    {
+      id: 4,
+      name: 'Meu Café da Manhã',
+      category: 'Café da Manhã',
+
+      foods: [
+        { name: 'Arroz, tipo 1, cozido', carb100: 28.1, pro100: 2.5, qnt: 100, kcal100: 1000 },
+        { name: 'Feijão fradinho', carb100: 28.1, pro100: 2.5, qnt: 20, kcal100: 1000 },
+        { name: 'Frango, tipo 2, grelhado', carb100: 28.1, pro100: 2.5, qnt: 100, kcal100: 1000 },
+      ],
+    },
+    {
+      id: 5,
+      name: 'Meu Café da Manhã',
+      category: 'Café da Manhã',
+
+      foods: [
+        { name: 'Arroz, tipo 1, cozido', carb100: 28.1, pro100: 2.5, qnt: 100, kcal100: 1000 },
+        { name: 'Feijão fradinho', carb100: 28.1, pro100: 2.5, qnt: 20, kcal100: 1000 },
+        { name: 'Frango, tipo 2, grelhado', carb100: 28.1, pro100: 2.5, qnt: 100, kcal100: 1000 },
       ],
     },
   ]);
@@ -33,11 +74,11 @@ const FavoriteDishes = () => {
     <View style={styles.mainContainer}>
       <View style={styles.searchBarContainer}>
         <TextInput
-          placeholder="Digite o nome do prato aqui..."
+          placeholder="Busque um prato aqui..."
           placeholderTextColor="black"
           mode="outlined"
-          activeOutlineColor="black"
-          right={<TextInput.Icon icon="food-fork-drink" iconColor="purple" />}
+          activeOutlineColor="#256D1B"
+          right={<TextInput.Icon icon="food-fork-drink" iconColor="#256D1B" />}
           onChangeText={onChangeSearchInput}
         />
       </View>
@@ -49,12 +90,13 @@ const FavoriteDishes = () => {
           {dishesData.map((dish, index) => (
             <DishCard
               onChangeDishesData={onChangeDishesData}
-              id={dish.id}
+              dishIndex={index}
               key={index}
               dishName={dish.name}
               dishCategory={dish.category}
               style={{ marginTop: 10 }}
               foods={dish.foods}
+              dishesData={dishesData}
             />
           ))}
         </ScrollView>
@@ -79,7 +121,7 @@ const styles = StyleSheet.create({
     height: '80%',
   },
   dishesScrollView: {
-    backgroundColor: 'orange',
+    backgroundColor: '#256D1B',
     padding: 15,
     borderRadius: 5,
   },

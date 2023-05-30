@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   listContainer: {
-    backgroundColor: 'green',
+    backgroundColor: '#256D1B',
     padding: 10,
     borderRadius: 10,
     alignItems: 'center',

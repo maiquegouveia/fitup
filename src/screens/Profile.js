@@ -68,7 +68,16 @@ const ProfileScreen = () => {
     <SafeAreaView style={styles.mainContainer}>
       <Provider>
         <ScrollView showsVerticalScrollIndicator={false}>
-          <View style={[styles.container]}>
+          <View style={styles.container}>
+            <Text
+              style={{
+                fontSize: 20,
+                fontWeight: 'bold',
+                flexWrap: 'wrap',
+              }}
+            >
+              {params.nome}
+            </Text>
             <View style={styles.profileImageContainer}>
               <TouchableOpacity onPress={() => getImageAndPermissions()}>
                 <Image
@@ -88,17 +97,7 @@ const ProfileScreen = () => {
                     alignItems: 'center',
                     marginBottom: 40,
                   }}
-                >
-                  <Text
-                    style={{
-                      fontSize: 20,
-                      fontWeight: 'bold',
-                      flexWrap: 'wrap',
-                    }}
-                  >
-                    {params.nome}
-                  </Text>
-                </View>
+                ></View>
                 <ButtonComponent
                   styles={{ marginBottom: 20 }}
                   btnText="Editar Perfil"

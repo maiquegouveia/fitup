@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { useState } from 'react';
 import Stepper from './Stepper';
 
-const DishCard = ({ dishId, dishName, dishCategory, style, foods, onChangeDishesData }) => {
+const DishCard = ({ dishIndex, dishName, dishCategory, style, foods, onChangeDishesData, dishesData }) => {
   const [showController, setShowController] = useState(false);
   const onShowController = () => setShowController(prev => !prev);
 
@@ -38,8 +38,30 @@ const DishCard = ({ dishId, dishName, dishCategory, style, foods, onChangeDishes
       </View>
       {showController && (
         <View style={styles.dishControllerContainer}>
-          <Text>{foods[0].name}</Text>
-          <Stepper amount={foods[0].qnt} />
+          {foods.map((food, index) => (
+            <View
+              style={{
+                backgroundColor: '#DFD9E2',
+                marginBottom: 10,
+                padding: 10,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}
+              key={index}
+            >
+              <View style={{ backgroundColor: '#E57A44', width: '50%', padding: 5, borderRadius: 5 }}>
+                <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'white' }}>{food.name}</Text>
+              </View>
+              <Stepper
+                foodName={food.name}
+                dishesData={dishesData}
+                dishIndex={dishIndex}
+                amount={food.qnt}
+                foodIndex={index}
+                onChangeDishesData={onChangeDishesData}
+              />
+            </View>
+          ))}
         </View>
       )}
     </TouchableOpacity>
@@ -67,11 +89,10 @@ const styles = StyleSheet.create({
   },
   dishDetails: {
     padding: 10,
-    backgroundColor: '#ccc',
+    backgroundColor: '#DFD9E2',
   },
   dishControllerContainer: {
+    flexDirection: 'column',
     marginTop: 10,
-    backgroundColor: '#ccc',
-    height: 100,
   },
 });

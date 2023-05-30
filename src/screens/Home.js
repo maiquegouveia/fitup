@@ -39,8 +39,8 @@ const Home = () => {
           </View>
           {progressBar !== 1 && (
             <View style={styles.registrationProgressContainer}>
-              <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Complete o seu cadastro...</Text>
-              <ProgressBar progress={progressBar} color="#25A55A" style={{ height: 5 }} />
+              <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#0B5563' }}>Complete o seu cadastro...</Text>
+              <ProgressBar progress={progressBar} color="#E57A44" style={{ height: 5 }} />
             </View>
           )}
         </View>
@@ -59,7 +59,6 @@ const Home = () => {
           cardBackground={cardPratos}
           onPress={() => navigation.navigate('FavoriteDishes')}
         />
-        <Button title="Teste" onPress={() => console.log('CLEAR')} />
       </ScrollView>
     </SafeAreaView>
   );
@@ -81,14 +80,15 @@ const styles = StyleSheet.create({
   welcomeText: {
     fontSize: 34,
     fontWeight: 'bold',
+    color: '#0B5563',
   },
   nutriContainer: {
     backgroundColor: 'green',
   },
   registrationProgressContainer: {
-    backgroundColor: '#ccc',
+    backgroundColor: '#DFD9E2',
     padding: 10,
-    borderRadius: 10,
+    borderRadius: 5,
     marginTop: '5%',
   },
 });

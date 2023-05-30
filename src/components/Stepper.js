@@ -3,19 +3,29 @@ import { useState } from 'react';
 import { AntDesign } from '@expo/vector-icons';
 import { TextInput } from 'react-native';
 
-const Stepper = ({ amount }) => {
+const Stepper = ({ amount, dishIndex, dishesData, foodIndex, onChangeDishesData }) => {
   const [value, setValue] = useState(amount);
-  const onIncrement = () => setValue(prev => prev + 1);
-  const onDecrement = () => {
-    if (value > 0) setValue(prev => prev - 1);
+  let dishesUpdated = [...dishesData];
+
+  const onIncrement = () => {
+    dishesUpdated[dishIndex].foods[foodIndex].qnt += 1;
+    onChangeDishesData(dishesUpdated);
   };
+
+  const onDecrement = () => {
+    dishesUpdated[dishIndex].foods[foodIndex].qnt -= 1;
+    onChangeDishesData(dishesUpdated);
+  };
+
   const onChange = text => {
+    text = text.replaceAll(',', '.').replaceAll('..', '.').replaceAll('-', '').replaceAll(' ', '');
     if (text.at(0) === ',' || text.at(0) === '.' || text.at(0) === ' ' || text.at(0) === '-') {
-      setValue(0);
+      dishesUpdated[dishIndex].foods[foodIndex].qnt = text;
+      onChangeDishesData(dishesUpdated);
       return;
     }
-    text = text.replaceAll(',', '.').replaceAll('..', '.').replaceAll('-', '').replaceAll(' ', '');
-    setValue(text);
+    dishesUpdated[dishIndex].foods[foodIndex].qnt = text;
+    onChangeDishesData(dishesUpdated);
   };
 
   return (
@@ -27,14 +37,18 @@ const Stepper = ({ amount }) => {
           paddingHorizontal: 10,
           alignItems: 'center',
           justifyContent: 'center',
-          borderWidth: 2,
+          borderWidth: 2.2,
+          marginHorizontal: 3,
           borderColor: 'black',
+          width: 50,
+          height: 30,
+          backgroundColor: '#E57A44',
         }}
       >
         <TextInput
           inputMode="numeric"
-          style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 18 }}
-          value={`${value}`}
+          style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 16, color: 'white' }}
+          value={`${dishesData[dishIndex].foods[foodIndex].qnt}`}
           onChangeText={onChange}
         />
       </View>
