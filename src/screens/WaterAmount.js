@@ -2,10 +2,17 @@ import { StyleSheet, Text, View, Animated, SafeAreaView } from 'react-native';
 import React from 'react';
 import Cup from '../components/Cup';
 import AddWaterButton from '../components/AddWaterButton';
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
+import { useContext } from 'react';
+import AppContext from '../../AppContext';
+import { useFocusEffect } from '@react-navigation/native';
+import postWaterConsume from '../../utilities/postWaterConsume';
+import getUserDailyWaterConsume from '../../utilities/getUserDailyWaterConsume';
 
 const WaterAmount = () => {
-  const totalWater = 5000;
+  const totalWater = 2000;
+  const { params, setParams } = useContext(AppContext);
+
   const [consumedWater, setConsumedWater] = useState(0);
   const [animation] = useState(new Animated.Value(0));
   const [animationWidth] = useState(new Animated.Value(90));
@@ -19,29 +26,60 @@ const WaterAmount = () => {
   const startAnimation = (value) => {
     Animated.timing(animation, {
       toValue: value,
-      duration: 500,
+      duration: 1000,
       useNativeDriver: false,
     }).start();
   };
   const startAnimationWidth = (value) => {
     Animated.timing(animationWidth, {
       toValue: value,
-      duration: 500,
+      duration: 1000,
       useNativeDriver: false,
     }).start();
   };
 
-  const onChangeConsume = (amount) => {
-    const newConsumed = consumedWater + amount;
+  const onChangeConsume = (newConsumed) => {
+    setConsumedWater(newConsumed);
     if (newConsumed > totalWater) return;
-    const newHeight = ((amount + consumedWater) * 195) / totalWater;
-    console.log(newHeight);
-    setConsumedWater((prev) => prev + amount);
+    const newHeight = (newConsumed * 195) / totalWater;
     startAnimation(newHeight);
     if (newHeight > 9.75) {
       startAnimationWidth(110);
     }
   };
+
+  const onPressAddWaterButton = async (amount) => {
+    const response = await postWaterConsume(params.usuario_id, amount);
+    if (!response?.error) {
+      const newConsumed = consumedWater + amount;
+      onChangeConsume(newConsumed);
+      setParams((prev) => {
+        return {
+          ...prev,
+          consumedWater: newConsumed,
+        };
+      });
+    } else {
+    }
+  };
+
+  // const getData = async() => {
+  //   const consumedWater = await getUserDailyWaterConsume(params.usuario_id);
+  //   setParams((prev) => {
+  //     return {
+  //       ...prev,
+  //       consumedWater: consumedWater,
+  //     };
+  //   });
+  // }
+
+  useFocusEffect(
+    useCallback(() => {
+      // getData()
+      resetWater();
+      onChangeConsume(params.consumedWater);
+    }, [])
+  );
 
   return (
     <SafeAreaView style={styles.mainContainer}>
@@ -53,15 +91,15 @@ const WaterAmount = () => {
           <Text style={styles.title}>Opções Rápidas</Text>
         </View>
         <View style={styles.btnContainer}>
-          <AddWaterButton amount="100" showIcon={true} onChangeConsume={() => onChangeConsume(100)} />
-          <AddWaterButton amount="200" showIcon={true} onChangeConsume={() => onChangeConsume(200)} />
+          <AddWaterButton amount="100" showIcon={true} onChangeConsume={() => onPressAddWaterButton(100)} />
+          <AddWaterButton amount="200" showIcon={true} onChangeConsume={() => onPressAddWaterButton(200)} />
         </View>
         <View style={[styles.btnContainer, { marginTop: 15 }]}>
-          <AddWaterButton amount="300" showIcon={true} onChangeConsume={() => onChangeConsume(300)} />
-          <AddWaterButton amount="400" showIcon={true} onChangeConsume={() => onChangeConsume(400)} />
+          <AddWaterButton amount="300" showIcon={true} onChangeConsume={() => onPressAddWaterButton(300)} />
+          <AddWaterButton amount="400" showIcon={true} onChangeConsume={() => onPressAddWaterButton(400)} />
         </View>
         <View style={{ alignItems: 'center', marginTop: 15 }}>
-          <AddWaterButton amount="Outros" onChangeConsume={resetWater} />
+          <AddWaterButton amount="Outros" onChangeConsume={() => {}} />
         </View>
       </View>
     </SafeAreaView>

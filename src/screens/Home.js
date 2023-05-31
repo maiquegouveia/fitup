@@ -8,6 +8,7 @@ import CalculateRegistrationProgress from '../../utilities/CalculateRegistration
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import getUserFavoriteFoods from '../../utilities/getUserFavoriteFoods';
+import getUserDailyWaterConsume from '../../utilities/getUserDailyWaterConsume';
 
 const Home = () => {
   const { params, userIsAuthenticated, setParams } = useContext(AppContext);
@@ -17,10 +18,12 @@ const Home = () => {
   useEffect(() => {
     const getData = async () => {
       const data = await getUserFavoriteFoods(params.usuario_id);
-      setParams(prev => {
+      const consumedWater = await getUserDailyWaterConsume(params.usuario_id);
+      setParams((prev) => {
         return {
           ...prev,
           favoriteList: data,
+          consumedWater: consumedWater,
         };
       });
     };
