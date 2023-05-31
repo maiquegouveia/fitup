@@ -1,7 +1,9 @@
-import { StyleSheet, Text, View, ScrollView, Alert, Animated, Easing } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Alert, Animated } from 'react-native';
 import { useState } from 'react';
 import { TextInput, Button } from 'react-native-paper';
 import DishCard from '../components/DishCard';
+import CreateDishPopover from '../components/CreateDishPopover';
+import { NativeBaseProvider } from 'native-base';
 
 const FavoriteDishes = () => {
   const [searchInput, setSearchInput] = useState('');
@@ -102,7 +104,9 @@ const FavoriteDishes = () => {
           right={<TextInput.Icon icon="food-fork-drink" iconColor="#256D1B" />}
           onChangeText={onChangeSearchInput}
         />
+        <CreateDishPopover />
       </View>
+
       <View style={styles.dishesContainer}>
         <ScrollView contentContainerStyle={styles.dishesScrollView} showsVerticalScrollIndicator={false}>
           <View style={styles.dishesTitleContainer}>
@@ -146,14 +150,13 @@ export default FavoriteDishes;
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
+    padding: 15,
   },
   searchBarContainer: {
     width: '100%',
-    padding: 15,
-    marginTop: 10,
+    height: '20%',
   },
   dishesContainer: {
-    padding: 15,
     height: '80%',
   },
   dishesScrollView: {
@@ -174,5 +177,9 @@ const styles = StyleSheet.create({
     width: '50%',
     borderRadius: 5,
     marginTop: 15,
+  },
+  addDishBtn: {
+    backgroundColor: 'green',
+    borderRadius: 5,
   },
 });
