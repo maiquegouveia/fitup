@@ -3,7 +3,7 @@ import { TextInput, Text } from 'react-native-paper';
 import { EditProfileContext } from '../../EditProfileContext';
 import { useContext } from 'react';
 
-const EditInputProfile = props => {
+const EditInputProfile = (props) => {
   const { setModalContent } = useContext(EditProfileContext);
 
   const onPress = () => {
@@ -29,7 +29,7 @@ const EditInputProfile = props => {
           secureTextEntry={props?.hideText}
           style={{ width: '100%' }}
           mode="outlined"
-          value={props?.value}
+          value={`${props?.value}`}
           right={<TextInput.Icon icon="square-edit-outline" iconColor="black" size={20} onPress={onPress} />}
         ></TextInput>
       </View>

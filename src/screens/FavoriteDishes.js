@@ -66,14 +66,14 @@ const FavoriteDishes = () => {
 
   const [filteredData, setFilteredData] = useState([...dishesData]);
 
-  const onChangeSearchInput = text => {
+  const onChangeSearchInput = (text) => {
     if (text.length === 0) {
       setSearchInput(text);
       setFilteredData([...dishesData]);
       return;
     }
     setSearchInput(text);
-    setFilteredData(dishesData.filter(dish => dish.name.startsWith(text)));
+    setFilteredData(dishesData.filter((dish) => dish.name.startsWith(text)));
   };
 
   const onSaveChanges = () => {};
@@ -87,57 +87,12 @@ const FavoriteDishes = () => {
     );
   };
 
-  const onChangeDishesData = data => {
+  const onChangeDishesData = (data) => {
     setDishesData(data);
-  };
-
-  const [waterAmount, setWaterAmount] = useState(50);
-
-  const onAddWater = () => {
-    if (waterAmount < 90) {
-      setWaterAmount(prev => prev + 10);
-    }
-  };
-  const onRemoveWater = () => {
-    if (waterAmount > 50) {
-      setWaterAmount(prev => prev - 10);
-    }
   };
 
   return (
     <View style={styles.mainContainer}>
-      <View style={{ backgroundColor: '#655A7C', alignItems: 'center', padding: 50 }}>
-        <View
-          style={{
-            width: 120,
-            height: 200,
-            backgroundColor: '#B0C4DE',
-            borderBottomEndRadius: 50,
-            borderBottomLeftRadius: 50,
-            padding: 3,
-            justifyContent: 'flex-end',
-          }}
-        >
-          <View
-            style={{
-              opacity: 0.5,
-              backgroundColor: 'blue',
-              width: '100%',
-              height: `${waterAmount}%`,
-              borderBottomEndRadius: 50,
-              borderBottomLeftRadius: 50,
-            }}
-          ></View>
-        </View>
-        <Button style={{ backgroundColor: 'white', borderRadius: 5, marginTop: 10 }} onPress={onAddWater}>
-          Add Water
-        </Button>
-        <Button style={{ backgroundColor: 'white', borderRadius: 5, marginTop: 10 }} onPress={onRemoveWater}>
-          Remove Water
-        </Button>
-      </View>
-      <View />
-
       <View style={styles.searchBarContainer}>
         <TextInput
           placeholder="Busque um prato aqui..."
