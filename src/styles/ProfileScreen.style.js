@@ -6,7 +6,7 @@ export default StyleSheet.create({
   },
   container: {
     paddingVertical: 30,
-    backgroundColor: 'white',
+    backgroundColor: 'red',
     width: '100%',
     height: 200,
   },
@@ -14,8 +14,6 @@ export default StyleSheet.create({
     width: 75,
     height: 75,
     borderRadius: 100,
-    marginTop: 22,
-    marginLeft: 22,
   },
   image: {
     width: '100%',

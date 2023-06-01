@@ -12,6 +12,7 @@ const WaterAmount = () => {
   const { params, setParams } = useContext(AppContext);
   const [animation] = useState(new Animated.Value(0));
   const [animationWidth] = useState(new Animated.Value(90));
+  const [consumedWater, setConsumedWater] = useState(params.consumedWater);
 
   const startAnimation = (value) => {
     Animated.timing(animation, {
@@ -29,13 +30,14 @@ const WaterAmount = () => {
     }).start();
   };
 
-  const onChangeConsume = (consumedWater) => {
-    if (consumedWater >= params.totalWater) {
+  const onChangeConsume = (newConsumedWater) => {
+    setConsumedWater(newConsumedWater);
+    if (newConsumedWater >= params.totalWater) {
       startAnimation(195);
       startAnimationWidth(110);
       return;
     }
-    const newHeight = (consumedWater * 195) / params.totalWater;
+    const newHeight = (newConsumedWater * 195) / params.totalWater;
     startAnimation(newHeight);
     if (newHeight > 9.75) {
       startAnimationWidth(110);
@@ -58,18 +60,15 @@ const WaterAmount = () => {
 
   useFocusEffect(
     useCallback(() => {
-      startAnimation(0);
-      startAnimationWidth(90);
-      console.log(params.consumedWater);
       onChangeConsume(params.consumedWater);
-    }, [])
+    }, [params.consumedWater, params.peso])
   );
 
   return (
     <SafeAreaView style={styles.mainContainer}>
       <View style={styles.cupContainer}>
         <Cup
-          consumedWater={params.consumedWater}
+          consumedWater={consumedWater}
           animation={animation}
           animationWidth={animationWidth}
           totalWater={params.totalWater}

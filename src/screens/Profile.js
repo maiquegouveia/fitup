@@ -71,25 +71,36 @@ const ProfileScreen = () => {
       <Provider>
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.container}>
-            <Text
-              onPress={() => navigation.navigate('WaterAmount')}
+            <View
               style={{
-                fontSize: 20,
-                fontWeight: 'bold',
-                flexWrap: 'wrap',
+                width: '100%',
+                backgroundColor: 'pink',
+                flexDirection: 'row',
+                alignItems: 'center',
+                padding: 20,
               }}
             >
-              {params.nome}
-            </Text>
-            <View style={styles.profileImageContainer}>
-              <TouchableOpacity onPress={() => getImageAndPermissions()}>
-                <Image
-                  source={{ uri: `https://i.ibb.co/${params.foto_perfil}` }}
-                  resizeMode="contain"
-                  style={styles.image}
-                />
-              </TouchableOpacity>
+              <View style={styles.profileImageContainer}>
+                <TouchableOpacity onPress={() => getImageAndPermissions()}>
+                  <Image
+                    source={{ uri: `https://i.ibb.co/${params.foto_perfil}` }}
+                    resizeMode="contain"
+                    style={styles.image}
+                  />
+                </TouchableOpacity>
+              </View>
+              <Text
+                onPress={() => navigation.navigate('WaterAmount')}
+                style={{
+                  fontSize: 20,
+                  fontWeight: 'bold',
+                  marginLeft: 12,
+                }}
+              >
+                {params.nome}
+              </Text>
             </View>
+            <View style={{ width: '50%', backgroundColor: 'blue' }}></View>
           </View>
           <View style={{ flex: 0.5, alignItems: 'center' }}>
             {!showEditContainer && (
