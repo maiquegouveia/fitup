@@ -1,6 +1,6 @@
 import { StyleSheet, View, Animated, Text } from 'react-native';
 
-const Cup = ({ animation, consumedWater, animationWidth }) => {
+const Cup = ({ animation, consumedWater, animationWidth, totalWater }) => {
   return (
     <View style={{ flexDirection: 'column', alignItems: 'center' }}>
       <View
@@ -38,7 +38,7 @@ const Cup = ({ animation, consumedWater, animationWidth }) => {
           marginLeft: 10,
         }}
       >
-        {consumedWater}mL
+        {consumedWater}/{totalWater}mL
       </Text>
     </View>
   );

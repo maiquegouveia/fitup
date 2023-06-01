@@ -47,6 +47,9 @@ const ProfileScreen = () => {
     if (response.status === 204) {
       const updatedParams = { ...params };
       updatedParams[`${modalContent.field.name}`] = modalContent.value;
+      if (modalContent.field.name === 'peso') {
+        updatedParams.totalWater = updatedParams.peso * 35;
+      }
       setParams(updatedParams);
       setShowEditModal(false);
     } else if (response.status === 500 && response?.errorCode === 'ER_DUP_ENTRY') {
@@ -55,7 +58,7 @@ const ProfileScreen = () => {
   };
 
   const onCloseEditHandler = () => {
-    setShowEditContainer(prev => !prev);
+    setShowEditContainer((prev) => !prev);
   };
 
   const onLogoutHandler = () => {

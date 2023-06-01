@@ -7,21 +7,11 @@ import { useContext } from 'react';
 import AppContext from '../../AppContext';
 import { useFocusEffect } from '@react-navigation/native';
 import postWaterConsume from '../../utilities/postWaterConsume';
-import getUserDailyWaterConsume from '../../utilities/getUserDailyWaterConsume';
 
 const WaterAmount = () => {
-  const totalWater = 2000;
   const { params, setParams } = useContext(AppContext);
-
-  const [consumedWater, setConsumedWater] = useState(0);
   const [animation] = useState(new Animated.Value(0));
   const [animationWidth] = useState(new Animated.Value(90));
-
-  const resetWater = () => {
-    setConsumedWater(0);
-    startAnimation(0);
-    startAnimationWidth(90);
-  };
 
   const startAnimation = (value) => {
     Animated.timing(animation, {
@@ -30,6 +20,7 @@ const WaterAmount = () => {
       useNativeDriver: false,
     }).start();
   };
+
   const startAnimationWidth = (value) => {
     Animated.timing(animationWidth, {
       toValue: value,
@@ -38,10 +29,13 @@ const WaterAmount = () => {
     }).start();
   };
 
-  const onChangeConsume = (newConsumed) => {
-    setConsumedWater(newConsumed);
-    if (newConsumed > totalWater) return;
-    const newHeight = (newConsumed * 195) / totalWater;
+  const onChangeConsume = (consumedWater) => {
+    if (consumedWater >= params.totalWater) {
+      startAnimation(195);
+      startAnimationWidth(110);
+      return;
+    }
+    const newHeight = (consumedWater * 195) / params.totalWater;
     startAnimation(newHeight);
     if (newHeight > 9.75) {
       startAnimationWidth(110);
@@ -51,32 +45,22 @@ const WaterAmount = () => {
   const onPressAddWaterButton = async (amount) => {
     const response = await postWaterConsume(params.usuario_id, amount);
     if (!response?.error) {
-      const newConsumed = consumedWater + amount;
-      onChangeConsume(newConsumed);
+      const newConsumed = params.consumedWater + amount;
       setParams((prev) => {
         return {
           ...prev,
           consumedWater: newConsumed,
         };
       });
-    } else {
+      onChangeConsume(newConsumed);
     }
   };
 
-  // const getData = async() => {
-  //   const consumedWater = await getUserDailyWaterConsume(params.usuario_id);
-  //   setParams((prev) => {
-  //     return {
-  //       ...prev,
-  //       consumedWater: consumedWater,
-  //     };
-  //   });
-  // }
-
   useFocusEffect(
     useCallback(() => {
-      // getData()
-      resetWater();
+      startAnimation(0);
+      startAnimationWidth(90);
+      console.log(params.consumedWater);
       onChangeConsume(params.consumedWater);
     }, [])
   );
@@ -84,7 +68,12 @@ const WaterAmount = () => {
   return (
     <SafeAreaView style={styles.mainContainer}>
       <View style={styles.cupContainer}>
-        <Cup consumedWater={consumedWater} animation={animation} animationWidth={animationWidth} />
+        <Cup
+          consumedWater={params.consumedWater}
+          animation={animation}
+          animationWidth={animationWidth}
+          totalWater={params.totalWater}
+        />
       </View>
       <View style={styles.btnsContainer}>
         <View style={styles.titleContainer}>

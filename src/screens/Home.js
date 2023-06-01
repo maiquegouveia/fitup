@@ -24,6 +24,7 @@ const Home = () => {
           ...prev,
           favoriteList: data,
           consumedWater: consumedWater,
+          totalWater: prev.peso > 0 ? prev.peso * 35 : 2000,
         };
       });
     };
