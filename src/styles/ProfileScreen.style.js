@@ -5,19 +5,35 @@ export default StyleSheet.create({
     flex: 1,
   },
   container: {
-    paddingVertical: 30,
-    backgroundColor: 'red',
     width: '100%',
-    height: 200,
+    alignItems: 'center',
   },
   profileImageContainer: {
-    width: 75,
-    height: 75,
+    width: 150,
+    height: 150,
     borderRadius: 100,
+    marginVertical: 30,
   },
   image: {
     width: '100%',
     height: '100%',
     borderRadius: 100,
+  },
+  statsContainer: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 50,
+  },
+  statsWaterContainer: {
+    width: '50%',
+    alignItems: 'center',
+  },
+  statsWaterController: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#ccc',
+    padding: 20,
+    borderRadius: 10,
   },
 });

@@ -1,5 +1,5 @@
 import { View, SafeAreaView, Image, ScrollView, TouchableOpacity } from 'react-native';
-import { Provider, Text } from 'react-native-paper';
+import { Provider, Text, Button } from 'react-native-paper';
 import { useState, useContext } from 'react';
 import EditProfileContainer from '../components/EditProfileContainer';
 import styles from '../styles/ProfileScreen.style';
@@ -11,6 +11,7 @@ import removeUserCredentialsFromStorage from '../../utilities/removeUserCredenti
 import EditProfileModal from '../components/EditProfileModal';
 import { EditProfileContext } from '../../EditProfileContext';
 import editUserCredentials from '../../utilities/editUserCredentials';
+import CircularProgress from 'react-native-circular-progress-indicator';
 
 const ProfileScreen = () => {
   const { params, setParams, setUserIsAuthenticated } = useContext(AppContext);
@@ -71,38 +72,48 @@ const ProfileScreen = () => {
       <Provider>
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.container}>
-            <View
+            <View style={styles.profileImageContainer}>
+              <TouchableOpacity onPress={() => getImageAndPermissions()}>
+                <Image
+                  source={{ uri: `https://i.ibb.co/${params.foto_perfil}` }}
+                  resizeMode="contain"
+                  style={styles.image}
+                />
+              </TouchableOpacity>
+            </View>
+            <Text
+              onPress={() => navigation.navigate('WaterAmount')}
               style={{
-                width: '100%',
-                backgroundColor: 'pink',
-                flexDirection: 'row',
-                alignItems: 'center',
-                padding: 20,
+                fontSize: 20,
+                fontWeight: 'bold',
+                flexWrap: 'wrap',
               }}
             >
-              <View style={styles.profileImageContainer}>
-                <TouchableOpacity onPress={() => getImageAndPermissions()}>
-                  <Image
-                    source={{ uri: `https://i.ibb.co/${params.foto_perfil}` }}
-                    resizeMode="contain"
-                    style={styles.image}
-                  />
-                </TouchableOpacity>
-              </View>
-              <Text
-                onPress={() => navigation.navigate('WaterAmount')}
-                style={{
-                  fontSize: 20,
-                  fontWeight: 'bold',
-                  marginLeft: 12,
-                }}
-              >
-                {params.nome}
-              </Text>
-            </View>
-            <View style={{ width: '50%', backgroundColor: 'blue' }}></View>
+              {params.nome}
+            </Text>
           </View>
-          <View style={{ flex: 0.5, alignItems: 'center' }}>
+          <View style={styles.statsContainer}>
+            <View style={styles.statsWaterContainer}>
+              <CircularProgress
+                value={60}
+                radius={60}
+                progressValueColor={'black'}
+                activeStrokeColor={'blue'}
+                inActiveStrokeColor={'brown'}
+                inActiveStrokeOpacity={0.5}
+                inActiveStrokeWidth={10}
+                activeStrokeWidth={20}
+                s
+              />
+            </View>
+            <View style={styles.statsWaterController}>
+              <Text>Água Consumida</Text>
+              <Button textColor="white" style={{ backgroundColor: 'orange', borderRadius: 5, marginTop: 5 }}>
+                Adicionar Água
+              </Button>
+            </View>
+          </View>
+          <View style={{ alignItems: 'center' }}>
             {!showEditContainer && (
               <>
                 <View
