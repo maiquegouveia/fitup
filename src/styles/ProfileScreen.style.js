@@ -3,6 +3,7 @@ import { StyleSheet } from 'react-native';
 export default StyleSheet.create({
   mainContainer: {
     flex: 1,
+    backgroundColor: 'white',
   },
   container: {
     width: '100%',
@@ -21,19 +22,22 @@ export default StyleSheet.create({
   },
   statsContainer: {
     width: '100%',
-    flexDirection: 'row',
+    flexDirection: 'column',
     alignItems: 'center',
     marginVertical: 50,
+    backgroundColor: 'orange',
+    padding: 10,
+    borderRadius: 10,
   },
   statsWaterContainer: {
-    width: '50%',
+    width: '40%',
     alignItems: 'center',
   },
   statsWaterController: {
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#ccc',
-    padding: 20,
+    padding: 10,
     borderRadius: 10,
   },
 });

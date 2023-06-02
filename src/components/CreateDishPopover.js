@@ -16,7 +16,7 @@ function Example() {
           );
         }}
       >
-        <Popover.Content accessibilityLabel="Delete Customerd" w="56">
+        <Popover.Content accessibilityLabel="Delete Customerd" w="64">
           <Popover.Arrow />
           <Popover.CloseButton />
           <Popover.Header>Criar Prato</Popover.Header>
@@ -26,9 +26,9 @@ function Example() {
           <Popover.Footer justifyContent="flex-end">
             <Button.Group space={2}>
               <Button colorScheme="coolGray" variant="ghost">
-                Cancel
+                Cancelar
               </Button>
-              <Button colorScheme="danger">Delete</Button>
+              <Button backgroundColor="#256D1B">Criar</Button>
             </Button.Group>
           </Popover.Footer>
         </Popover.Content>

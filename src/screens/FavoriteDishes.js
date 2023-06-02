@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, ScrollView, Alert, Animated } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Alert } from 'react-native';
 import { useState } from 'react';
 import { TextInput, Button } from 'react-native-paper';
 import DishCard from '../components/DishCard';
@@ -94,7 +94,7 @@ const FavoriteDishes = () => {
   };
 
   return (
-    <View style={styles.mainContainer}>
+    <ScrollView contentContainerStyle={styles.mainContainer}>
       <View style={styles.searchBarContainer}>
         <TextInput
           placeholder="Busque um prato aqui..."
@@ -107,41 +107,35 @@ const FavoriteDishes = () => {
         <CreateDishPopover />
       </View>
 
-      <View style={styles.dishesContainer}>
-        <ScrollView contentContainerStyle={styles.dishesScrollView} showsVerticalScrollIndicator={false}>
-          <View style={styles.dishesTitleContainer}>
-            {filteredData.length > 0 ? (
-              <Text style={styles.dishesTitle}>Pratos ({filteredData.length})</Text>
-            ) : (
-              <Text style={styles.dishesTitle}>Nenhum prato encontrado!</Text>
-            )}
-          </View>
-          {filteredData.map((dish, index) => (
-            <DishCard
-              onChangeDishesData={onChangeDishesData}
-              dishIndex={index}
-              key={index}
-              dishName={dish.name}
-              dishCategory={dish.category}
-              style={{ marginTop: 10 }}
-              foods={dish.foods}
-              dishesData={dishesData}
-            />
-          ))}
-          {filteredData.length > 0 && (
-            <View style={{ alignItems: 'center' }}>
-              <Button
-                onPress={onSaveChanges}
-                labelStyle={{ color: 'black', fontWeight: 'bold' }}
-                style={styles.saveBtn}
-              >
-                Salvar
-              </Button>
-            </View>
+      <ScrollView contentContainerStyle={styles.dishesScrollView} showsVerticalScrollIndicator={false}>
+        <View style={styles.dishesTitleContainer}>
+          {filteredData.length > 0 ? (
+            <Text style={styles.dishesTitle}>Pratos ({filteredData.length})</Text>
+          ) : (
+            <Text style={styles.dishesTitle}>Nenhum prato encontrado!</Text>
           )}
-        </ScrollView>
-      </View>
-    </View>
+        </View>
+        {filteredData.map((dish, index) => (
+          <DishCard
+            onChangeDishesData={onChangeDishesData}
+            dishIndex={index}
+            key={index}
+            dishName={dish.name}
+            dishCategory={dish.category}
+            style={{ marginTop: 10 }}
+            foods={dish.foods}
+            dishesData={dishesData}
+          />
+        ))}
+        {filteredData.length > 0 && (
+          <View style={{ alignItems: 'center' }}>
+            <Button onPress={onSaveChanges} labelStyle={{ color: 'black', fontWeight: 'bold' }} style={styles.saveBtn}>
+              Salvar
+            </Button>
+          </View>
+        )}
+      </ScrollView>
+    </ScrollView>
   );
 };
 
@@ -154,10 +148,7 @@ const styles = StyleSheet.create({
   },
   searchBarContainer: {
     width: '100%',
-    height: '20%',
-  },
-  dishesContainer: {
-    height: '80%',
+    marginBottom: 20,
   },
   dishesScrollView: {
     backgroundColor: '#256D1B',

@@ -20,7 +20,6 @@ const ProfileScreen = () => {
   const [showEditContainer, setShowEditContainer] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-
   const [image, setImage] = useState({
     base64: '',
   });
@@ -67,6 +66,12 @@ const ProfileScreen = () => {
     removeUserCredentialsFromStorage();
     navigation.replace('InitialScreen');
   };
+  const getWaterProgress = () => {
+    const progress = (params.consumedWater / params.totalWater) * 100;
+    if (progress > 100) return 100;
+    return progress;
+  };
+
   return (
     <SafeAreaView style={styles.mainContainer}>
       <Provider>
@@ -82,7 +87,6 @@ const ProfileScreen = () => {
               </TouchableOpacity>
             </View>
             <Text
-              onPress={() => navigation.navigate('WaterAmount')}
               style={{
                 fontSize: 20,
                 fontWeight: 'bold',
@@ -92,27 +96,43 @@ const ProfileScreen = () => {
               {params.nome}
             </Text>
           </View>
-          <View style={styles.statsContainer}>
-            <View style={styles.statsWaterContainer}>
-              <CircularProgress
-                value={60}
-                radius={60}
-                progressValueColor={'black'}
-                activeStrokeColor={'blue'}
-                inActiveStrokeColor={'brown'}
-                inActiveStrokeOpacity={0.5}
-                inActiveStrokeWidth={10}
-                activeStrokeWidth={20}
-                s
-              />
-            </View>
-            <View style={styles.statsWaterController}>
-              <Text>Água Consumida</Text>
-              <Button textColor="white" style={{ backgroundColor: 'orange', borderRadius: 5, marginTop: 5 }}>
-                Adicionar Água
-              </Button>
+          <View style={{ paddingHorizontal: 20 }}>
+            <View style={styles.statsContainer}>
+              <View style={{ width: '100%', marginBottom: 40, alignItems: 'center' }}>
+                <Text style={{ fontSize: 24, fontWeight: 'bold' }}>Estatísticas</Text>
+              </View>
+              <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-between' }}>
+                <TouchableOpacity
+                  activeOpacity={1}
+                  style={styles.statsWaterContainer}
+                  onPress={() => navigation.navigate('WaterAmount')}
+                >
+                  <CircularProgress
+                    value={getWaterProgress()}
+                    radius={60}
+                    progressValueColor={'black'}
+                    activeStrokeColor={'blue'}
+                    inActiveStrokeColor={'brown'}
+                    inActiveStrokeOpacity={0.5}
+                    inActiveStrokeWidth={10}
+                    activeStrokeWidth={20}
+                    valueSuffix="%"
+                  />
+                </TouchableOpacity>
+                <View style={styles.statsWaterController}>
+                  <Text>Água Consumida</Text>
+                  <Button
+                    textColor="white"
+                    style={{ backgroundColor: 'orange', borderRadius: 5, marginTop: 5 }}
+                    onPress={() => navigation.navigate('WaterAmount')}
+                  >
+                    Adicionar Água
+                  </Button>
+                </View>
+              </View>
             </View>
           </View>
+
           <View style={{ alignItems: 'center' }}>
             {!showEditContainer && (
               <>
