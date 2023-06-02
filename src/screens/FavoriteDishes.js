@@ -143,7 +143,6 @@ export default FavoriteDishes;
 
 const styles = StyleSheet.create({
   mainContainer: {
-    flex: 1,
     padding: 15,
   },
   searchBarContainer: {

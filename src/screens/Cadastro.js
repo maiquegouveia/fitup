@@ -64,14 +64,14 @@ const Cadastro = () => {
     /// Este useEffect será executado toda vez que "email.value" sofrer alteração
     /// Define se "email.value" é uma valor válido
     if (isValidEmail(email.value)) {
-      setEmail(prev => {
+      setEmail((prev) => {
         return {
           ...prev,
           isValid: true,
         };
       });
     } else {
-      setEmail(prev => {
+      setEmail((prev) => {
         return {
           ...prev,
           isValid: false,
@@ -84,14 +84,14 @@ const Cadastro = () => {
     /// Este useEffect será executado toda vez que "senha.value" sofrer alteração
     /// Define se "senha.value" é uma valor válido
     if (senha.value.length > 8) {
-      setSenha(prev => {
+      setSenha((prev) => {
         return {
           ...prev,
           isValid: true,
         };
       });
     } else {
-      setSenha(prev => {
+      setSenha((prev) => {
         return {
           ...prev,
           isValid: false,
@@ -104,14 +104,14 @@ const Cadastro = () => {
     /// Este useEffect será executado toda vez que "confSenha.value" sofrer alteração
     /// Define se "confSenha.value" é uma valor válido
     if (confSenha.value === senha.value) {
-      setConfSenha(prev => {
+      setConfSenha((prev) => {
         return {
           ...prev,
           isValid: true,
         };
       });
     } else {
-      setConfSenha(prev => {
+      setConfSenha((prev) => {
         return {
           ...prev,
           isValid: false,
@@ -127,7 +127,7 @@ const Cadastro = () => {
   }, [email.isValid, senha.isValid, confSenha.isValid, termoStatus]);
 
   const onChangeEmailHandler = function (text) {
-    setEmail(prev => {
+    setEmail((prev) => {
       return {
         ...prev,
         value: text,
@@ -136,7 +136,7 @@ const Cadastro = () => {
   };
 
   const onChangeSenhaHandler = function (text) {
-    setSenha(prev => {
+    setSenha((prev) => {
       return {
         ...prev,
         value: text,
@@ -145,7 +145,7 @@ const Cadastro = () => {
   };
 
   const onChangeConfSenhaHandler = function (text) {
-    setConfSenha(prev => {
+    setConfSenha((prev) => {
       return {
         ...prev,
         value: text,
