@@ -2,12 +2,11 @@ import { StyleSheet, Text, View, ScrollView, Alert } from 'react-native';
 import { useState } from 'react';
 import { TextInput, Button } from 'react-native-paper';
 import DishCard from '../components/DishCard';
-import CreateDishPopover from '../components/CreateDishPopover';
-import { NativeBaseProvider } from 'native-base';
+import { useNavigation } from '@react-navigation/native';
 
 const FavoriteDishes = () => {
   const [searchInput, setSearchInput] = useState('');
-
+  const navigation = useNavigation();
   const [dishesData, setDishesData] = useState([
     {
       id: 1,
@@ -104,7 +103,13 @@ const FavoriteDishes = () => {
           right={<TextInput.Icon icon="food-fork-drink" iconColor="#256D1B" />}
           onChangeText={onChangeSearchInput}
         />
-        <CreateDishPopover />
+        <Button
+          textColor="white"
+          style={{ backgroundColor: '#256D1B', borderRadius: 5, marginTop: 10 }}
+          onPress={() => navigation.navigate('CreateDish')}
+        >
+          Criar Prato
+        </Button>
       </View>
 
       <ScrollView contentContainerStyle={styles.dishesScrollView} showsVerticalScrollIndicator={false}>

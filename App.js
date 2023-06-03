@@ -6,9 +6,9 @@ import AppContext from './AppContext';
 import { EditProfileProvider } from './EditProfileContext';
 import { useState } from 'react';
 import { Image, TouchableOpacity } from 'react-native';
-import { header } from './constants/images';
 import { Avatar } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
+import { logo } from './constants/images';
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
@@ -23,6 +23,7 @@ import SearchFood from './src/screens/SearchFood';
 import FavoriteFoods from './src/screens/FavoriteFoods';
 import FavoriteDishes from './src/screens/FavoriteDishes';
 import WaterAmount from './src/screens/WaterAmount';
+import CreateDish from './src/screens/Dish/CreateDish';
 
 function RootStack() {
   const [params, setParams] = useState({});
@@ -83,7 +84,8 @@ function DrawerStack({ params }) {
       screenOptions={{
         headerTitle: '',
         headerBackgroundContainerStyle: { backgroundColor: '#1B818C' },
-        headerBackground: () => <Image source={header} style={{ width: '100%', height: '100%' }} resizeMode="cover" />,
+
+        headerStyle: { backgroundColor: '#53CA6B' },
         headerRight: () => (
           <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate('Profile')}>
             <Avatar.Image
@@ -142,6 +144,13 @@ function DrawerStack({ params }) {
         component={WaterAmount}
         options={{
           title: 'Água Diária',
+        }}
+      />
+      <Drawer.Screen
+        name="CreateDish"
+        component={CreateDish}
+        options={{
+          title: 'Criar Prato',
         }}
       />
     </Drawer.Navigator>
