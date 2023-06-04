@@ -21,7 +21,7 @@ import Cadastro from './src/screens/Cadastro';
 import { leftArrow } from './constants/icons';
 import SearchFood from './src/screens/SearchFood';
 import FavoriteFoods from './src/screens/FavoriteFoods';
-import FavoriteDishes from './src/screens/FavoriteDishes';
+import FavoriteDishes from './src/screens/Dish/FavoriteDishes';
 import WaterAmount from './src/screens/WaterAmount';
 import CreateDish from './src/screens/Dish/CreateDish';
 

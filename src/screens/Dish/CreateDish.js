@@ -1,5 +1,5 @@
 import { StyleSheet, View, ScrollView } from 'react-native';
-import { useState, useContext, useCallback, useEffect } from 'react';
+import { useState, useContext, useCallback } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { Input, NativeBaseProvider, Text, Button } from 'native-base';
 import WarningCreateDish from '../../components/WarningCreateDish';
@@ -9,13 +9,7 @@ import FoodListItem from './components/FoodListItem';
 import FoodCategorySelect from './components/FoodCategorySelect';
 import AppContext from '../../../AppContext';
 import { useFocusEffect } from '@react-navigation/native';
-
-// INSERT INTO table_name (column1, column2, column3, ...)
-// VALUES
-//   (value1_row1, value2_row1, value3_row1, ...),
-//   (value1_row2, value2_row2, value3_row2, ...),
-//   (value1_row3, value2_row3, value3_row3, ...),
-//   ...
+import createDish from '../../../utilities/Dish/createDish';
 
 const CreateDish = () => {
   const { params } = useContext(AppContext);
@@ -117,17 +111,18 @@ const CreateDish = () => {
     return foodList.filter((food) => food.category === selectedCategory);
   };
 
-  const onCreateDish = () => {
+  const onCreateDish = async () => {
     if (!input.isValid || showWarningCategory || showWarningFood) return;
     setIsLoading(true);
     const dish = {
-      dishId: Math.floor(Math.random() * 10),
+      userId: params.usuario_id,
       dishName: input.value,
       foods: foodAddedList,
       dishCategory: dishCategory,
     };
-    const query = dish.foods.map((food, index) => `(${dish.dishId}, ${food.foodId}, ${food.amount}),`);
-    console.log(`VALUES ${query}`);
+    const result = await createDish(dish);
+    console.log(result);
+    if (!result?.error) navigation.navigate('FavoriteDishes');
     setIsLoading(false);
   };
 
@@ -143,64 +138,71 @@ const CreateDish = () => {
 
   return (
     <NativeBaseProvider>
-      <View style={styles.mainContainer}>
-        <Text fontSize={24} fontWeight="bold">
-          Criar Prato
-        </Text>
-        <View style={styles.formContainer}>
-          <View style={styles.formControl}>
-            <Text fontWeight="semibold">Nome do Prato</Text>
-            <Input
-              onChangeText={onChangeInput}
-              value={input.value}
-              borderWidth={2}
-              focusOutlineColor="black"
-              variant="outline"
-              placeholder="Digite o nome do prato"
-              placeholderTextColor="black"
-              borderColor="black"
-              invalidOutlineColor="red"
-            />
-            {!input.isValid && <WarningCreateDish message={getNameError()} />}
-          </View>
-          <View style={styles.formControl}>
-            <Text fontWeight="semibold">Categoria</Text>
-            <DishCategorySelect category={dishCategory} onSelectDishCategory={onSelectDishCategory} />
-            {showWarningCategory && <WarningCreateDish message="Selecione uma categoria para o prato" />}
-          </View>
-          <View style={styles.formControl}>
-            <Text fontWeight="semibold">Alimentos</Text>
-            <View style={{ flexDirection: 'row', width: '100%' }}>
-              <FoodSelect foodList={getFilteredFood()} onSelectFood={onSelectFood} />
-              <FoodCategorySelect
-                categories={getAllCategories()}
-                selectedValue={selectedCategory}
-                setCategory={setCategory}
+      <ScrollView contentContainerStyle={{ flex: 1, backgroundColor: 'white' }}>
+        <View style={styles.mainContainer}>
+          <Text fontSize={24} fontWeight="bold">
+            Criar Prato
+          </Text>
+          <View style={styles.formContainer}>
+            <View style={styles.formControl}>
+              <Text fontWeight="semibold">Nome do Prato</Text>
+              <Input
+                onChangeText={onChangeInput}
+                value={input.value}
+                borderWidth={2}
+                focusOutlineColor="black"
+                variant="outline"
+                placeholder="Digite o nome do prato"
+                placeholderTextColor="black"
+                borderColor="black"
+                invalidOutlineColor="red"
               />
+              {!input.isValid && <WarningCreateDish message={getNameError()} />}
             </View>
-            {showWarningFood && <WarningCreateDish message="Adicione pelo menos 1 Alimento" />}
+            <View style={styles.formControl}>
+              <Text fontWeight="semibold">Categoria</Text>
+              <DishCategorySelect category={dishCategory} onSelectDishCategory={onSelectDishCategory} />
+              {showWarningCategory && <WarningCreateDish message="Selecione uma categoria para o prato" />}
+            </View>
+            <View style={styles.formControl}>
+              <Text fontWeight="semibold">Alimentos</Text>
+              <View style={{ flexDirection: 'row', width: '100%' }}>
+                <FoodSelect foodList={getFilteredFood()} onSelectFood={onSelectFood} />
+                <FoodCategorySelect
+                  categories={getAllCategories()}
+                  selectedValue={selectedCategory}
+                  setCategory={setCategory}
+                />
+              </View>
+              {showWarningFood && <WarningCreateDish message="Adicione pelo menos 1 Alimento" />}
+            </View>
+            {foodAddedList.length > 0 && (
+              <View style={{ marginTop: 10, height: '40%', backgroundColor: '#ccc' }}>
+                <ScrollView contentContainerStyle={{ padding: 10 }}>
+                  {foodAddedList.map((food, index) => (
+                    <FoodListItem
+                      onRemove={onRemove}
+                      foodId={food.foodId}
+                      key={index}
+                      foodName={food.foodName}
+                      amount={food.amount}
+                      style={{ marginBottom: index === foodAddedList.length - 1 ? 0 : 10 }}
+                    />
+                  ))}
+                </ScrollView>
+              </View>
+            )}
+            <Button
+              isLoading={isLoading}
+              disabled={false}
+              marginTop={foodAddedList.length > 0 ? 5 : 10}
+              onPress={onCreateDish}
+            >
+              Criar
+            </Button>
           </View>
-          {foodAddedList.length > 0 && (
-            <View style={{ marginTop: 10, height: '40%' }}>
-              <ScrollView contentContainerStyle={{ padding: 10, backgroundColor: '#ccc' }}>
-                {foodAddedList.map((food, index) => (
-                  <FoodListItem
-                    onRemove={onRemove}
-                    foodId={food.foodId}
-                    key={index}
-                    foodName={food.foodName}
-                    amount={food.amount}
-                    style={{ marginBottom: index === foodAddedList.length - 1 ? 0 : 10 }}
-                  />
-                ))}
-              </ScrollView>
-            </View>
-          )}
-          <Button isLoading={isLoading} disabled={false} marginTop={10} onPress={onCreateDish}>
-            Criar
-          </Button>
         </View>
-      </View>
+      </ScrollView>
     </NativeBaseProvider>
   );
 };
@@ -209,9 +211,7 @@ export default CreateDish;
 
 const styles = StyleSheet.create({
   mainContainer: {
-    flex: 1,
     alignItems: 'center',
-    backgroundColor: 'white',
     padding: 10,
   },
   formContainer: {

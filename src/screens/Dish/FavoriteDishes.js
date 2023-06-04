@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, ScrollView, Alert } from 'react-native';
 import { useState } from 'react';
 import { TextInput, Button } from 'react-native-paper';
-import DishCard from '../components/DishCard';
+import DishCard from '../../components/DishCard';
 import { useNavigation } from '@react-navigation/native';
 
 const FavoriteDishes = () => {
