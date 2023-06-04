@@ -5,6 +5,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 const FoodCategorySelect = ({ categories, setCategory, selectedValue }) => {
   return (
     <Select
+    borderWidth={2}
       placeholderTextColor="black"
       borderColor="black"
       dropdownIcon={<MaterialIcons style={{ marginRight: 5 }} name="arrow-drop-down" size={24} color="black" />}

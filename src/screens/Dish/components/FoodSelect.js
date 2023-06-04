@@ -7,6 +7,7 @@ const FoodSelect = ({ foodList, onSelectFood }) => {
 
   return (
     <Select
+    borderWidth={2}
       minWidth="2/3"
       borderColor="black"
       placeholderTextColor="black"

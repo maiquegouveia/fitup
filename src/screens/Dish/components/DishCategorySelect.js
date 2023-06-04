@@ -1,11 +1,10 @@
-import { useState } from 'react';
-import { CheckIcon, Select, WarningOutlineIcon, FormControl } from 'native-base';
+import { CheckIcon, Select } from 'native-base';
 import { MaterialIcons } from '@expo/vector-icons';
 
-const DishCategorySelect = () => {
-  const [category, setCategory] = useState('');
+const DishCategorySelect = ({ category, onSelectDishCategory }) => {
   return (
     <Select
+      borderWidth={2}
       placeholderTextColor="black"
       borderColor="black"
       dropdownIcon={<MaterialIcons style={{ marginRight: 5 }} name="arrow-drop-down" size={24} color="black" />}
@@ -17,11 +16,13 @@ const DishCategorySelect = () => {
         bg: '#ccc',
         endIcon: <CheckIcon size={5} />,
       }}
-      onValueChange={(itemValue) => setCategory(itemValue)}
+      onValueChange={(itemValue) => onSelectDishCategory(itemValue)}
     >
-      <Select.Item label="Café da Manhã" value="cafe_manha" />
-      <Select.Item label="Almoço" value="almoco" />
-      <Select.Item label="Janta" value="janta" />
+      <Select.Item label="Café da Manhã" value="Café da Manhã" />
+      <Select.Item label="Lanche da Manhã" value="Lanche da Manhã" />
+      <Select.Item label="Almoço" value="Almoço" />
+      <Select.Item label="Lanche da Tarde" value="Lanche da Tarde" />
+      <Select.Item label="Janta" value="Janta" />
     </Select>
   );
 };
