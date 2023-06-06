@@ -9,6 +9,8 @@ import { Image, TouchableOpacity } from 'react-native';
 import { Avatar } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { logo } from './constants/images';
+import { ThemeProvider } from './contexts/ThemeProvider';
+
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
@@ -28,12 +30,9 @@ import CreateDish from './src/screens/Dish/CreateDish';
 function RootStack() {
   const [params, setParams] = useState({});
   const [userIsAuthenticated, setUserIsAuthenticated] = useState(false);
-  const [styleMode, setStyleMode] = useState('black');
 
   return (
-    <AppContext.Provider
-      value={{ params, setParams, userIsAuthenticated, setUserIsAuthenticated, styleMode, setStyleMode }}
-    >
+    <AppContext.Provider value={{ params, setParams, userIsAuthenticated, setUserIsAuthenticated }}>
       <NavigationContainer>
         <Stack.Navigator
           initialRouteName="InitialScreen"
@@ -69,10 +68,10 @@ function RootStack() {
             }}
           >
             {() => (
-              <AppContext.Provider
-                value={{ params, setParams, userIsAuthenticated, setUserIsAuthenticated, styleMode, setStyleMode }}
-              >
-                <DrawerStack params={params} styleMode={styleMode} />
+              <AppContext.Provider value={{ params, setParams, userIsAuthenticated, setUserIsAuthenticated }}>
+                <ThemeProvider>
+                  <DrawerStack params={params} />
+                </ThemeProvider>
               </AppContext.Provider>
             )}
           </Stack.Screen>
@@ -82,7 +81,7 @@ function RootStack() {
   );
 }
 
-function DrawerStack({ params, styleMode }) {
+function DrawerStack({ params }) {
   const navigation = useNavigation();
   return (
     <Drawer.Navigator

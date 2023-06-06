@@ -1,20 +1,23 @@
 import { View, SafeAreaView, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { Provider, Text, Button } from 'react-native-paper';
 import { useState, useContext } from 'react';
-import EditProfileContainer from '../components/EditProfileContainer';
-import styles from '../styles/ProfileScreen.style';
-import ButtonComponent from '../components/ButtonComponent';
-import AppContext from '../../AppContext';
 import { useNavigation } from '@react-navigation/native';
+import CircularProgress from 'react-native-circular-progress-indicator';
+import EditProfileContainer from '../components/EditProfileContainer';
+import ButtonComponent from '../components/ButtonComponent';
+import EditProfileModal from '../components/EditProfileModal';
+import styles from '../styles/ProfileScreen.style';
+import AppContext from '../../AppContext';
+import { EditProfileContext } from '../../EditProfileContext';
+import { ThemeContext } from '../../contexts/ThemeProvider';
 import getImageAndPermissions from '../../utilities/getImageAndPermissions';
 import removeUserCredentialsFromStorage from '../../utilities/removeUserCredentialsFromStorage';
-import EditProfileModal from '../components/EditProfileModal';
-import { EditProfileContext } from '../../EditProfileContext';
 import editUserCredentials from '../../utilities/editUserCredentials';
-import CircularProgress from 'react-native-circular-progress-indicator';
 
 const ProfileScreen = () => {
   const { params, setParams, setUserIsAuthenticated } = useContext(AppContext);
+  const { theme } = useContext(ThemeContext);
+
   const [showEditModal, setShowEditModal] = useState(false);
   const { modalContent } = useContext(EditProfileContext);
   const [showEditContainer, setShowEditContainer] = useState(false);
@@ -73,7 +76,7 @@ const ProfileScreen = () => {
   };
 
   return (
-    <SafeAreaView style={styles.mainContainer}>
+    <SafeAreaView style={[styles.mainContainer, { backgroundColor: theme.backgroundColor }]}>
       <Provider>
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.container}>
@@ -86,53 +89,48 @@ const ProfileScreen = () => {
                 />
               </TouchableOpacity>
             </View>
-            <Text
-              style={{
-                fontSize: 20,
-                fontWeight: 'bold',
-                flexWrap: 'wrap',
-              }}
-            >
-              {params.nome}
-            </Text>
+            {!showEditContainer && (
+              <Text style={[styles.nameText, { color: theme.fontColor.title }]}>{params.nome}</Text>
+            )}
           </View>
-          <View style={{ paddingHorizontal: 20 }}>
-            <View style={styles.statsContainer}>
-              <View style={{ width: '100%', marginBottom: 40, alignItems: 'center' }}>
-                <Text style={{ fontSize: 24, fontWeight: 'bold' }}>Estatísticas</Text>
-              </View>
-              <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-between' }}>
-                <TouchableOpacity
-                  activeOpacity={1}
-                  style={styles.statsWaterContainer}
-                  onPress={() => navigation.navigate('WaterAmount')}
-                >
-                  <CircularProgress
-                    value={getWaterProgress()}
-                    radius={60}
-                    progressValueColor={'black'}
-                    activeStrokeColor={'blue'}
-                    inActiveStrokeColor={'brown'}
-                    inActiveStrokeOpacity={0.5}
-                    inActiveStrokeWidth={10}
-                    activeStrokeWidth={20}
-                    valueSuffix="%"
-                  />
-                </TouchableOpacity>
-                <View style={styles.statsWaterController}>
-                  <Text>Água Consumida</Text>
-                  <Button
-                    textColor="white"
-                    style={{ backgroundColor: 'orange', borderRadius: 5, marginTop: 5 }}
+          {!showEditContainer && (
+            <View style={{ paddingHorizontal: 20 }}>
+              <View style={styles.statsContainer}>
+                <View style={{ width: '100%', marginBottom: 40, alignItems: 'center' }}>
+                  <Text style={{ fontSize: 24, fontWeight: 'bold' }}>Estatísticas</Text>
+                </View>
+                <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-between' }}>
+                  <TouchableOpacity
+                    activeOpacity={1}
+                    style={styles.statsWaterContainer}
                     onPress={() => navigation.navigate('WaterAmount')}
                   >
-                    Adicionar Água
-                  </Button>
+                    <CircularProgress
+                      value={getWaterProgress()}
+                      radius={60}
+                      progressValueColor={'black'}
+                      activeStrokeColor={'blue'}
+                      inActiveStrokeColor={'brown'}
+                      inActiveStrokeOpacity={0.5}
+                      inActiveStrokeWidth={10}
+                      activeStrokeWidth={20}
+                      valueSuffix="%"
+                    />
+                  </TouchableOpacity>
+                  <View style={styles.statsWaterController}>
+                    <Text>Água Consumida</Text>
+                    <Button
+                      textColor="white"
+                      style={{ backgroundColor: 'orange', borderRadius: 5, marginTop: 5 }}
+                      onPress={() => navigation.navigate('WaterAmount')}
+                    >
+                      Adicionar Água
+                    </Button>
+                  </View>
                 </View>
               </View>
             </View>
-          </View>
-
+          )}
           <View style={{ alignItems: 'center' }}>
             {!showEditContainer && (
               <>
@@ -144,7 +142,7 @@ const ProfileScreen = () => {
                   }}
                 ></View>
                 <ButtonComponent
-                  styles={{ marginBottom: 20 }}
+                  styles={{ marginBottom: 10 }}
                   btnText="Editar Perfil"
                   onPress={() => setShowEditContainer(true)}
                 />

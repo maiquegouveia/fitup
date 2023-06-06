@@ -9,9 +9,12 @@ import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import getUserFavoriteFoods from '../../utilities/getUserFavoriteFoods';
 import getUserDailyWaterConsume from '../../utilities/getUserDailyWaterConsume';
+import { ThemeContext } from '../../contexts/ThemeProvider';
 
 const Home = () => {
   const { params, userIsAuthenticated, setParams } = useContext(AppContext);
+  const { theme } = useContext(ThemeContext);
+
   const progressBar = CalculateRegistrationProgress(params);
   const navigation = useNavigation();
 
@@ -32,13 +35,13 @@ const Home = () => {
   }, []);
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.backgroundColor }}>
       <ScrollView style={styles.mainContainer} showsVerticalScrollIndicator={false}>
         <View style={styles.welcomeContainer}>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Text style={styles.welcomeText}>Funcionalidades</Text>
+            <Text style={[styles.welcomeText, { color: theme.fontColor.title }]}>Funcionalidades</Text>
             <TouchableOpacity>
-              <Ionicons name="notifications" size={26} color="black" />
+              <Ionicons name="notifications" size={26} color={theme.iconColor} />
             </TouchableOpacity>
           </View>
           {progressBar !== 1 && (
@@ -75,7 +78,6 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     height: '100%',
-    backgroundColor: 'white',
   },
   welcomeContainer: {
     padding: 5,

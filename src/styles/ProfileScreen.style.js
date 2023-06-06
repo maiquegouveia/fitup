@@ -3,7 +3,6 @@ import { StyleSheet } from 'react-native';
 export default StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: 'white',
   },
   container: {
     width: '100%',
@@ -39,5 +38,10 @@ export default StyleSheet.create({
     backgroundColor: '#ccc',
     padding: 10,
     borderRadius: 10,
+  },
+  nameText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    flexWrap: 'wrap',
   },
 });

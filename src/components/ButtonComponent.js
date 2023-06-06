@@ -1,10 +1,10 @@
 import { Button } from 'react-native-paper';
 
-const ButtonComponent = props => {
+const ButtonComponent = (props) => {
   return (
     <Button
       textColor="white"
-      style={[{ width: 100, backgroundColor: 'green', borderRadius: 5 }, props.styles]}
+      style={[{ width: 100, backgroundColor: '#FF7043', borderRadius: 5 }, props.styles]}
       onPress={props.onPress}
     >
       {props.btnText}

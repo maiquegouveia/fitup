@@ -1,38 +1,29 @@
 import { Text, View, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
-import React from 'react';
 import { Ionicons, AntDesign, SimpleLineIcons, MaterialIcons } from '@expo/vector-icons';
-import SharedStylesComponent from '../SharedStylesComponent';
+import { useContext } from 'react';
+import { ThemeContext } from '../../contexts/ThemeProvider';
 
 const Settings = () => {
-  const changeStyleMode = () => {
-    // if (styleMode === 'white') {
-    //   setStyleMode('black');
-    // } else {
-    //   setStyleMode('white');
-    // }
-  };
+  const { theme, setIsDarkMode } = useContext(ThemeContext);
 
-  const globalStyles = SharedStylesComponent();
+  const onChangeTheme = () => setIsDarkMode((prev) => !prev);
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.backgroundColor }}>
       <View style={styles.body}>
         <TouchableOpacity style={styles.container}>
-          <AntDesign name="questioncircle" size={15} color="black" style={styles.icon} />
-          <Text style={styles.textBtn}>Sobre</Text>
+          <AntDesign name="questioncircle" size={15} color={theme.iconColor} style={styles.icon} />
+          <Text style={[styles.textBtn, { color: theme.fontColor.text }]}>Sobre</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.container}>
-          <Ionicons name="ios-document-text" size={15} color="black" style={styles.icon} />
-          <Text style={styles.textBtn}>Termo & Condições</Text>
+          <Ionicons name="ios-document-text" size={15} color={theme.iconColor} style={styles.icon} />
+          <Text style={[styles.textBtn, { color: theme.fontColor.text }]}>Termo & Condições</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
-          style={[styles.container, { backgroundColor: globalStyles.themeBackground }]}
-          onPress={changeStyleMode}
-        >
-          <Ionicons name="color-fill" size={15} color="black" style={styles.icon} />
-          <Text style={styles.textBtn}>Alterar cor de fundo</Text>
+        <TouchableOpacity style={[styles.container]} onPress={onChangeTheme}>
+          <Ionicons name="color-fill" size={15} color={theme.iconColor} style={styles.icon} />
+          <Text style={[styles.textBtn, { color: theme.fontColor.text }]}>Alterar cor de fundo</Text>
         </TouchableOpacity>
         <View
           style={{
@@ -51,19 +42,19 @@ const Settings = () => {
         </View>
         <View>
           <TouchableOpacity>
-            <Text style={{ alignItems: 'center', marginTop: 12 }}>Versão 1.0</Text>
+            <Text style={{ alignItems: 'center', marginTop: 12, color: theme.fontColor.text }}>Versão 1.0</Text>
           </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>
   );
 };
+
 const styles = StyleSheet.create({
   body: {
     flex: 1,
     alignItems: 'center',
     height: '100%',
-    backgroundColor: '#FFFFFF',
   },
   container: {
     width: '100%',
@@ -74,7 +65,6 @@ const styles = StyleSheet.create({
   },
   textBtn: {
     fontSize: 15,
-    color: 'black',
     fontWeight: 'bold',
     marginLeft: 20,
   },

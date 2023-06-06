@@ -4,14 +4,15 @@ import EditInputProfile from '../components/EditInputProfile';
 import styles from './EditProfileContainer.style';
 import ButtonComponent from './ButtonComponent';
 import AppContext from '../../AppContext';
+import { ThemeContext } from '../../contexts/ThemeProvider';
 
-const EditProfileContainer = props => {
+const EditProfileContainer = (props) => {
   const { params } = useContext(AppContext);
-
+  const { theme } = useContext(ThemeContext);
   return (
     <>
       <View style={{ alignItems: 'center' }}>
-        <Text style={styles.title}>Editar Perfil</Text>
+        <Text style={[styles.title, { color: theme.fontColor.title }]}>Editar Perfil</Text>
       </View>
       <View style={styles.container}>
         <EditInputProfile
