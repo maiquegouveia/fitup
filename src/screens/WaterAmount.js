@@ -7,12 +7,14 @@ import { useContext } from 'react';
 import AppContext from '../../AppContext';
 import { useFocusEffect } from '@react-navigation/native';
 import postWaterConsume from '../../utilities/postWaterConsume';
+import { ThemeContext } from '../../contexts/ThemeProvider';
 
 const WaterAmount = () => {
   const { params, setParams } = useContext(AppContext);
   const [animation] = useState(new Animated.Value(0));
   const [animationWidth] = useState(new Animated.Value(90));
   const [consumedWater, setConsumedWater] = useState(params.consumedWater);
+  const { theme } = useContext(ThemeContext);
 
   const startAnimation = (value) => {
     Animated.timing(animation, {
@@ -65,18 +67,19 @@ const WaterAmount = () => {
   );
 
   return (
-    <SafeAreaView style={styles.mainContainer}>
+    <SafeAreaView style={[styles.mainContainer, { backgroundColor: theme.backgroundColor }]}>
       <View style={styles.cupContainer}>
         <Cup
           consumedWater={consumedWater}
           animation={animation}
           animationWidth={animationWidth}
           totalWater={params.totalWater}
+          color={theme.fontColor.text}
         />
       </View>
       <View style={styles.btnsContainer}>
         <View style={styles.titleContainer}>
-          <Text style={styles.title}>Opções Rápidas</Text>
+          <Text style={[styles.title, { color: theme.fontColor.title }]}>Opções Rápidas</Text>
         </View>
         <View style={styles.btnContainer}>
           <AddWaterButton amount="100" showIcon={true} onChangeConsume={() => onPressAddWaterButton(100)} />

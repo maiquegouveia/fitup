@@ -18,6 +18,7 @@ export const ThemeProvider = ({ children }) => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const theme = {
     backgroundColor: isDarkMode ? '#303030' : 'white',
+    backgroundLine: isDarkMode ? 'white' : '#303030',
     fontColor: {
       title: isDarkMode ? 'white' : '#0B5563',
       text: isDarkMode ? 'white' : 'black',

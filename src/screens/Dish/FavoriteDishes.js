@@ -1,71 +1,21 @@
 import { StyleSheet, Text, View, ScrollView, Alert } from 'react-native';
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { TextInput, Button } from 'react-native-paper';
 import DishCard from '../../components/DishCard';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { ThemeContext } from '../../../contexts/ThemeProvider';
+import { useContext } from 'react';
+import getDishes from '../../../utilities/Dish/getDishes';
+import AppContext from '../../../AppContext';
 
 const FavoriteDishes = () => {
   const [searchInput, setSearchInput] = useState('');
   const navigation = useNavigation();
-  const [dishesData, setDishesData] = useState([
-    {
-      id: 1,
-      name: 'Almoço',
-      category: 'Almoço',
+  const { params } = useContext(AppContext);
+  const { theme } = useContext(ThemeContext);
+  const [dishesData, setDishesData] = useState([]);
 
-      foods: [
-        { name: 'Arroz, tipo 1, cozido', carb100: 28.1, pro100: 2.5, qnt: 100, kcal100: 1000 },
-        { name: 'Feijão fradinho', carb100: 28.1, pro100: 2.5, qnt: 20, kcal100: 1000 },
-        { name: 'Frango, tipo 2, grelhado', carb100: 28.1, pro100: 2.5, qnt: 100, kcal100: 1000 },
-      ],
-    },
-    {
-      id: 2,
-      name: 'Café da Manhã',
-      category: 'Café da Manhã',
-
-      foods: [
-        { name: 'Arroz, tipo 1, cozido', carb100: 28.1, pro100: 2.5, qnt: 100, kcal100: 1000 },
-        { name: 'Feijão fradinho', carb100: 28.1, pro100: 2.5, qnt: 20, kcal100: 1000 },
-        { name: 'Frango, tipo 2, grelhado', carb100: 28.1, pro100: 2.5, qnt: 100, kcal100: 1000 },
-      ],
-    },
-    {
-      id: 3,
-      name: 'Café da Manhã',
-      category: 'Café da Manhã',
-
-      foods: [
-        { name: 'Arroz, tipo 1, cozido', carb100: 28.1, pro100: 2.5, qnt: 100, kcal100: 1000 },
-        { name: 'Feijão fradinho', carb100: 28.1, pro100: 2.5, qnt: 20, kcal100: 1000 },
-        { name: 'Frango, tipo 2, grelhado', carb100: 28.1, pro100: 2.5, qnt: 100, kcal100: 1000 },
-      ],
-    },
-    {
-      id: 4,
-      name: 'Café da Manhã',
-      category: 'Café da Manhã',
-
-      foods: [
-        { name: 'Arroz, tipo 1, cozido', carb100: 28.1, pro100: 2.5, qnt: 100, kcal100: 1000 },
-        { name: 'Feijão fradinho', carb100: 28.1, pro100: 2.5, qnt: 20, kcal100: 1000 },
-        { name: 'Frango, tipo 2, grelhado', carb100: 28.1, pro100: 2.5, qnt: 100, kcal100: 1000 },
-      ],
-    },
-    {
-      id: 5,
-      name: 'Janta',
-      category: 'Janta',
-
-      foods: [
-        { name: 'Arroz, tipo 1, cozido', carb100: 28.1, pro100: 2.5, qnt: 100, kcal100: 1000 },
-        { name: 'Feijão fradinho', carb100: 28.1, pro100: 2.5, qnt: 20, kcal100: 1000 },
-        { name: 'Frango, tipo 2, grelhado', carb100: 0, pro100: 23.9, qnt: 100, kcal100: 243 },
-      ],
-    },
-  ]);
-
-  const [filteredData, setFilteredData] = useState([...dishesData]);
+  const [filteredData, setFilteredData] = useState([]);
 
   const onChangeSearchInput = (text) => {
     if (text.length === 0) {
@@ -92,8 +42,19 @@ const FavoriteDishes = () => {
     setDishesData(data);
   };
 
+  useFocusEffect(
+    useCallback(() => {
+      const getData = async () => {
+        const data = await getDishes(params.usuario_id);
+        setDishesData(data);
+        setFilteredData(data);
+      };
+      getData();
+    }, [])
+  );
+
   return (
-    <ScrollView contentContainerStyle={styles.mainContainer}>
+    <ScrollView contentContainerStyle={[styles.mainContainer, { backgroundColor: theme.backgroundColor }]}>
       <View style={styles.searchBarContainer}>
         <TextInput
           placeholder="Busque um prato aqui..."
@@ -114,25 +75,16 @@ const FavoriteDishes = () => {
 
       <ScrollView contentContainerStyle={styles.dishesScrollView} showsVerticalScrollIndicator={false}>
         <View style={styles.dishesTitleContainer}>
-          {filteredData.length > 0 ? (
-            <Text style={styles.dishesTitle}>Pratos ({filteredData.length})</Text>
+          {filteredData?.length > 0 ? (
+            <Text style={styles.dishesTitle}>Pratos ({filteredData?.length})</Text>
           ) : (
             <Text style={styles.dishesTitle}>Nenhum prato encontrado!</Text>
           )}
         </View>
-        {filteredData.map((dish, index) => (
-          <DishCard
-            onChangeDishesData={onChangeDishesData}
-            dishIndex={index}
-            key={index}
-            dishName={dish.name}
-            dishCategory={dish.category}
-            style={{ marginTop: 10 }}
-            foods={dish.foods}
-            dishesData={dishesData}
-          />
+        {filteredData?.map((dish, index) => (
+          <DishCard key={index} dishName={dish.name} dishCategory={dish.category} style={{ marginTop: 10 }} />
         ))}
-        {filteredData.length > 0 && (
+        {filteredData?.length > 0 && (
           <View style={{ alignItems: 'center' }}>
             <Button onPress={onSaveChanges} labelStyle={{ color: 'black', fontWeight: 'bold' }} style={styles.saveBtn}>
               Salvar

@@ -1,13 +1,19 @@
 import { CheckIcon, Select } from 'native-base';
 import { MaterialIcons } from '@expo/vector-icons';
+import { ThemeContext } from '../../../../contexts/ThemeProvider';
+import { useContext } from 'react';
 
 const DishCategorySelect = ({ category, onSelectDishCategory }) => {
+  const { theme } = useContext(ThemeContext);
   return (
     <Select
       borderWidth={2}
-      placeholderTextColor="black"
-      borderColor="black"
-      dropdownIcon={<MaterialIcons style={{ marginRight: 5 }} name="arrow-drop-down" size={24} color="black" />}
+      placeholderTextColor={theme.fontColor.text}
+      color={theme.fontColor.text}
+      borderColor={theme.backgroundLine}
+      dropdownIcon={
+        <MaterialIcons style={{ marginRight: 5 }} name="arrow-drop-down" size={24} color={theme.iconColor} />
+      }
       selectedValue={category}
       minWidth="1/3"
       accessibilityLabel="Escolha uma categoria"

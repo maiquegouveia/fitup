@@ -5,7 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import AppContext from './AppContext';
 import { EditProfileProvider } from './EditProfileContext';
 import { useState } from 'react';
-import { Image, TouchableOpacity } from 'react-native';
+import { Image, TouchableOpacity, Text } from 'react-native';
 import { Avatar } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { logo } from './constants/images';
@@ -26,6 +26,7 @@ import FavoriteFoods from './src/screens/FavoriteFoods';
 import FavoriteDishes from './src/screens/Dish/FavoriteDishes';
 import WaterAmount from './src/screens/WaterAmount';
 import CreateDish from './src/screens/Dish/CreateDish';
+import { color } from 'react-native-reanimated';
 
 function RootStack() {
   const [params, setParams] = useState({});
@@ -86,10 +87,14 @@ function DrawerStack({ params }) {
   return (
     <Drawer.Navigator
       screenOptions={{
-        headerTitle: '',
-        headerBackgroundContainerStyle: { backgroundColor: '#1B818C' },
-
-        headerStyle: { backgroundColor: '#53CA6B' },
+        headerTitleAlign: 'center',
+        headerStyle: { backgroundColor: '#59CA6B' },
+        headerTitle: () => (
+          <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate('Home')}>
+            {/* <Image src="assets/logo.png"></Image> */}
+            <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 25 }}>FitUP</Text>
+          </TouchableOpacity>
+        ),
         headerRight: () => (
           <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate('Profile')}>
             <Avatar.Image

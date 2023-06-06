@@ -1,17 +1,21 @@
 import { useState } from 'react';
 import { CheckIcon, Select } from 'native-base';
 import { MaterialIcons } from '@expo/vector-icons';
-
+import { ThemeContext } from '../../../../contexts/ThemeProvider';
+import { useContext } from 'react';
 const FoodSelect = ({ foodList, onSelectFood }) => {
   const [selectedFood, setSelectedFood] = useState('');
+  const { theme } = useContext(ThemeContext);
 
   return (
     <Select
-    borderWidth={2}
+      borderWidth={2}
       minWidth="2/3"
-      borderColor="black"
-      placeholderTextColor="black"
-      dropdownIcon={<MaterialIcons style={{ marginRight: 5 }} name="arrow-drop-down" size={24} color="black" />}
+      borderColor={theme.backgroundLine}
+      placeholderTextColor={theme.fontColor.text}
+      dropdownIcon={
+        <MaterialIcons style={{ marginRight: 5 }} name="arrow-drop-down" size={24} color={theme.iconColor} />
+      }
       selectedValue={selectedFood}
       accessibilityLabel="Adicione um alimento"
       placeholder="Adicione um alimento"

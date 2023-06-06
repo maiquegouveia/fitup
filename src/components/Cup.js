@@ -1,6 +1,9 @@
 import { StyleSheet, View, Animated, Text } from 'react-native';
+import { ThemeContext } from '../../contexts/ThemeProvider';
+import { useContext } from 'react';
 
 const Cup = ({ animation, consumedWater, animationWidth, totalWater }) => {
+  const { theme } = useContext(ThemeContext);
   return (
     <View style={{ flexDirection: 'column', alignItems: 'center' }}>
       <View
@@ -34,7 +37,7 @@ const Cup = ({ animation, consumedWater, animationWidth, totalWater }) => {
         style={{
           fontSize: 18,
           fontWeight: 'bold',
-          color: 'black',
+          color: theme.fontColor.text,
           marginLeft: 10,
         }}
       >

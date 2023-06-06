@@ -4,7 +4,7 @@ import Stepper from './Stepper';
 
 const DishCard = ({ dishIndex, dishName, dishCategory, style, foods, onChangeDishesData, dishesData }) => {
   const [showController, setShowController] = useState(false);
-  const onShowController = () => setShowController(prev => !prev);
+  const onShowController = () => setShowController((prev) => !prev);
 
   return (
     <TouchableOpacity onPress={onShowController} activeOpacity={1} style={[styles.dishContainer, style]}>
@@ -20,23 +20,23 @@ const DishCard = ({ dishIndex, dishName, dishCategory, style, foods, onChangeDis
           <Text style={styles.dishProperties}>Calorias: </Text>
           <Text style={styles.dishDescription}>
             {' '}
-            {foods.reduce((acc, curr) => acc + (curr.qnt * curr.kcal100) / 100, 0).toFixed(2)}kcal
+            {/* {foods.reduce((acc, curr) => acc + (curr.qnt * curr.kcal100) / 100, 0).toFixed(2)}kcal */}
           </Text>
         </View>
         <View style={{ flexDirection: 'row' }}>
           <Text style={styles.dishProperties}>Carboidratos: </Text>
           <Text style={styles.dishDescription}>
-            {foods.reduce((acc, curr) => acc + (curr.qnt * curr.carb100) / 100, 0).toFixed(2)}g
+            {/* {foods.reduce((acc, curr) => acc + (curr.qnt * curr.carb100) / 100, 0).toFixed(2)}g */}
           </Text>
         </View>
         <View style={{ flexDirection: 'row' }}>
           <Text style={styles.dishProperties}>Proteínas: </Text>
           <Text style={styles.dishDescription}>
-            {foods.reduce((acc, curr) => acc + (curr.qnt * curr.pro100) / 100, 0).toFixed(2)}g
+            {/* {foods.reduce((acc, curr) => acc + (curr.qnt * curr.pro100) / 100, 0).toFixed(2)}g */}
           </Text>
         </View>
       </View>
-      {showController && (
+      {/* {showController && (
         <View style={styles.dishControllerContainer}>
           {foods.map((food, index) => (
             <View
@@ -63,7 +63,7 @@ const DishCard = ({ dishIndex, dishName, dishCategory, style, foods, onChangeDis
             </View>
           ))}
         </View>
-      )}
+      )} */}
     </TouchableOpacity>
   );
 };

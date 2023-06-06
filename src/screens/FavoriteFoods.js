@@ -7,6 +7,7 @@ import SearchFoodListItem from '../components/SearchFoodListItem';
 import { ActivityIndicator, Provider, Button } from 'react-native-paper';
 import DeleteDialog from '../components/DeleteDialog';
 import changeFavoriteStatus from '../../utilities/changeFavoriteStatus';
+import { ThemeContext } from '../../contexts/ThemeProvider';
 
 const FavoriteFoods = () => {
   const navigation = useNavigation();
@@ -15,7 +16,7 @@ const FavoriteFoods = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [showRemoveConfirmationModal, setShowRemoveConfirmationModal] = useState(false);
   const [foodDelete, setFoodDelete] = useState('');
-
+  const { theme } = useContext(ThemeContext);
   const showRemoveConfirmationModalHandler = (foodId, foodName) => {
     setFoodDelete({
       name: foodName,
@@ -41,7 +42,7 @@ const FavoriteFoods = () => {
 
   const getData = async () => {
     const data = await getUserFavoriteFoods(params.usuario_id);
-    setParams(prev => {
+    setParams((prev) => {
       return {
         ...prev,
         favoriteList: data,
@@ -67,7 +68,7 @@ const FavoriteFoods = () => {
 
   return (
     <Provider>
-      <SafeAreaView style={styles.mainContainer}>
+      <SafeAreaView style={[styles.mainContainer, { backgroundColor: theme.backgroundColor }]}>
         <DeleteDialog
           title={`Deseja deletar o alimento (${foodDelete.name})?`}
           visible={showRemoveConfirmationModal}
@@ -99,7 +100,7 @@ const FavoriteFoods = () => {
             )}
             {!isLoading &&
               !params.favoriteList.error &&
-              params.favoriteList.map(food => (
+              params.favoriteList.map((food) => (
                 <SearchFoodListItem
                   isFavorite={true}
                   key={food.alimento_id}

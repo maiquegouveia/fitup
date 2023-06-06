@@ -10,6 +10,7 @@ import FoodCategorySelect from './components/FoodCategorySelect';
 import AppContext from '../../../AppContext';
 import { useFocusEffect } from '@react-navigation/native';
 import createDish from '../../../utilities/Dish/createDish';
+import { ThemeContext } from '../../../contexts/ThemeProvider';
 
 const CreateDish = () => {
   const { params } = useContext(AppContext);
@@ -20,6 +21,7 @@ const CreateDish = () => {
   const [foodAddedList, setFoodAddedList] = useState([]);
   const [foodList, setFoodList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const { theme } = useContext(ThemeContext);
   const [input, setInput] = useState({
     value: '',
     isValid: false,
@@ -138,14 +140,16 @@ const CreateDish = () => {
 
   return (
     <NativeBaseProvider>
-      <ScrollView contentContainerStyle={{ flex: 1, backgroundColor: 'white' }}>
+      <ScrollView contentContainerStyle={{ flex: 1, backgroundColor: 'white', backgroundColor: theme.backgroundColor }}>
         <View style={styles.mainContainer}>
-          <Text fontSize={24} fontWeight="bold">
+          <Text fontSize={24} fontWeight="bold" color={theme.fontColor.title}>
             Criar Prato
           </Text>
           <View style={styles.formContainer}>
             <View style={styles.formControl}>
-              <Text fontWeight="semibold">Nome do Prato</Text>
+              <Text fontWeight="semibold" color={theme.fontColor.text}>
+                Nome do Prato
+              </Text>
               <Input
                 onChangeText={onChangeInput}
                 value={input.value}
@@ -153,19 +157,23 @@ const CreateDish = () => {
                 focusOutlineColor="black"
                 variant="outline"
                 placeholder="Digite o nome do prato"
-                placeholderTextColor="black"
-                borderColor="black"
+                placeholderTextColor={theme.fontColor.text}
+                borderColor={theme.backgroundLine}
                 invalidOutlineColor="red"
               />
               {!input.isValid && <WarningCreateDish message={getNameError()} />}
             </View>
             <View style={styles.formControl}>
-              <Text fontWeight="semibold">Categoria</Text>
+              <Text fontWeight="semibold" color={theme.fontColor.text}>
+                Categoria
+              </Text>
               <DishCategorySelect category={dishCategory} onSelectDishCategory={onSelectDishCategory} />
               {showWarningCategory && <WarningCreateDish message="Selecione uma categoria para o prato" />}
             </View>
             <View style={styles.formControl}>
-              <Text fontWeight="semibold">Alimentos</Text>
+              <Text fontWeight="semibold" color={theme.fontColor.text}>
+                Alimentos
+              </Text>
               <View style={{ flexDirection: 'row', width: '100%' }}>
                 <FoodSelect foodList={getFilteredFood()} onSelectFood={onSelectFood} />
                 <FoodCategorySelect

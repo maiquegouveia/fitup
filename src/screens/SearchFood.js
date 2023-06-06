@@ -8,6 +8,7 @@ import FoodDetailsModal from '../components/FoodDetailsModal';
 import AppContext from '../../AppContext';
 import MenuCategory from '../components/MenuCategory';
 import changeFavoriteStatus from '../../utilities/changeFavoriteStatus';
+import { ThemeContext } from '../../contexts/ThemeProvider';
 
 const SearchFood = () => {
   const { params } = useContext(AppContext);
@@ -22,14 +23,15 @@ const SearchFood = () => {
   const [showFoodDetailsModal, setShowFoodDetailsModal] = useState(false);
   const [modalDetails, setModalDetails] = useState({});
   const [errorMessage, setErrorMessage] = useState(null);
+  const { theme } = useContext(ThemeContext);
 
-  const handleCategoryPress = value => {
+  const handleCategoryPress = (value) => {
     setSelectedCategory(value);
     setCategoryModalVisible(false);
     if (value === 'Todas') {
       setFilteredResults(results);
     } else {
-      setFilteredResults(results.filter(curr => curr.categoria === value));
+      setFilteredResults(results.filter((curr) => curr.categoria === value));
     }
   };
 
@@ -41,7 +43,7 @@ const SearchFood = () => {
 
   useFocusEffect(useCallback(resetStates, []));
 
-  const onChangeInputHandler = text => {
+  const onChangeInputHandler = (text) => {
     setInputValue(text);
   };
 
@@ -49,7 +51,7 @@ const SearchFood = () => {
     setErrorMessage(null);
     let favoriteFoodsId;
     if (!params.favoriteList.error) {
-      favoriteFoodsId = params.favoriteList.map(food => food.alimento_id);
+      favoriteFoodsId = params.favoriteList.map((food) => food.alimento_id);
     } else {
       favoriteFoodsId = [];
     }
@@ -61,7 +63,7 @@ const SearchFood = () => {
     if (data.error_message) {
       setErrorMessage(data.error_message);
     } else {
-      const dataWithFavoriteStatus = data.map(food => {
+      const dataWithFavoriteStatus = data.map((food) => {
         return {
           ...food,
           isFavorite: favoriteFoodsId?.includes(food.alimento_id),
@@ -70,9 +72,9 @@ const SearchFood = () => {
       setResults([...dataWithFavoriteStatus]);
       setFilteredResults([...dataWithFavoriteStatus]);
 
-      const categories = [...new Set(data.map(curr => curr.categoria))];
+      const categories = [...new Set(data.map((curr) => curr.categoria))];
       setCategories(
-        categories.map(curr => {
+        categories.map((curr) => {
           return { name: curr, active: false };
         })
       );
@@ -81,7 +83,7 @@ const SearchFood = () => {
     setShowResults(true);
   };
 
-  const onShowModalDetails = food => {
+  const onShowModalDetails = (food) => {
     setModalDetails({
       ...food,
     });
@@ -92,7 +94,7 @@ const SearchFood = () => {
   const onDismissModal = async () => {
     setShowFoodDetailsModal(false);
     const updatedFilteredResults = [...filteredResults];
-    const currentFoodIndex = updatedFilteredResults.findIndex(curr => curr.alimento_id === modalDetails.alimento_id);
+    const currentFoodIndex = updatedFilteredResults.findIndex((curr) => curr.alimento_id === modalDetails.alimento_id);
     if (modalDetails.isFavorite !== updatedFilteredResults[currentFoodIndex].isFavorite) {
       if (modalDetails.isFavorite) {
         const result = await changeFavoriteStatus(params.usuario_id, modalDetails.alimento_id);
@@ -114,7 +116,7 @@ const SearchFood = () => {
 
   return (
     <Provider>
-      <SafeAreaView style={styles.mainContainer}>
+      <SafeAreaView style={[styles.mainContainer, { backgroundColor: theme.backgroundColor }]}>
         <View style={styles.searchContainer}>
           <FoodDetailsModal
             setModalDetails={setModalDetails}
@@ -122,7 +124,7 @@ const SearchFood = () => {
             visible={showFoodDetailsModal}
             onDismiss={onDismissModal}
           />
-          <Text style={styles.inputLabel}>Buscar Alimento</Text>
+          <Text style={[styles.inputLabel, { color: theme.fontColor.title }]}>Buscar Alimento</Text>
           <TextInput
             cursorColor="green"
             activeOutlineColor="green"
@@ -168,7 +170,7 @@ const SearchFood = () => {
               </View>
 
               {!errorMessage &&
-                filteredResults?.map(food => (
+                filteredResults?.map((food) => (
                   <SearchFoodListItem key={food.alimento_id} food={food} onPress={onShowModalDetails} />
                 ))}
             </ScrollView>
