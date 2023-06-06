@@ -1,8 +1,19 @@
 import { Text, View, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
 import React from 'react';
 import { Ionicons, AntDesign, SimpleLineIcons, MaterialIcons } from '@expo/vector-icons';
+import SharedStylesComponent from '../SharedStylesComponent';
 
 const Settings = () => {
+  const changeStyleMode = () => {
+    // if (styleMode === 'white') {
+    //   setStyleMode('black');
+    // } else {
+    //   setStyleMode('white');
+    // }
+  };
+
+  const globalStyles = SharedStylesComponent();
+
   return (
     <SafeAreaView>
       <View style={styles.body}>
@@ -16,7 +27,10 @@ const Settings = () => {
           <Text style={styles.textBtn}>Termo & Condições</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.container}>
+        <TouchableOpacity
+          style={[styles.container, { backgroundColor: globalStyles.themeBackground }]}
+          onPress={changeStyleMode}
+        >
           <Ionicons name="color-fill" size={15} color="black" style={styles.icon} />
           <Text style={styles.textBtn}>Alterar cor de fundo</Text>
         </TouchableOpacity>
@@ -52,7 +66,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
   },
   container: {
-    backgroundColor: '#FFFFFF',
     width: '100%',
     height: 55,
     alignItems: 'center',

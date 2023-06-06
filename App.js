@@ -28,9 +28,12 @@ import CreateDish from './src/screens/Dish/CreateDish';
 function RootStack() {
   const [params, setParams] = useState({});
   const [userIsAuthenticated, setUserIsAuthenticated] = useState(false);
+  const [styleMode, setStyleMode] = useState('black');
 
   return (
-    <AppContext.Provider value={{ params, setParams, userIsAuthenticated, setUserIsAuthenticated }}>
+    <AppContext.Provider
+      value={{ params, setParams, userIsAuthenticated, setUserIsAuthenticated, styleMode, setStyleMode }}
+    >
       <NavigationContainer>
         <Stack.Navigator
           initialRouteName="InitialScreen"
@@ -66,8 +69,10 @@ function RootStack() {
             }}
           >
             {() => (
-              <AppContext.Provider value={{ params, setParams, userIsAuthenticated, setUserIsAuthenticated }}>
-                <DrawerStack params={params} />
+              <AppContext.Provider
+                value={{ params, setParams, userIsAuthenticated, setUserIsAuthenticated, styleMode, setStyleMode }}
+              >
+                <DrawerStack params={params} styleMode={styleMode} />
               </AppContext.Provider>
             )}
           </Stack.Screen>
@@ -77,7 +82,7 @@ function RootStack() {
   );
 }
 
-function DrawerStack({ params }) {
+function DrawerStack({ params, styleMode }) {
   const navigation = useNavigation();
   return (
     <Drawer.Navigator
