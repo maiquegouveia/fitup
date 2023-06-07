@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, ScrollView, Alert } from 'react-native';
 import { useState, useCallback } from 'react';
-import { TextInput, Button } from 'react-native-paper';
+import { TextInput, Button, ActivityIndicator, MD2Colors } from 'react-native-paper';
 import DishCard from '../../components/DishCard';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { ThemeContext } from '../../../contexts/ThemeProvider';
@@ -14,7 +14,7 @@ const FavoriteDishes = () => {
   const { params } = useContext(AppContext);
   const { theme } = useContext(ThemeContext);
   const [dishesData, setDishesData] = useState([]);
-
+  const [isLoading, setIsLoading] = useState(true);
   const [filteredData, setFilteredData] = useState([]);
 
   const onChangeSearchInput = (text) => {
@@ -24,7 +24,7 @@ const FavoriteDishes = () => {
       return;
     }
     setSearchInput(text);
-    setFilteredData(dishesData.filter((dish) => dish.name.startsWith(text)));
+    setFilteredData(dishesData.filter((dish) => dish.nome.startsWith(text)));
   };
 
   const onSaveChanges = () => {};
@@ -42,14 +42,18 @@ const FavoriteDishes = () => {
     setDishesData(data);
   };
 
+  const getDishesData = async () => {
+    setIsLoading(true);
+    const data = await getDishes(params.usuario_id);
+    console.log(data);
+    setDishesData(data);
+    setFilteredData(data);
+    setIsLoading(false);
+  };
+
   useFocusEffect(
     useCallback(() => {
-      const getData = async () => {
-        const data = await getDishes(params.usuario_id);
-        setDishesData(data);
-        setFilteredData(data);
-      };
-      getData();
+      getDishesData();
     }, [])
   );
 
@@ -74,17 +78,23 @@ const FavoriteDishes = () => {
       </View>
 
       <ScrollView contentContainerStyle={styles.dishesScrollView} showsVerticalScrollIndicator={false}>
-        <View style={styles.dishesTitleContainer}>
-          {filteredData?.length > 0 ? (
-            <Text style={styles.dishesTitle}>Pratos ({filteredData?.length})</Text>
-          ) : (
-            <Text style={styles.dishesTitle}>Nenhum prato encontrado!</Text>
-          )}
-        </View>
-        {filteredData?.map((dish, index) => (
-          <DishCard key={index} dishName={dish.name} dishCategory={dish.category} style={{ marginTop: 10 }} />
-        ))}
-        {filteredData?.length > 0 && (
+        {isLoading && <ActivityIndicator animating={isLoading} color="white" />}
+        {!isLoading && (
+          <View style={styles.dishesTitleContainer}>
+            {filteredData?.length > 0 ? (
+              <Text style={styles.dishesTitle}>Pratos ({filteredData?.length})</Text>
+            ) : (
+              <Text style={styles.dishesTitle}>Nenhum prato encontrado!</Text>
+            )}
+          </View>
+        )}
+
+        {!isLoading &&
+          filteredData?.length > 0 &&
+          filteredData?.map((dish, index) => (
+            <DishCard key={index} dishName={dish.nome} dishCategory={dish.categoria} style={{ marginTop: 10 }} />
+          ))}
+        {!isLoading && filteredData?.length > 0 && (
           <View style={{ alignItems: 'center' }}>
             <Button onPress={onSaveChanges} labelStyle={{ color: 'black', fontWeight: 'bold' }} style={styles.saveBtn}>
               Salvar
@@ -101,6 +111,7 @@ export default FavoriteDishes;
 const styles = StyleSheet.create({
   mainContainer: {
     padding: 15,
+    flex: 1,
   },
   searchBarContainer: {
     width: '100%',

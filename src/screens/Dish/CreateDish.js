@@ -11,9 +11,10 @@ import AppContext from '../../../AppContext';
 import { useFocusEffect } from '@react-navigation/native';
 import createDish from '../../../utilities/Dish/createDish';
 import { ThemeContext } from '../../../contexts/ThemeProvider';
+import getUserFavoriteFoods from '../../../utilities/getUserFavoriteFoods';
 
 const CreateDish = () => {
-  const { params } = useContext(AppContext);
+  const { params, setParams } = useContext(AppContext);
   const navigation = useNavigation();
   const [selectedCategory, setSelectedCategory] = useState('Todos');
   const [showWarningCategory, setShowWarningCategory] = useState(true);
@@ -58,20 +59,33 @@ const CreateDish = () => {
     });
   };
 
+  const getUserFavoriteFoodsData = async () => {
+    const data = await getUserFavoriteFoods(params.usuario_id);
+    setParams((prev) => {
+      return {
+        ...prev,
+        favoriteList: data,
+      };
+    });
+    setFoodList(
+      data.map((food) => {
+        return {
+          foodName: food.nome,
+          foodId: food.alimento_id,
+          amount: 100,
+          category: food.categoria,
+          carb: food.carboidrato,
+          kcal: food.kcal,
+          protein: food.proteina,
+        };
+      })
+    );
+  };
+
   useFocusEffect(
     useCallback(() => {
       resetStates();
-      const foodList = [...params.favoriteList];
-      setFoodList(
-        foodList.map((food) => {
-          return {
-            foodName: food.nome,
-            foodId: food.alimento_id,
-            amount: 100,
-            category: food.categoria,
-          };
-        })
-      );
+      getUserFavoriteFoodsData();
     }, [])
   );
 
@@ -123,7 +137,7 @@ const CreateDish = () => {
       dishCategory: dishCategory,
     };
     const result = await createDish(dish);
-    console.log(result);
+    console.log(dish);
     if (!result?.error) navigation.navigate('FavoriteDishes');
     setIsLoading(false);
   };
@@ -151,6 +165,7 @@ const CreateDish = () => {
                 Nome do Prato
               </Text>
               <Input
+                color={theme.fontColor.text}
                 onChangeText={onChangeInput}
                 value={input.value}
                 borderWidth={2}
