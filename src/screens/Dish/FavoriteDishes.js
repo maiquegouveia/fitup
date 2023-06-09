@@ -1,12 +1,13 @@
-import { StyleSheet, Text, View, ScrollView, Alert } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Alert, RefreshControl } from 'react-native';
 import { useState, useCallback } from 'react';
 import { TextInput, Button, ActivityIndicator, MD2Colors } from 'react-native-paper';
-import DishCard from '../../components/DishCard';
+import DishCard from './components/DishCard';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { ThemeContext } from '../../../contexts/ThemeProvider';
 import { useContext } from 'react';
 import getDishes from '../../../utilities/Dish/getDishes';
 import AppContext from '../../../AppContext';
+import deleteDish from '../../../utilities/Dish/deleteDish';
 
 const FavoriteDishes = () => {
   const [searchInput, setSearchInput] = useState('');
@@ -16,6 +17,7 @@ const FavoriteDishes = () => {
   const [dishesData, setDishesData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [filteredData, setFilteredData] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
 
   const onChangeSearchInput = (text) => {
     if (text.length === 0) {
@@ -45,7 +47,6 @@ const FavoriteDishes = () => {
   const getDishesData = async () => {
     setIsLoading(true);
     const data = await getDishes(params.usuario_id);
-    console.log(data);
     setDishesData(data);
     setFilteredData(data);
     setIsLoading(false);
@@ -57,8 +58,24 @@ const FavoriteDishes = () => {
     }, [])
   );
 
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    getDishesData();
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 0);
+  }, []);
+
+  const onDeleteDish = async (dishId) => {
+    const response = await deleteDish(dishId);
+    getDishesData();
+  };
+
   return (
-    <ScrollView contentContainerStyle={[styles.mainContainer, { backgroundColor: theme.backgroundColor }]}>
+    <ScrollView
+      contentContainerStyle={[styles.mainContainer, { backgroundColor: theme.backgroundColor }]}
+      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+    >
       <View style={styles.searchBarContainer}>
         <TextInput
           placeholder="Busque um prato aqui..."
@@ -92,15 +109,18 @@ const FavoriteDishes = () => {
         {!isLoading &&
           filteredData?.length > 0 &&
           filteredData?.map((dish, index) => (
-            <DishCard key={index} dishName={dish.nome} dishCategory={dish.categoria} style={{ marginTop: 10 }} />
+            <DishCard
+              key={index}
+              dishId={dish.prato_id}
+              dishName={dish.nome}
+              dishCarbo={dish.carboidratos}
+              dishKcal={dish.calorias}
+              dishProtein={dish.proteinas}
+              dishCategory={dish.categoria}
+              style={{ marginTop: 10 }}
+              onDeleteDish={onDeleteDish}
+            />
           ))}
-        {!isLoading && filteredData?.length > 0 && (
-          <View style={{ alignItems: 'center' }}>
-            <Button onPress={onSaveChanges} labelStyle={{ color: 'black', fontWeight: 'bold' }} style={styles.saveBtn}>
-              Salvar
-            </Button>
-          </View>
-        )}
       </ScrollView>
     </ScrollView>
   );

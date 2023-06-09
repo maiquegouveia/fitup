@@ -2,7 +2,7 @@ import { StyleSheet, View, ScrollView } from 'react-native';
 import { useState, useContext, useCallback } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { Input, NativeBaseProvider, Text, Button } from 'native-base';
-import WarningCreateDish from '../../components/WarningCreateDish';
+import WarningCreateDish from './components/WarningCreateDish';
 import DishCategorySelect from './components/DishCategorySelect';
 import FoodSelect from './components/FoodSelect';
 import FoodListItem from './components/FoodListItem';
@@ -11,7 +11,7 @@ import AppContext from '../../../AppContext';
 import { useFocusEffect } from '@react-navigation/native';
 import createDish from '../../../utilities/Dish/createDish';
 import { ThemeContext } from '../../../contexts/ThemeProvider';
-import getUserFavoriteFoods from '../../../utilities/getUserFavoriteFoods';
+import getUserFavoriteFoods from '../../../utilities/FavoriteFoods/getUserFavoriteFoods';
 
 const CreateDish = () => {
   const { params, setParams } = useContext(AppContext);
@@ -136,8 +136,8 @@ const CreateDish = () => {
       foods: foodAddedList,
       dishCategory: dishCategory,
     };
-    const result = await createDish(dish);
     console.log(dish);
+    const result = await createDish(dish);
     if (!result?.error) navigation.navigate('FavoriteDishes');
     setIsLoading(false);
   };
@@ -204,12 +204,18 @@ const CreateDish = () => {
                 <ScrollView contentContainerStyle={{ padding: 10 }}>
                   {foodAddedList.map((food, index) => (
                     <FoodListItem
+                      index={index}
+                      setFoodAddedList={setFoodAddedList}
+                      foodAddedList={foodAddedList}
                       onRemove={onRemove}
                       foodId={food.foodId}
                       key={index}
                       foodName={food.foodName}
                       amount={food.amount}
                       style={{ marginBottom: index === foodAddedList.length - 1 ? 0 : 10 }}
+                      foodCarbo={food.carb}
+                      foodKcal={food.kcal}
+                      foodProtein={food.protein}
                     />
                   ))}
                 </ScrollView>

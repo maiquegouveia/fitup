@@ -1,7 +1,7 @@
-import { ImageBackground, View } from "react-native";
-import React from "react";
-import { logo } from "../../constants/images";
-import styles from "../styles/Logo.style";
+import { ImageBackground, View } from 'react-native';
+import React from 'react';
+import { logo } from '../../constants/images';
+import styles from '../styles/Logo.style';
 
 const Logo = ({ style }) => {
   return (

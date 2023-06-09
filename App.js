@@ -10,21 +10,22 @@ import { Avatar } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { logo } from './constants/images';
 import { ThemeProvider } from './contexts/ThemeProvider';
+import EditDish from './src/screens/Dish/EditDish';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
-import Login from './src/screens/Login';
-import Home from './src/screens/Home';
-import Profile from './src/screens/Profile';
-import Settings from './src/screens/Settings';
+import Login from './src/screens/Login/Login';
+import Home from './src/screens/Home/Home';
+import Profile from './src/screens/Profile/Profile';
+import Settings from './src/screens/Settings/Settings';
 import InitialScreen from './src/screens/InitialScreen';
-import Cadastro from './src/screens/Cadastro';
+import Cadastro from './src/screens/Cadastro/Cadastro';
 import { leftArrow } from './constants/icons';
-import SearchFood from './src/screens/SearchFood';
-import FavoriteFoods from './src/screens/FavoriteFoods';
+import SearchFood from './src/screens/SearchFood/SearchFood';
+import FavoriteFoods from './src/screens/FavoriteFoods/FavoriteFoods';
 import FavoriteDishes from './src/screens/Dish/FavoriteDishes';
-import WaterAmount from './src/screens/WaterAmount';
+import WaterAmount from './src/screens/WaterAmount/WaterAmount';
 import CreateDish from './src/screens/Dish/CreateDish';
 import { color } from 'react-native-reanimated';
 
@@ -91,7 +92,6 @@ function DrawerStack({ params }) {
         headerStyle: { backgroundColor: '#59CA6B' },
         headerTitle: () => (
           <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate('Home')}>
-            {/* <Image src="assets/logo.png"></Image> */}
             <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 25 }}>FitUP</Text>
           </TouchableOpacity>
         ),
@@ -160,6 +160,13 @@ function DrawerStack({ params }) {
         component={CreateDish}
         options={{
           title: 'Criar Prato',
+        }}
+      />
+      <Drawer.Screen
+        name="EditDish"
+        component={EditDish}
+        options={{
+          title: '',
         }}
       />
     </Drawer.Navigator>
