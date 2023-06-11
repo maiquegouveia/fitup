@@ -136,7 +136,6 @@ const CreateDish = () => {
       foods: foodAddedList,
       dishCategory: dishCategory,
     };
-    console.log(dish);
     const result = await createDish(dish);
     if (!result?.error) navigation.navigate('FavoriteDishes');
     setIsLoading(false);

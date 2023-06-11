@@ -156,8 +156,11 @@ const Cadastro = () => {
   //Botão de registro
   const registerBtnHandler = async function () {
     if (formIsValid) {
-      const profileImageURL = await postImage(image.base64);
-      const imageUrl = profileImageURL.replace('https://i.ibb.co/', '');
+      let imageUrl = 'tJBC4C4/default-profile.png';
+      if (image.base64) {
+        const profileImageURL = await postImage(image.base64);
+        imageUrl = profileImageURL.replace('https://i.ibb.co/', '');
+      }
 
       await postUser({
         email: email.value,

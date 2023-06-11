@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, ImageBackground, Alert } from 'react-native';
+import { View, Text, SafeAreaView, ImageBackground, Alert, ScrollView } from 'react-native';
 import { useEffect, useState, useContext } from 'react';
 import background from '../../../assets/home-img-2.png';
 import { useHeaderHeight } from '@react-navigation/elements';
@@ -171,11 +171,11 @@ const Login = () => {
   };
 
   return (
-    <SafeAreaView style={styles.mainContainer}>
+    <ScrollView contentContainerStyle={styles.mainContainer}>
       <ImageBackground source={background} resizeMode="cover" style={styles.background}>
         <Provider>
           <Dialog visible={visible} title={dialog.title} content={dialog.content} hideDialog={hideDialog} />
-          <Logo style={{ marginTop: headerHeight }} />
+          <Logo style={{ marginTop: headerHeight + 20 }} />
           <View style={styles.formContainer}>
             <View style={styles.form}>
               <TextInput
@@ -213,7 +213,7 @@ const Login = () => {
           </View>
         </Provider>
       </ImageBackground>
-    </SafeAreaView>
+    </ScrollView>
   );
 };
 

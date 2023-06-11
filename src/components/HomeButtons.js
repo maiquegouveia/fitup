@@ -7,7 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 const HomeButtons = () => {
   const navigation = useNavigation();
   return (
-    <View style={styles.btnsContainer}>
+    <>
       <Button style={styles.btn} labelStyle={styles.btnText} onPress={() => navigation.replace('Login')}>
         Entrar
       </Button>
@@ -15,7 +15,7 @@ const HomeButtons = () => {
       <Button style={styles.btn} labelStyle={styles.btnText} onPress={() => navigation.replace('Cadastro')}>
         Cadastrar-se
       </Button>
-    </View>
+    </>
   );
 };
 

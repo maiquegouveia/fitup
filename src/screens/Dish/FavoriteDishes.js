@@ -116,7 +116,7 @@ const FavoriteDishes = () => {
               dishCarbo={dish.carboidratos}
               dishKcal={dish.calorias}
               dishProtein={dish.proteinas}
-              dishCategory={dish.categoria}
+              dishCategory={dish.categoria_prato}
               style={{ marginTop: 10 }}
               onDeleteDish={onDeleteDish}
             />

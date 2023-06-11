@@ -17,7 +17,7 @@ const EditProfileContainer = (props) => {
       <View style={styles.container}>
         <EditInputProfile
           label="Nome Completo"
-          value={params.nome}
+          value={params.nome || ''}
           onShowEditModal={props.onShowEditModal}
           fieldName="nome"
           fieldType="string"
@@ -25,7 +25,7 @@ const EditProfileContainer = (props) => {
         <EditInputProfile
           keyboardType="numeric"
           label="Telefone"
-          value={params.telefone}
+          value={params.telefone || ''}
           onShowEditModal={props.onShowEditModal}
           fieldName="telefone"
           fieldType="string"
@@ -33,7 +33,7 @@ const EditProfileContainer = (props) => {
         <EditInputProfile
           keyboardType="numeric"
           label="Peso"
-          value={params.peso}
+          value={params.peso || ''}
           onShowEditModal={props.onShowEditModal}
           fieldName="peso"
           fieldType="numeric"
@@ -41,7 +41,7 @@ const EditProfileContainer = (props) => {
         <EditInputProfile
           keyboardType="numeric"
           label="Altura"
-          value={params.altura}
+          value={params.altura || ''}
           onShowEditModal={props.onShowEditModal}
           fieldName="altura"
           fieldType="numeric"

@@ -30,13 +30,15 @@ const styles = StyleSheet.create({
   },
   input: {
     width: 250,
-    borderTopStartRadius: 10,
-    borderTopEndRadius: 10,
-    borderRadius: 10,
+    borderTopStartRadius: 5,
+    borderTopEndRadius: 5,
+    borderBottomLeftRadius: 5,
+    borderBottomEndRadius: 5,
   },
   btn: {
     width: 250,
     backgroundColor: 'rgba(255, 255, 255, 1)',
+    borderRadius: 5,
   },
   btnText: {
     color: 'rgba(29, 29, 41, 0.6)',

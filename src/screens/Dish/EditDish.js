@@ -1,7 +1,7 @@
-import { StyleSheet, Text, View, ScrollView, RefreshControl, TouchableOpacity } from 'react-native';
-import { Button, ActivityIndicator } from 'react-native-paper';
+import { StyleSheet, Text, View, ScrollView, RefreshControl, TouchableOpacity, Alert } from 'react-native';
+import { ActivityIndicator } from 'react-native-paper';
 import { useContext, useState, useEffect, useCallback } from 'react';
-import { NativeBaseProvider } from 'native-base';
+import { NativeBaseProvider, Button } from 'native-base';
 import { useIsFocused } from '@react-navigation/native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import getDishItens from '../../../utilities/Dish/getDishItens';
@@ -9,11 +9,14 @@ import FoodListItem from './components/FoodListItem';
 import FoodSelect from './components/FoodSelect';
 import { ThemeContext } from '../../../contexts/ThemeProvider';
 import AppContext from '../../../AppContext';
+import updateDish from '../../../utilities/Dish/updateDish';
+import deleteDish from '../../../utilities/Dish/deleteDish';
 
 const EditDish = ({ route, navigation }) => {
   const { theme } = useContext(ThemeContext);
   const { params } = useContext(AppContext);
   const [isLoading, setIsLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [foodAddedList, setFoodAddedList] = useState([]);
   const [foodList, setFoodList] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
@@ -31,12 +34,13 @@ const EditDish = ({ route, navigation }) => {
     setFoodAddedList(
       data.map((food) => {
         return {
-          foodName: food.alimento_nome,
+          foodName: food.nome,
           foodId: food.alimento_id,
           amount: food.quantidade,
           carbo: food.carboidrato,
           kcal: food.kcal,
           protein: food.proteina,
+          category: food.categoria,
         };
       })
     );
@@ -50,6 +54,7 @@ const EditDish = ({ route, navigation }) => {
           carbo: food.carboidrato,
           kcal: food.kcal,
           protein: food.proteina,
+          category: food.categoria,
         };
       })
     );
@@ -81,19 +86,31 @@ const EditDish = ({ route, navigation }) => {
 
   const getTotalKcal = () => {
     const total = foodAddedList.reduce((acc, food) => acc + (food.kcal * food.amount) / 100, 0);
-    return `${total.toFixed(2)}kcal`;
+    return total.toFixed(2);
   };
   const getTotalCarbo = () => {
     const total = foodAddedList.reduce((acc, food) => acc + (food.carbo * food.amount) / 100, 0);
-    return `${total.toFixed(2)}g`;
+    return total.toFixed(2);
   };
   const getTotalProtein = () => {
     const total = foodAddedList.reduce((acc, food) => acc + (food.protein * food.amount) / 100, 0);
-    return `${total.toFixed(2)}g`;
+    return total.toFixed(2);
   };
 
-  const handleOnSave = () => {
-    console.log(foodAddedList);
+  const handleOnSave = async () => {
+    setSaving(true);
+    const dish = {
+      dishId: route.params.dishId,
+      totalCarbo: +getTotalCarbo(),
+      totalKcal: +getTotalKcal(),
+      totalProtein: +getTotalProtein(),
+      foods: [...foodAddedList],
+    };
+    const response = await updateDish(dish);
+    if (response.status === 204) {
+      navigation.navigate('FavoriteDishes');
+      setSaving(false);
+    }
   };
 
   const onSelectFood = (foodId) => {
@@ -116,6 +133,27 @@ const EditDish = ({ route, navigation }) => {
     setFoodList(updatedFoodList);
   };
 
+  const onDeleteDish = async () => {
+    const response = await deleteDish(route.params.dishId);
+    if (response) {
+      navigation.navigate('FavoriteDishes');
+    }
+  };
+
+  const alertShow = () => {
+    Alert.alert('', `Deseja deletar o prato (${route.params.dishName})?`, [
+      {
+        text: 'Cancelar',
+        onPress: () => {},
+      },
+
+      {
+        text: 'Deletar',
+        onPress: () => onDeleteDish(),
+      },
+    ]);
+  };
+
   return (
     <NativeBaseProvider>
       <ScrollView
@@ -134,7 +172,7 @@ const EditDish = ({ route, navigation }) => {
             <View style={{ width: '80%' }}>
               <Text style={[styles.dishName]}>{route.params.dishName}</Text>
             </View>
-            <TouchableOpacity onPress={() => {}} activeOpacity={0.7}>
+            <TouchableOpacity onPress={alertShow} activeOpacity={0.7}>
               <FontAwesome5 name="trash" size={20} color="red" />
             </TouchableOpacity>
           </View>
@@ -145,15 +183,15 @@ const EditDish = ({ route, navigation }) => {
             </View>
             <View style={{ flexDirection: 'row' }}>
               <Text style={{ fontWeight: 'bold', color: theme.fontColor.text }}>Calorias: </Text>
-              <Text style={{ color: theme.fontColor.text }}>{getTotalKcal()}</Text>
+              <Text style={{ color: theme.fontColor.text }}>{getTotalKcal()}kcal</Text>
             </View>
             <View style={{ flexDirection: 'row' }}>
               <Text style={{ fontWeight: 'bold', color: theme.fontColor.text }}>Carboidratos: </Text>
-              <Text style={{ color: theme.fontColor.text }}>{getTotalCarbo()}</Text>
+              <Text style={{ color: theme.fontColor.text }}>{getTotalCarbo()}g</Text>
             </View>
             <View style={{ flexDirection: 'row' }}>
               <Text style={{ fontWeight: 'bold', color: theme.fontColor.text }}>Proteínas: </Text>
-              <Text style={{ color: theme.fontColor.text }}>{getTotalProtein()}</Text>
+              <Text style={{ color: theme.fontColor.text }}>{getTotalProtein()}g</Text>
             </View>
           </View>
           {!isLoading && <FoodSelect foodList={foodList} onSelectFood={onSelectFood} />}
@@ -181,6 +219,7 @@ const EditDish = ({ route, navigation }) => {
                     foodKcal={food.kcal}
                     foodCarbo={food.carbo}
                     foodProtein={food.protein}
+                    foodCategory={food.category}
                     foodAddedList={foodAddedList}
                     setFoodAddedList={setFoodAddedList}
                   />
@@ -189,7 +228,7 @@ const EditDish = ({ route, navigation }) => {
           </View>
           {foodAddedList.length > 0 && (
             <View style={{ alignItems: 'center', marginTop: 10 }}>
-              <Button textColor="white" style={styles.button} onPress={handleOnSave}>
+              <Button style={styles.button} onPress={handleOnSave} isLoading={saving}>
                 Salvar
               </Button>
             </View>

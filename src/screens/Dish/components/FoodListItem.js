@@ -15,6 +15,7 @@ const FoodListItem = ({
   foodKcal,
   foodCarbo,
   foodProtein,
+  foodCategory,
 }) => {
   const [inputValue, setInputValue] = useState(amount);
 
@@ -35,16 +36,17 @@ const FoodListItem = ({
     <View style={[styles.mainContainer, style]}>
       <View style={{ width: '80%' }}>
         <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{foodName}</Text>
+        <Text style={{}}>{foodCategory}</Text>
         <View style={{ backgroundColor: '#ccc', padding: 10, marginVertical: 5 }}>
-          <View style={{ flexDirection: 'row' }}>
+          <View style={styles.detailContainer}>
             <Text style={{ fontWeight: 'bold' }}>Calorias: </Text>
             <Text style={{}}>{((foodKcal * inputValue) / 100).toFixed(2)}kcal</Text>
           </View>
-          <View style={{ flexDirection: 'row' }}>
+          <View style={styles.detailContainer}>
             <Text style={{ fontWeight: 'bold' }}>Carboidratos: </Text>
             <Text style={{}}>{((foodCarbo * inputValue) / 100).toFixed(2)}g</Text>
           </View>
-          <View style={{ flexDirection: 'row' }}>
+          <View style={styles.detailContainer}>
             <Text style={{ fontWeight: 'bold' }}>Proteínas: </Text>
             <Text style={{}}>{((foodProtein * inputValue) / 100).toFixed(2)}g</Text>
           </View>
@@ -84,5 +86,9 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  detailContainer: {
+    flexDirection: 'row',
+    width: '100%',
   },
 });
