@@ -1,7 +1,7 @@
 import * as ImagePicker from 'expo-image-picker';
 import { Alert } from 'react-native';
 
-export default async setImage => {
+export default async (setImage) => {
   const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
   if (permissionResult.granted === false) {
     Alert.alert('Sem permissão!', 'Você precisa permitar acesso a galeria.');
@@ -21,5 +21,6 @@ export default async setImage => {
       uri: result.assets[0].uri,
       base64: result.assets[0].base64,
     });
+    return result.assets[0].base64;
   }
 };

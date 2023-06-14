@@ -13,6 +13,9 @@ import { ThemeContext } from '../../../contexts/ThemeProvider';
 import getImageAndPermissions from '../../../utilities/getImageAndPermissions';
 import removeUserCredentialsFromStorage from '../../../utilities/removeUserCredentialsFromStorage';
 import editUserCredentials from '../../../utilities/editUserCredentials';
+import changeProfilePicture from '../../../utilities/Profile/changeProfilePicture';
+import postImage from '../../../utilities/Cadastro/postImage';
+import { ActivityIndicator } from 'react-native-paper';
 
 const ProfileScreen = () => {
   const { params, setParams, setUserIsAuthenticated } = useContext(AppContext);
@@ -23,7 +26,9 @@ const ProfileScreen = () => {
   const [showEditContainer, setShowEditContainer] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [changingPicture, setChangingPicture] = useState(false);
   const [image, setImage] = useState({
+    uri: '',
     base64: '',
   });
 
@@ -69,10 +74,35 @@ const ProfileScreen = () => {
     removeUserCredentialsFromStorage();
     navigation.replace('InitialScreen');
   };
+
   const getWaterProgress = () => {
     const progress = (params.consumedWater / params.totalWater) * 100;
     if (progress > 100) return 100;
     return progress;
+  };
+
+  const handlerProfilePicture = async () => {
+    const base64 = await getImageAndPermissions(setImage);
+    setChangingPicture(true);
+    if (base64) {
+      let url = await postImage(base64);
+      url = url.replace('https://i.ibb.co/', '');
+      const response = await changeProfilePicture(params.usuario_id, url);
+      if (response?.error) {
+        console.log('ERROR');
+      } else {
+        setParams((prev) => {
+          return {
+            ...prev,
+            foto_perfil: url,
+          };
+        });
+        console.log('Changed');
+      }
+    } else {
+      console.log('test');
+    }
+    setChangingPicture(false);
   };
 
   return (
@@ -81,12 +111,26 @@ const ProfileScreen = () => {
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.container}>
             <View style={styles.profileImageContainer}>
-              <TouchableOpacity onPress={() => getImageAndPermissions()}>
-                <Image
-                  source={{ uri: `https://i.ibb.co/${params.foto_perfil}` }}
-                  resizeMode="contain"
-                  style={styles.image}
-                />
+              <TouchableOpacity disabled={!showEditContainer} onPress={handlerProfilePicture}>
+                {changingPicture && (
+                  <View
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <ActivityIndicator animating={true} color="black" />
+                  </View>
+                )}
+                {!changingPicture && (
+                  <Image
+                    source={{ uri: `https://i.ibb.co/${params.foto_perfil}` }}
+                    resizeMode="contain"
+                    style={styles.image}
+                  />
+                )}
               </TouchableOpacity>
             </View>
             {!showEditContainer && (

@@ -111,6 +111,7 @@ function DrawerStack({ params }) {
         name="Profile"
         options={{
           title: 'Meu Perfil',
+          headerRight: () => null,
         }}
       >
         {() => (
