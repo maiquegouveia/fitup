@@ -9,17 +9,29 @@ import { useEffect, useContext, useState } from 'react';
 import AppContext from '../../AppContext';
 import { useNavigation } from '@react-navigation/native';
 import { ActivityIndicator } from 'react-native-paper';
+import User from '../../models/User';
 
 const HomePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const headerHeight = useHeaderHeight();
-  const { setParams, setUserIsAuthenticated } = useContext(AppContext);
+  const { setParams, setUserIsAuthenticated, userObject, setUserObject } = useContext(AppContext);
   const navigation = useNavigation();
 
   const getData = async () => {
     setIsLoading(true);
     const data = await getUserCredentials();
     if (!data?.error) {
+      const updatedUserObject = new User(
+        data.usuario_id,
+        data.nome,
+        data.email,
+        data.senha,
+        data.altura,
+        data.peso,
+        data.telefone,
+        data.foto_perfil
+      );
+      setUserObject(updatedUserObject);
       setParams(data);
       setUserIsAuthenticated(true);
       navigation.replace('DrawerStack', { screen: 'Home' });

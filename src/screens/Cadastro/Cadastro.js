@@ -4,13 +4,14 @@ import Form from './components/Form';
 import Input from './components/Input';
 import { Button, RadioButton, Provider } from 'react-native-paper';
 import ProfileImage from '../../components/ProfileImage';
-import isValidEmail from '../../../utilities/isValidEmail';
+import validateEmail from '../../../utilities/validateEmail';
 import postImage from '../../../utilities/Cadastro/postImage';
 import postUser from '../../../utilities/Cadastro/postUser';
 import Dialog from '../../components/Dialog';
 import styles from './Cadastro.style';
 import { useNavigation } from '@react-navigation/native';
 import CustomBackButtonHeader from '../../components/CustomBackButtonHeader';
+import User from '../../../models/User';
 
 const Cadastro = () => {
   const navigation = useNavigation();
@@ -63,7 +64,7 @@ const Cadastro = () => {
   useEffect(() => {
     /// Este useEffect será executado toda vez que "email.value" sofrer alteração
     /// Define se "email.value" é uma valor válido
-    if (isValidEmail(email.value)) {
+    if (validateEmail(email.value)) {
       setEmail((prev) => {
         return {
           ...prev,
@@ -168,6 +169,8 @@ const Cadastro = () => {
         profile_image: imageUrl,
         type: 1,
       });
+
+      console.log(new User(email.value, senha.value, imageUrl));
 
       navigation.navigate('Login');
     } else {

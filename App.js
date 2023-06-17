@@ -28,13 +28,17 @@ import FavoriteDishes from './src/screens/Dish/FavoriteDishes';
 import WaterAmount from './src/screens/WaterAmount/WaterAmount';
 import CreateDish from './src/screens/Dish/CreateDish';
 import { color } from 'react-native-reanimated';
+import User from './models/User';
 
 function RootStack() {
   const [params, setParams] = useState({});
   const [userIsAuthenticated, setUserIsAuthenticated] = useState(false);
+  const [userObject, setUserObject] = useState(new User());
 
   return (
-    <AppContext.Provider value={{ params, setParams, userIsAuthenticated, setUserIsAuthenticated }}>
+    <AppContext.Provider
+      value={{ params, setParams, userIsAuthenticated, setUserIsAuthenticated, userObject, setUserObject }}
+    >
       <NavigationContainer>
         <Stack.Navigator
           initialRouteName="InitialScreen"
@@ -70,9 +74,11 @@ function RootStack() {
             }}
           >
             {() => (
-              <AppContext.Provider value={{ params, setParams, userIsAuthenticated, setUserIsAuthenticated }}>
+              <AppContext.Provider
+                value={{ params, setParams, userIsAuthenticated, setUserIsAuthenticated, userObject, setUserObject }}
+              >
                 <ThemeProvider>
-                  <DrawerStack params={params} />
+                  <DrawerStack userObject={userObject} />
                 </ThemeProvider>
               </AppContext.Provider>
             )}
@@ -83,7 +89,7 @@ function RootStack() {
   );
 }
 
-function DrawerStack({ params }) {
+function DrawerStack({ userObject }) {
   const navigation = useNavigation();
   return (
     <Drawer.Navigator
@@ -100,7 +106,7 @@ function DrawerStack({ params }) {
             <Avatar.Image
               style={{ marginRight: 10 }}
               size={38}
-              source={{ uri: `https://i.ibb.co/${params.foto_perfil}` }}
+              source={{ uri: `https://i.ibb.co/${userObject.profile_picture}` }}
             />
           </TouchableOpacity>
         ),

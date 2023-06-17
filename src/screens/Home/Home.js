@@ -4,7 +4,6 @@ import AppContext from '../../../AppContext';
 import CardFeature from './components/CardFeature';
 import { cardAguaFeature, cardAliments, cardBuscar, cardPratos } from '../../../constants/images';
 import { ProgressBar, Avatar } from 'react-native-paper';
-import CalculateRegistrationProgress from '../../../utilities/CalculateRegistrationProgress';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import getUserFavoriteFoods from '../../../utilities/FavoriteFoods/getUserFavoriteFoods';
@@ -12,15 +11,18 @@ import getUserDailyWaterConsume from '../../../utilities/getUserDailyWaterConsum
 import { ThemeContext } from '../../../contexts/ThemeProvider';
 
 const Home = () => {
-  const { params, userIsAuthenticated, setParams } = useContext(AppContext);
+  const { params, userIsAuthenticated, setParams, userObject } = useContext(AppContext);
   const { theme } = useContext(ThemeContext);
 
-  const progressBar = CalculateRegistrationProgress(params);
+  const progressBar = userObject.getRegistrationProgress();
   const navigation = useNavigation();
 
   useEffect(() => {
     const getData = async () => {
       const data = await getUserFavoriteFoods(params.usuario_id);
+      userObject.getFavoriteFoods();
+      userObject.getDailyWaterConsume();
+      userObject.consumedWater = 1000;
       const consumedWater = await getUserDailyWaterConsume(params.usuario_id);
       setParams((prev) => {
         return {
@@ -40,7 +42,7 @@ const Home = () => {
         <View style={styles.welcomeContainer}>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <Text style={[styles.welcomeText, { color: theme.fontColor.title }]}>Funcionalidades</Text>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => console.log(userObject)}>
               <Ionicons name="notifications" size={26} color={theme.iconColor} />
             </TouchableOpacity>
           </View>

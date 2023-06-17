@@ -4,7 +4,7 @@ import background from '../../../assets/home-img-2.png';
 import { useHeaderHeight } from '@react-navigation/elements';
 import Logo from '../../components/Logo';
 import { TextInput, Button, Provider } from 'react-native-paper';
-import isValidEmail from '../../../utilities/isValidEmail';
+import validateEmail from '../../../utilities/validateEmail';
 import getUserData from '../../../utilities/getUserData';
 import styles from './Login.style';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -12,10 +12,11 @@ import Dialog from '../../components/Dialog';
 import { useNavigation } from '@react-navigation/native';
 import AppContext from '../../../AppContext';
 import CustomBackButtonHeader from '../../components/CustomBackButtonHeader';
+import User from '../../../models/User';
 
 const Login = () => {
   const navigation = useNavigation();
-  const { setParams, userIsAuthenticated, setUserIsAuthenticated } = useContext(AppContext);
+  const { setParams, userIsAuthenticated, setUserIsAuthenticated, userObject, setUserObject } = useContext(AppContext);
 
   useEffect(() => {
     navigation.setOptions({
@@ -29,6 +30,17 @@ const Login = () => {
   }, []);
 
   const navigateToDrawerScreen = async (userCredentials) => {
+    const updatedUserObject = new User(
+      userCredentials.usuario_id,
+      userCredentials.nome,
+      userCredentials.email,
+      userCredentials.senha,
+      userCredentials.altura,
+      userCredentials.peso,
+      userCredentials.telefone,
+      userCredentials.foto_perfil
+    );
+    setUserObject(updatedUserObject);
     setParams(userCredentials);
     setUserIsAuthenticated(true);
     await storeData(userCredentials.usuario_id);
@@ -94,7 +106,7 @@ const Login = () => {
     /// Este useEffect será executado toda vez que "email.value" sofrer alteração
     /// Define se "email.value" é uma valor válido
 
-    if (isValidEmail(email.value)) {
+    if (validateEmail(email.value)) {
       setEmail((prev) => {
         return {
           ...prev,

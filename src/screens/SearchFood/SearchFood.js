@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, SafeAreaView, ScrollView, KeyboardAvoidingView } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, ScrollView } from 'react-native';
 import { TextInput, Button, Provider } from 'react-native-paper';
 import { useState, useCallback, useContext } from 'react';
 import SearchFoodListItem from './components/SearchFoodListItem';
@@ -11,7 +11,7 @@ import changeFavoriteStatus from '../../../utilities/changeFavoriteStatus';
 import { ThemeContext } from '../../../contexts/ThemeProvider';
 
 const SearchFood = () => {
-  const { params } = useContext(AppContext);
+  const { userObject } = useContext(AppContext);
   const [inputValue, setInputValue] = useState('');
   const [showResults, setShowResults] = useState(false);
   const [results, setResults] = useState([]);
@@ -50,8 +50,8 @@ const SearchFood = () => {
   const onSubmitInputHandler = async () => {
     setErrorMessage(null);
     let favoriteFoodsId;
-    if (!params.favoriteList.error) {
-      favoriteFoodsId = params.favoriteList.map((food) => food.alimento_id);
+    if (!userObject.favoriteFoods.error) {
+      favoriteFoodsId = userObject.favoriteFoods.map((food) => food.alimento_id);
     } else {
       favoriteFoodsId = [];
     }
@@ -97,18 +97,16 @@ const SearchFood = () => {
     const currentFoodIndex = updatedFilteredResults.findIndex((curr) => curr.alimento_id === modalDetails.alimento_id);
     if (modalDetails.isFavorite !== updatedFilteredResults[currentFoodIndex].isFavorite) {
       if (modalDetails.isFavorite) {
-        const result = await changeFavoriteStatus(params.usuario_id, modalDetails.alimento_id);
+        const result = await changeFavoriteStatus(userObject.id, modalDetails.alimento_id);
         if (!result?.error) {
           updatedFilteredResults[currentFoodIndex].isFavorite = modalDetails.isFavorite;
           setFilteredResults(updatedFilteredResults);
-          console.log('Saved food');
         }
       } else {
-        const result = await changeFavoriteStatus(params.usuario_id, modalDetails.alimento_id, (operation = 'remove'));
+        const result = await changeFavoriteStatus(userObject.id, modalDetails.alimento_id, (operation = 'remove'));
         if (!result?.error) {
           updatedFilteredResults[currentFoodIndex].isFavorite = modalDetails.isFavorite;
           setFilteredResults(updatedFilteredResults);
-          console.log('Removed food');
         }
       }
     }
