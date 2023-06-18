@@ -1,17 +1,15 @@
 import { useContext, useEffect } from 'react';
-import { View, Text, SafeAreaView, StyleSheet, ScrollView, Button, TouchableOpacity } from 'react-native';
+import { View, Text, SafeAreaView, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import AppContext from '../../../AppContext';
 import CardFeature from './components/CardFeature';
 import { cardAguaFeature, cardAliments, cardBuscar, cardPratos } from '../../../constants/images';
-import { ProgressBar, Avatar } from 'react-native-paper';
+import { ProgressBar } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
-import getUserFavoriteFoods from '../../../utilities/FavoriteFoods/getUserFavoriteFoods';
-import getUserDailyWaterConsume from '../../../utilities/getUserDailyWaterConsume';
 import { ThemeContext } from '../../../contexts/ThemeProvider';
 
 const Home = () => {
-  const { params, userIsAuthenticated, setParams, userObject } = useContext(AppContext);
+  const { userObject, setUserObject, setActiveScreen } = useContext(AppContext);
   const { theme } = useContext(ThemeContext);
 
   const progressBar = userObject.getRegistrationProgress();
@@ -19,22 +17,20 @@ const Home = () => {
 
   useEffect(() => {
     const getData = async () => {
-      const data = await getUserFavoriteFoods(params.usuario_id);
-      userObject.getFavoriteFoods();
-      userObject.getDailyWaterConsume();
-      userObject.consumedWater = 1000;
-      const consumedWater = await getUserDailyWaterConsume(params.usuario_id);
-      setParams((prev) => {
-        return {
-          ...prev,
-          favoriteList: data,
-          consumedWater: consumedWater,
-          totalWater: prev.peso > 0 ? prev.peso * 35 : 2000,
-        };
-      });
+      await userObject.getDailyWaterConsume();
+      await userObject.getFavoriteFoods();
+      await userObject.getDishes();
+      const updatedUserObject = userObject.clone();
+      updatedUserObject.setTotalWater();
+      setUserObject(updatedUserObject);
     };
     getData();
   }, []);
+
+  const onPressCard = (screen) => {
+    setActiveScreen(screen);
+    navigation.navigate(screen);
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.backgroundColor }}>
@@ -53,25 +49,17 @@ const Home = () => {
             </View>
           )}
         </View>
-        <CardFeature
-          title="Buscar Alimentos"
-          cardBackground={cardBuscar}
-          onPress={() => navigation.navigate('SearchFood')}
-        />
-        <CardFeature
-          title="Água Diária"
-          cardBackground={cardAguaFeature}
-          onPress={() => navigation.navigate('WaterAmount')}
-        />
+        <CardFeature title="Buscar Alimentos" cardBackground={cardBuscar} onPress={() => onPressCard('SearchFood')} />
+        <CardFeature title="Água Diária" cardBackground={cardAguaFeature} onPress={() => onPressCard('WaterAmount')} />
         <CardFeature
           title="Alimentos Favoritos"
           cardBackground={cardAliments}
-          onPress={() => navigation.navigate('FavoriteFoods')}
+          onPress={() => onPressCard('FavoriteFoods')}
         />
         <CardFeature
           title="Pratos Favoritos"
           cardBackground={cardPratos}
-          onPress={() => navigation.navigate('FavoriteDishes')}
+          onPress={() => onPressCard('FavoriteDishes')}
         />
       </ScrollView>
     </SafeAreaView>

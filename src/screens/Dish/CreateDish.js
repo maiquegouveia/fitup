@@ -1,6 +1,6 @@
 import { StyleSheet, View, ScrollView } from 'react-native';
-import { useState, useContext, useCallback } from 'react';
-import { useNavigation } from '@react-navigation/native';
+import { useState, useContext } from 'react';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { Input, NativeBaseProvider, Text, Button } from 'native-base';
 import WarningCreateDish from './components/WarningCreateDish';
 import DishCategorySelect from './components/DishCategorySelect';
@@ -8,13 +8,12 @@ import FoodSelect from './components/FoodSelect';
 import FoodListItem from './components/FoodListItem';
 import FoodCategorySelect from './components/FoodCategorySelect';
 import AppContext from '../../../AppContext';
-import { useFocusEffect } from '@react-navigation/native';
 import createDish from '../../../utilities/Dish/createDish';
 import { ThemeContext } from '../../../contexts/ThemeProvider';
-import getUserFavoriteFoods from '../../../utilities/FavoriteFoods/getUserFavoriteFoods';
+import { useEffect } from 'react';
 
 const CreateDish = () => {
-  const { params, setParams } = useContext(AppContext);
+  const { userObject, setUserObject, setActiveScreen } = useContext(AppContext);
   const navigation = useNavigation();
   const [selectedCategory, setSelectedCategory] = useState('Todos');
   const [showWarningCategory, setShowWarningCategory] = useState(true);
@@ -28,6 +27,7 @@ const CreateDish = () => {
     isValid: false,
   });
   const [dishCategory, setDishCategory] = useState('');
+  const isFocused = useIsFocused();
 
   const onChangeInput = (text) => {
     if (text.length > 3) {
@@ -60,34 +60,31 @@ const CreateDish = () => {
   };
 
   const getUserFavoriteFoodsData = async () => {
-    const data = await getUserFavoriteFoods(params.usuario_id);
-    setParams((prev) => {
-      return {
-        ...prev,
-        favoriteList: data,
-      };
-    });
+    userObject.getFavoriteFoods();
+    const updatedUserObject = userObject.clone();
+    setUserObject(updatedUserObject);
     setFoodList(
-      data.map((food) => {
+      updatedUserObject.favoriteFoods.map((food) => {
         return {
-          foodName: food.nome,
-          foodId: food.alimento_id,
+          foodName: food.name,
+          foodId: food.id,
           amount: 100,
-          category: food.categoria,
-          carb: food.carboidrato,
+          category: food.category,
+          carb: food.carbohydrates,
           kcal: food.kcal,
-          protein: food.proteina,
+          protein: food.protein,
         };
       })
     );
   };
 
-  useFocusEffect(
-    useCallback(() => {
-      resetStates();
+  useEffect(() => {
+    if (isFocused) {
       getUserFavoriteFoodsData();
-    }, [])
-  );
+    } else {
+      resetStates();
+    }
+  }, [isFocused]);
 
   const onSelectFood = (foodId) => {
     const updatedFoodList = [...foodList];
@@ -131,7 +128,7 @@ const CreateDish = () => {
     if (!input.isValid || showWarningCategory || showWarningFood) return;
     setIsLoading(true);
     const dish = {
-      userId: params.usuario_id,
+      userId: userObject.id,
       dishName: input.value,
       foods: foodAddedList,
       dishCategory: dishCategory,

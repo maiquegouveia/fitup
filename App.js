@@ -5,12 +5,12 @@ import { NavigationContainer } from '@react-navigation/native';
 import AppContext from './AppContext';
 import { EditProfileProvider } from './EditProfileContext';
 import { useState } from 'react';
-import { Image, TouchableOpacity, Text } from 'react-native';
+import { TouchableOpacity, Text } from 'react-native';
 import { Avatar } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
-import { logo } from './constants/images';
 import { ThemeProvider } from './contexts/ThemeProvider';
 import EditDish from './src/screens/Dish/EditDish';
+import DrawerContent from './DrawerContent';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -27,17 +27,27 @@ import FavoriteFoods from './src/screens/FavoriteFoods/FavoriteFoods';
 import FavoriteDishes from './src/screens/Dish/FavoriteDishes';
 import WaterAmount from './src/screens/WaterAmount/WaterAmount';
 import CreateDish from './src/screens/Dish/CreateDish';
-import { color } from 'react-native-reanimated';
+
 import User from './models/User';
 
 function RootStack() {
   const [params, setParams] = useState({});
   const [userIsAuthenticated, setUserIsAuthenticated] = useState(false);
   const [userObject, setUserObject] = useState(new User());
+  const [activeScreen, setActiveScreen] = useState('Home');
 
   return (
     <AppContext.Provider
-      value={{ params, setParams, userIsAuthenticated, setUserIsAuthenticated, userObject, setUserObject }}
+      value={{
+        params,
+        setParams,
+        userIsAuthenticated,
+        setUserIsAuthenticated,
+        userObject,
+        setUserObject,
+        activeScreen,
+        setActiveScreen,
+      }}
     >
       <NavigationContainer>
         <Stack.Navigator
@@ -75,7 +85,16 @@ function RootStack() {
           >
             {() => (
               <AppContext.Provider
-                value={{ params, setParams, userIsAuthenticated, setUserIsAuthenticated, userObject, setUserObject }}
+                value={{
+                  params,
+                  setParams,
+                  userIsAuthenticated,
+                  setUserIsAuthenticated,
+                  userObject,
+                  setUserObject,
+                  activeScreen,
+                  setActiveScreen,
+                }}
               >
                 <ThemeProvider>
                   <DrawerStack userObject={userObject} />
@@ -93,6 +112,7 @@ function DrawerStack({ userObject }) {
   const navigation = useNavigation();
   return (
     <Drawer.Navigator
+      drawerContent={() => <DrawerContent />}
       screenOptions={{
         headerTitleAlign: 'center',
         headerStyle: { backgroundColor: '#59CA6B' },
@@ -106,7 +126,7 @@ function DrawerStack({ userObject }) {
             <Avatar.Image
               style={{ marginRight: 10 }}
               size={38}
-              source={{ uri: `https://i.ibb.co/${userObject.profile_picture}` }}
+              source={{ uri: `https://i.ibb.co/${userObject.profilePicture}` }}
             />
           </TouchableOpacity>
         ),

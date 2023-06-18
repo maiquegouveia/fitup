@@ -24,7 +24,7 @@ export default StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     marginVertical: 50,
-    backgroundColor: 'orange',
+    backgroundColor: 'white',
     padding: 10,
     borderRadius: 10,
   },

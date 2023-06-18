@@ -12,8 +12,9 @@ const EditInputProfile = (props) => {
       inputLabel: props?.label,
       value: props?.value,
       field: {
-        name: props?.fieldName,
-        type: props?.fieldType,
+        name: props.fieldName,
+        type: props.fieldType,
+        userObject: props.fieldUserObject,
       },
     });
     props.onShowEditModal();

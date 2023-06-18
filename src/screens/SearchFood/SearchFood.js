@@ -9,6 +9,7 @@ import AppContext from '../../../AppContext';
 import MenuCategory from './components/MenuCategory';
 import changeFavoriteStatus from '../../../utilities/changeFavoriteStatus';
 import { ThemeContext } from '../../../contexts/ThemeProvider';
+import Food from '../../../models/Food';
 
 const SearchFood = () => {
   const { userObject } = useContext(AppContext);
@@ -49,12 +50,7 @@ const SearchFood = () => {
 
   const onSubmitInputHandler = async () => {
     setErrorMessage(null);
-    let favoriteFoodsId;
-    if (!userObject.favoriteFoods.error) {
-      favoriteFoodsId = userObject.favoriteFoods.map((food) => food.alimento_id);
-    } else {
-      favoriteFoodsId = [];
-    }
+    const favoriteFoodsId = userObject.getFavoriteFoodsId();
 
     setIsLoading(true);
     const data = await getFoodByName(inputValue);
@@ -63,12 +59,29 @@ const SearchFood = () => {
     if (data.error_message) {
       setErrorMessage(data.error_message);
     } else {
-      const dataWithFavoriteStatus = data.map((food) => {
-        return {
-          ...food,
-          isFavorite: favoriteFoodsId?.includes(food.alimento_id),
-        };
-      });
+      const dataWithFavoriteStatus = data.map(
+        (food) =>
+          new Food(
+            food.alimento_id,
+            food.categoria,
+            food.nome,
+            food.kcal,
+            food.carboidrato,
+            food.proteina,
+            food.calcio,
+            food.ferro,
+            food.gordura_saturada,
+            food.gordura_monoinsaturada,
+            food.gordura_poli_insaturada,
+            food.magnesio,
+            food.sodio,
+            food.zinco,
+            food.potassio,
+            food.vitaminaC,
+            favoriteFoodsId?.includes(food.alimento_id)
+          )
+      );
+
       setResults([...dataWithFavoriteStatus]);
       setFilteredResults([...dataWithFavoriteStatus]);
 
@@ -94,16 +107,16 @@ const SearchFood = () => {
   const onDismissModal = async () => {
     setShowFoodDetailsModal(false);
     const updatedFilteredResults = [...filteredResults];
-    const currentFoodIndex = updatedFilteredResults.findIndex((curr) => curr.alimento_id === modalDetails.alimento_id);
+    const currentFoodIndex = updatedFilteredResults.findIndex((curr) => curr.id === modalDetails.id);
     if (modalDetails.isFavorite !== updatedFilteredResults[currentFoodIndex].isFavorite) {
       if (modalDetails.isFavorite) {
-        const result = await changeFavoriteStatus(userObject.id, modalDetails.alimento_id);
+        const result = await changeFavoriteStatus(userObject.id, modalDetails.id);
         if (!result?.error) {
           updatedFilteredResults[currentFoodIndex].isFavorite = modalDetails.isFavorite;
           setFilteredResults(updatedFilteredResults);
         }
       } else {
-        const result = await changeFavoriteStatus(userObject.id, modalDetails.alimento_id, (operation = 'remove'));
+        const result = await changeFavoriteStatus(userObject.id, modalDetails.id, (operation = 'remove'));
         if (!result?.error) {
           updatedFilteredResults[currentFoodIndex].isFavorite = modalDetails.isFavorite;
           setFilteredResults(updatedFilteredResults);
@@ -169,7 +182,7 @@ const SearchFood = () => {
 
               {!errorMessage &&
                 filteredResults?.map((food) => (
-                  <SearchFoodListItem key={food.alimento_id} food={food} onPress={onShowModalDetails} />
+                  <SearchFoodListItem key={food.id} food={food} onPress={onShowModalDetails} />
                 ))}
             </ScrollView>
           )}

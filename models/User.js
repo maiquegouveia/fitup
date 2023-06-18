@@ -1,5 +1,8 @@
 import fetchUserFavoriteFoods from '../utilities/FavoriteFoods/getUserFavoriteFoods';
 import fetchUserDailyWaterConsume from '../utilities/getUserDailyWaterConsume';
+import fetchUserDishes from '../utilities/Dish/getDishes';
+import Food from './Food';
+import Dish from './Dish';
 
 export default class User {
   constructor(
@@ -10,7 +13,7 @@ export default class User {
     height,
     weight,
     phone,
-    profile_picture = 'https://i.ibb.co/tJBC4C4/default-profile.png'
+    profilePicture = 'https://i.ibb.co/tJBC4C4/default-profile.png'
   ) {
     this.id = id;
     this.name = name;
@@ -19,10 +22,17 @@ export default class User {
     this.email = email;
     this.password = password;
     this.phone = phone;
-    this.profile_picture = profile_picture;
-    this.consumedWater = null;
-    this.favoriteFoods = null;
-    this.dishes = null;
+    this.profilePicture = profilePicture;
+    this.consumedWater = 0;
+    this.favoriteFoods = [];
+    this.dishes = [];
+    this.totalWater = 0;
+  }
+
+  setTotalWater() {
+    if (this.weight) {
+      this.totalWater = this.weight * 35;
+    }
   }
 
   async getDailyWaterConsume() {
@@ -30,7 +40,41 @@ export default class User {
   }
 
   async getFavoriteFoods() {
-    this.favoriteFoods = await fetchUserFavoriteFoods(this.id);
+    const foods = await fetchUserFavoriteFoods(this.id);
+    if (!foods.error) {
+      this.favoriteFoods = foods.map(
+        (food) =>
+          new Food(
+            food.alimento_id,
+            food.categoria,
+            food.nome,
+            food.kcal,
+            food.carboidrato,
+            food.proteina,
+            food.calcio,
+            food.ferro,
+            food.gordura_saturada,
+            food.gordura_monoinsaturada,
+            food.gordura_poli_insaturada,
+            food.magnesio,
+            food.sodio,
+            food.zinco,
+            food.potassio,
+            food.vitaminaC
+          )
+      );
+    } else {
+      this.favoriteFoods = foods;
+    }
+  }
+
+  async getDishes() {
+    this.dishes = await fetchUserDishes(this.id);
+  }
+
+  getFavoriteFoodsId() {
+    if (!this.favoriteFoods.error) return this.favoriteFoods.map((food) => food.id);
+    else return [];
   }
 
   getRegistrationProgress() {
@@ -56,9 +100,10 @@ export default class User {
     clonedObject.weight = this.weight;
     clonedObject.favoriteFoods = this.favoriteFoods;
     clonedObject.dishes = this.dishes;
-    clonedObject.profile_picture = this.profile_picture;
+    clonedObject.profilePicture = this.profilePicture;
     clonedObject.phone = this.phone;
     clonedObject.consumedWater = this.consumedWater;
+    clonedObject.totalWater = this.totalWater;
     return clonedObject;
   }
 }

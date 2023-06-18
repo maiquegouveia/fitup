@@ -15,7 +15,8 @@ export default class Food {
     sodium,
     zinc,
     potassium,
-    vitaminC
+    vitaminC,
+    isFavorite = true
   ) {
     this.id = id;
     this.category = category;
@@ -33,5 +34,6 @@ export default class Food {
     this.potassium = potassium;
     this.zinc = zinc;
     this.vitaminC = vitaminC;
+    this.isFavorite = isFavorite;
   }
 }

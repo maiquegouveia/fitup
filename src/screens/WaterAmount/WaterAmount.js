@@ -10,10 +10,10 @@ import postWaterConsume from '../../../utilities/WaterAmount/postWaterConsume';
 import { ThemeContext } from '../../../contexts/ThemeProvider';
 
 const WaterAmount = () => {
-  const { params, setParams } = useContext(AppContext);
+  const { userObject, setUserObject } = useContext(AppContext);
   const [animation] = useState(new Animated.Value(0));
   const [animationWidth] = useState(new Animated.Value(90));
-  const [consumedWater, setConsumedWater] = useState(params.consumedWater);
+
   const { theme } = useContext(ThemeContext);
 
   const startAnimation = (value) => {
@@ -33,13 +33,12 @@ const WaterAmount = () => {
   };
 
   const onChangeConsume = (newConsumedWater) => {
-    setConsumedWater(newConsumedWater);
-    if (newConsumedWater >= params.totalWater) {
+    if (newConsumedWater >= userObject.totalWater) {
       startAnimation(195);
       startAnimationWidth(110);
       return;
     }
-    const newHeight = (newConsumedWater * 195) / params.totalWater;
+    const newHeight = (newConsumedWater * 195) / userObject.totalWater;
     startAnimation(newHeight);
     if (newHeight > 9.75) {
       startAnimationWidth(110);
@@ -47,33 +46,30 @@ const WaterAmount = () => {
   };
 
   const onPressAddWaterButton = async (amount) => {
-    const response = await postWaterConsume(params.usuario_id, amount);
+    const response = await postWaterConsume(userObject.id, amount);
     if (!response?.error) {
-      const newConsumed = params.consumedWater + amount;
-      setParams((prev) => {
-        return {
-          ...prev,
-          consumedWater: newConsumed,
-        };
-      });
+      const newConsumed = userObject.consumedWater + amount;
+      userObject.consumedWater += amount;
+      const updatedUserObject = userObject.clone();
+      setUserObject(updatedUserObject);
       onChangeConsume(newConsumed);
     }
   };
 
   useFocusEffect(
     useCallback(() => {
-      onChangeConsume(params.consumedWater);
-    }, [params.consumedWater, params.peso])
+      onChangeConsume(userObject.consumedWater);
+    }, [userObject.consumedWater, userObject.weight])
   );
 
   return (
     <SafeAreaView style={[styles.mainContainer, { backgroundColor: theme.backgroundColor }]}>
       <View style={styles.cupContainer}>
         <Cup
-          consumedWater={consumedWater}
+          consumedWater={userObject.consumedWater}
           animation={animation}
           animationWidth={animationWidth}
-          totalWater={params.totalWater}
+          totalWater={userObject.totalWater}
           color={theme.fontColor.text}
         />
       </View>

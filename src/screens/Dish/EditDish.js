@@ -14,7 +14,7 @@ import deleteDish from '../../../utilities/Dish/deleteDish';
 
 const EditDish = ({ route, navigation }) => {
   const { theme } = useContext(ThemeContext);
-  const { params } = useContext(AppContext);
+  const { userObject } = useContext(AppContext);
   const [isLoading, setIsLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [foodAddedList, setFoodAddedList] = useState([]);
@@ -25,7 +25,7 @@ const EditDish = ({ route, navigation }) => {
   const getData = async () => {
     const data = await getDishItens(route.params.dishId);
     const itensId = data.map((food) => food.alimento_id);
-    const cleanFavoriteList = params.favoriteList.filter((food) => {
+    const cleanFavoriteList = userObject.favoriteFoods.filter((food) => {
       if (!itensId.includes(food.alimento_id)) {
         return food;
       }

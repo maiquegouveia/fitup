@@ -170,8 +170,6 @@ const Cadastro = () => {
         type: 1,
       });
 
-      console.log(new User(email.value, senha.value, imageUrl));
-
       navigation.navigate('Login');
     } else {
       if (email.isValid === false && senha.isValid === false && confSenha.isValid === false) {
