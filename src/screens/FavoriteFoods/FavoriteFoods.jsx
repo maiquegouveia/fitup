@@ -1,22 +1,34 @@
 import { StyleSheet, Text, View, SafeAreaView, RefreshControl, ScrollView } from 'react-native';
-import { useContext, useState, useCallback } from 'react';
-import getUserFavoriteFoods from '../../../utilities/FavoriteFoods/getUserFavoriteFoods';
+import { useContext, useState, useCallback, useEffect } from 'react';
 import AppContext from '../../../AppContext';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import SearchFoodListItem from '../SearchFood/components/SearchFoodListItem';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { ActivityIndicator, Provider, Button } from 'react-native-paper';
 import DeleteDialog from './components/DeleteDialog';
 import changeFavoriteStatus from '../../../utilities/changeFavoriteStatus';
 import { ThemeContext } from '../../../contexts/ThemeProvider';
+import FoodItem from './components/FoodItem';
+import SearchBar from '../../components/SearchBar';
 
 const FavoriteFoods = () => {
   const navigation = useNavigation();
-  const { params, setParams } = useContext(AppContext);
+  const { userObject, setUserObject, setActiveScreen } = useContext(AppContext);
   const [isLoading, setIsLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [showRemoveConfirmationModal, setShowRemoveConfirmationModal] = useState(false);
   const [foodDelete, setFoodDelete] = useState('');
+  const [filteredFoodsData, setFilteredFoodsData] = useState([]);
   const { theme } = useContext(ThemeContext);
+  const isFocused = useIsFocused();
+
+  const onChangeInput = (text) => {
+    if (text.length === 0) {
+      setFilteredFoodsData(userObject.favoriteFoods);
+    } else {
+      const data = userObject.favoriteFoods.filter((food) => food.name.startsWith(text));
+      setFilteredFoodsData(data);
+    }
+  };
+
   const showRemoveConfirmationModalHandler = (foodId, foodName) => {
     setFoodDelete({
       name: foodName,
@@ -26,12 +38,13 @@ const FavoriteFoods = () => {
   };
 
   const onDeleteFoodHandler = async () => {
-    const result = await changeFavoriteStatus(params.usuario_id, foodDelete.foodId, (operation = 'remove'));
+    const result = await changeFavoriteStatus(userObject.id, foodDelete.foodId, (operation = 'remove'));
     if (result?.error) {
       hideRemoveConfirmationModalHandler();
       return;
     } else {
       hideRemoveConfirmationModalHandler();
+      setIsLoading(true);
       getData();
     }
   };
@@ -41,18 +54,15 @@ const FavoriteFoods = () => {
   };
 
   const getData = async () => {
-    const data = await getUserFavoriteFoods(params.usuario_id);
-    setParams((prev) => {
-      return {
-        ...prev,
-        favoriteList: data,
-      };
-    });
+    setIsLoading(true);
+    await userObject.getFavoriteFoods();
+    const updatedUserObject = userObject.clone();
+    setFilteredFoodsData(updatedUserObject.favoriteFoods);
+    setUserObject(updatedUserObject);
     setIsLoading(false);
   };
 
   const onRefresh = useCallback(() => {
-    setIsLoading(true);
     setRefreshing(true);
     getData();
     setTimeout(() => {
@@ -60,11 +70,16 @@ const FavoriteFoods = () => {
     }, 0);
   }, []);
 
-  useFocusEffect(
-    useCallback(() => {
+  const onPressNavigate = (screen) => {
+    setActiveScreen(screen);
+    navigation.navigate(screen);
+  };
+
+  useEffect(() => {
+    if (isFocused) {
       getData();
-    }, [])
-  );
+    }
+  }, [isFocused]);
 
   return (
     <Provider>
@@ -79,31 +94,31 @@ const FavoriteFoods = () => {
           showsVerticalScrollIndicator={false}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         >
+          <SearchBar placeholder="Busque um alimento aqui..." iconName="food" onChange={onChangeInput} />
+          <Button
+            textColor="white"
+            style={{ backgroundColor: '#256D1B', borderRadius: 5, marginTop: 10 }}
+            onPress={() => onPressNavigate('SearchFood')}
+          >
+            Adicionar Alimentos
+          </Button>
           <View style={styles.listContainer}>
-            {!isLoading && params.favoriteList?.length > 0 && (
+            {!isLoading && filteredFoodsData.length > 0 && (
               <Text style={{ fontSize: 18, fontWeight: 'bold', marginVertical: 10, color: 'white' }}>
-                {`Alimentos Favoritos (${params.favoriteList.length})`}
+                {`Alimentos Favoritos (${filteredFoodsData.length})`}
               </Text>
             )}
             {isLoading && <ActivityIndicator animating={true} color="white" />}
-            {!isLoading && params.favoriteList?.error && (
-              <>
-                <Text style={styles.textError}>{params.favoriteList.error}</Text>
-                <Button
-                  textColor="black"
-                  style={{ marginVertical: 10, backgroundColor: 'white', borderRadius: 10 }}
-                  onPress={() => navigation.navigate('SearchFood')}
-                >
-                  Adicionar Alimentos
-                </Button>
-              </>
+
+            {!isLoading && (filteredFoodsData.length === 0 || filteredFoodsData.error) && (
+              <Text style={styles.textError}>Nenhum alimento encontrado!</Text>
             )}
+
             {!isLoading &&
-              !params.favoriteList.error &&
-              params.favoriteList.map((food) => (
-                <SearchFoodListItem
-                  isFavorite={true}
-                  key={food.alimento_id}
+              !filteredFoodsData.error &&
+              filteredFoodsData.map((food) => (
+                <FoodItem
+                  key={food.id}
                   food={food}
                   showRemoveConfirmationModalHandler={showRemoveConfirmationModalHandler}
                 />
@@ -120,14 +135,15 @@ export default FavoriteFoods;
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    padding: 10,
+    padding: 15,
   },
   listContainer: {
     backgroundColor: '#256D1B',
     padding: 10,
-    borderRadius: 10,
+    borderRadius: 5,
     alignItems: 'center',
     justifyContent: 'center',
+    marginTop: 20,
   },
   textError: {
     fontSize: 18,

@@ -5,12 +5,12 @@ import { NavigationContainer } from '@react-navigation/native';
 import AppContext from './AppContext';
 import { EditProfileProvider } from './EditProfileContext';
 import { useState } from 'react';
-import { Image, TouchableOpacity, Text } from 'react-native';
+import { TouchableOpacity, Text } from 'react-native';
 import { Avatar } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
-import { logo } from './constants/images';
 import { ThemeProvider } from './contexts/ThemeProvider';
 import EditDish from './src/screens/Dish/EditDish';
+import DrawerContent from './DrawerContent';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -27,14 +27,29 @@ import FavoriteFoods from './src/screens/FavoriteFoods/FavoriteFoods';
 import FavoriteDishes from './src/screens/Dish/FavoriteDishes';
 import WaterAmount from './src/screens/WaterAmount/WaterAmount';
 import CreateDish from './src/screens/Dish/CreateDish';
-import { color } from 'react-native-reanimated';
+import AccountRecovery from './src/screens/AccountRecovery/AccountRecovery';
+
+import User from './models/User';
 
 function RootStack() {
   const [params, setParams] = useState({});
   const [userIsAuthenticated, setUserIsAuthenticated] = useState(false);
+  const [userObject, setUserObject] = useState(new User());
+  const [activeScreen, setActiveScreen] = useState('Home');
 
   return (
-    <AppContext.Provider value={{ params, setParams, userIsAuthenticated, setUserIsAuthenticated }}>
+    <AppContext.Provider
+      value={{
+        params,
+        setParams,
+        userIsAuthenticated,
+        setUserIsAuthenticated,
+        userObject,
+        setUserObject,
+        activeScreen,
+        setActiveScreen,
+      }}
+    >
       <NavigationContainer>
         <Stack.Navigator
           initialRouteName="InitialScreen"
@@ -45,6 +60,16 @@ function RootStack() {
         >
           <Stack.Screen name="InitialScreen" component={InitialScreen} options={{}} />
           <Stack.Screen
+            name="AccountRecovery"
+            component={AccountRecovery}
+            options={{
+              headerBackImageSource: leftArrow,
+              headerTintColor: 'rgba(81, 242, 5, 1)',
+              title: '',
+            }}
+          />
+
+          <Stack.Screen
             name="Cadastro"
             component={Cadastro}
             options={{
@@ -53,6 +78,7 @@ function RootStack() {
               title: '',
             }}
           />
+
           <Stack.Screen
             name="Login"
             component={Login}
@@ -70,9 +96,20 @@ function RootStack() {
             }}
           >
             {() => (
-              <AppContext.Provider value={{ params, setParams, userIsAuthenticated, setUserIsAuthenticated }}>
+              <AppContext.Provider
+                value={{
+                  params,
+                  setParams,
+                  userIsAuthenticated,
+                  setUserIsAuthenticated,
+                  userObject,
+                  setUserObject,
+                  activeScreen,
+                  setActiveScreen,
+                }}
+              >
                 <ThemeProvider>
-                  <DrawerStack params={params} />
+                  <DrawerStack userObject={userObject} />
                 </ThemeProvider>
               </AppContext.Provider>
             )}
@@ -83,10 +120,11 @@ function RootStack() {
   );
 }
 
-function DrawerStack({ params }) {
+function DrawerStack({ userObject }) {
   const navigation = useNavigation();
   return (
     <Drawer.Navigator
+      drawerContent={() => <DrawerContent />}
       screenOptions={{
         headerTitleAlign: 'center',
         headerStyle: { backgroundColor: '#59CA6B' },
@@ -100,7 +138,7 @@ function DrawerStack({ params }) {
             <Avatar.Image
               style={{ marginRight: 10 }}
               size={38}
-              source={{ uri: `https://i.ibb.co/${params.foto_perfil}` }}
+              source={{ uri: `https://i.ibb.co/${userObject.profilePicture}` }}
             />
           </TouchableOpacity>
         ),

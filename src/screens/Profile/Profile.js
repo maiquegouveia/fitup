@@ -18,7 +18,7 @@ import postImage from '../../../utilities/Cadastro/postImage';
 import { ActivityIndicator } from 'react-native-paper';
 
 const ProfileScreen = () => {
-  const { params, setParams, setUserIsAuthenticated } = useContext(AppContext);
+  const { setUserIsAuthenticated, userObject, setUserObject } = useContext(AppContext);
   const { theme } = useContext(ThemeContext);
 
   const [showEditModal, setShowEditModal] = useState(false);
@@ -46,19 +46,19 @@ const ProfileScreen = () => {
   const onSaveEditModal = async () => {
     setIsLoading(true);
     const response = await editUserCredentials(
-      params.usuario_id,
+      userObject.id,
       modalContent.field.name,
       modalContent.field.type,
       modalContent.value
     );
     setIsLoading(false);
     if (response.status === 204) {
-      const updatedParams = { ...params };
-      updatedParams[`${modalContent.field.name}`] = modalContent.value;
-      if (modalContent.field.name === 'peso') {
-        updatedParams.totalWater = updatedParams.peso * 35;
-      }
-      setParams(updatedParams);
+      userObject[`${modalContent.field.userObject}`] = modalContent.value;
+      const updatedUserObject = userObject.clone();
+
+      updatedUserObject.setTotalWater();
+
+      setUserObject(updatedUserObject);
       setShowEditModal(false);
     } else if (response.status === 500 && response?.errorCode === 'ER_DUP_ENTRY') {
       setErrorMessage(`${modalContent.inputLabel} já cadastrado!`);
@@ -76,9 +76,11 @@ const ProfileScreen = () => {
   };
 
   const getWaterProgress = () => {
-    const progress = (params.consumedWater / params.totalWater) * 100;
-    if (progress > 100) return 100;
-    return progress;
+    if (userObject.consumedWater > 0) {
+      const progress = (userObject.consumedWater / userObject.totalWater) * 100;
+      if (progress > 100) return 100;
+    }
+    return 0;
   };
 
   const handlerProfilePicture = async () => {
@@ -87,20 +89,14 @@ const ProfileScreen = () => {
     if (base64) {
       let url = await postImage(base64);
       url = url.replace('https://i.ibb.co/', '');
-      const response = await changeProfilePicture(params.usuario_id, url);
+      const response = await changeProfilePicture(userObject.id, url);
       if (response?.error) {
         console.log('ERROR');
       } else {
-        setParams((prev) => {
-          return {
-            ...prev,
-            foto_perfil: url,
-          };
-        });
-        console.log('Changed');
+        userObject.profilePicture = url;
+        const updatedUserObject = userObject.clone();
+        setUserObject(updatedUserObject);
       }
-    } else {
-      console.log('test');
     }
     setChangingPicture(false);
   };
@@ -126,7 +122,7 @@ const ProfileScreen = () => {
                 )}
                 {!changingPicture && (
                   <Image
-                    source={{ uri: `https://i.ibb.co/${params.foto_perfil}` }}
+                    source={{ uri: `https://i.ibb.co/${userObject.profilePicture}` }}
                     resizeMode="contain"
                     style={styles.image}
                   />
@@ -134,7 +130,7 @@ const ProfileScreen = () => {
               </TouchableOpacity>
             </View>
             {!showEditContainer && (
-              <Text style={[styles.nameText, { color: theme.fontColor.title }]}>{params.nome}</Text>
+              <Text style={[styles.nameText, { color: theme.fontColor.title }]}>{userObject.name}</Text>
             )}
           </View>
           {!showEditContainer && (
@@ -153,19 +149,20 @@ const ProfileScreen = () => {
                       value={getWaterProgress()}
                       radius={60}
                       progressValueColor={'black'}
-                      activeStrokeColor={'blue'}
-                      inActiveStrokeColor={'brown'}
+                      activeStrokeColor={'#16B6E9'}
+                      inActiveStrokeColor={'#D9D9D9'}
                       inActiveStrokeOpacity={0.5}
                       inActiveStrokeWidth={10}
-                      activeStrokeWidth={20}
+                      activeStrokeWidth={10}
                       valueSuffix="%"
+                      duration={400}
                     />
                   </TouchableOpacity>
                   <View style={styles.statsWaterController}>
                     <Text>Água Consumida</Text>
                     <Button
-                      textColor="white"
-                      style={{ backgroundColor: 'orange', borderRadius: 5, marginTop: 5 }}
+                      textColor="black"
+                      style={{ backgroundColor: '#00F0FF', borderRadius: 5, marginTop: 5 }}
                       onPress={() => navigation.navigate('WaterAmount')}
                     >
                       Adicionar Água

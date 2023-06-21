@@ -1,10 +1,10 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
-const SearchFoodListItem = props => {
+const SearchFoodListItem = (props) => {
   const { food } = props;
 
   const onPressDelete = () => {
-    props.showRemoveConfirmationModalHandler(food.alimento_id, food.nome);
+    props.showRemoveConfirmationModalHandler(food.id, food.name);
   };
 
   const onShowModalDetails = () => {
@@ -27,8 +27,8 @@ const SearchFoodListItem = props => {
       }}
     >
       <View style={{ width: '80%' }}>
-        <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 18 }}>{food.nome}</Text>
-        <Text style={{ color: 'black', fontSize: 14 }}>{food.categoria} </Text>
+        <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 18 }}>{food.name}</Text>
+        <Text style={{ color: 'black', fontSize: 14 }}>{food.category} </Text>
       </View>
       {props.isFavorite && (
         <TouchableOpacity onPress={onPressDelete} activeOpacity={0.7} style={{ padding: 10 }}>

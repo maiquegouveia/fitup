@@ -7,7 +7,7 @@ import AppContext from '../../../../AppContext';
 import { ThemeContext } from '../../../../contexts/ThemeProvider';
 
 const EditProfileContainer = (props) => {
-  const { params } = useContext(AppContext);
+  const { userObject } = useContext(AppContext);
   const { theme } = useContext(ThemeContext);
   return (
     <>
@@ -17,49 +17,55 @@ const EditProfileContainer = (props) => {
       <View style={styles.container}>
         <EditInputProfile
           label="Nome Completo"
-          value={params.nome || ''}
+          value={userObject.name || ''}
           onShowEditModal={props.onShowEditModal}
           fieldName="nome"
+          fieldUserObject="name"
           fieldType="string"
         />
         <EditInputProfile
           keyboardType="numeric"
           label="Telefone"
-          value={params.telefone || ''}
+          value={userObject.phone || ''}
           onShowEditModal={props.onShowEditModal}
           fieldName="telefone"
+          fieldUserObject="phone"
           fieldType="string"
         />
         <EditInputProfile
           keyboardType="numeric"
           label="Peso"
-          value={params.peso || ''}
+          value={userObject.weight || ''}
           onShowEditModal={props.onShowEditModal}
           fieldName="peso"
+          fieldUserObject="weight"
           fieldType="numeric"
         />
         <EditInputProfile
           keyboardType="numeric"
           label="Altura"
-          value={params.altura || ''}
+          value={userObject.height || ''}
           onShowEditModal={props.onShowEditModal}
           fieldName="altura"
+          fieldUserObject="height"
           fieldType="numeric"
         />
         <EditInputProfile
           keyboardType="email-address"
           label="Email"
-          value={params.email}
+          value={userObject.email}
           onShowEditModal={props.onShowEditModal}
           fieldName="email"
+          fieldUserObject="email"
           fieldType="string"
         />
         <EditInputProfile
           label="Senha"
-          value={params.senha}
+          value={userObject.password}
           hideText={true}
           onShowEditModal={props.onShowEditModal}
           fieldName="senha"
+          fieldUserObject="password"
           fieldType="string"
         />
 

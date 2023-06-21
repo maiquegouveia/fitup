@@ -2,9 +2,9 @@ import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { Button, Dialog, Portal, Text } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
 
-const FoodDetailsModal = props => {
+const FoodDetailsModal = ({ food, onDismiss, setModalDetails, visible }) => {
   const onPressFavorite = () => {
-    props.setModalDetails(prev => {
+    setModalDetails((prev) => {
       return {
         ...prev,
         isFavorite: !prev.isFavorite,
@@ -14,65 +14,65 @@ const FoodDetailsModal = props => {
 
   return (
     <Portal>
-      <Dialog style={styles.dialog} visible={props.visible} onDismiss={props.onDismiss}>
-        <Dialog.Title style={styles.title}>{props.food.nome}</Dialog.Title>
+      <Dialog style={styles.dialog} visible={visible} onDismiss={onDismiss}>
+        <Dialog.Title style={styles.title}>{food.name}</Dialog.Title>
         <Dialog.Content>
           <View style={{ width: '80%' }}>
             <View style={styles.contentTopic}>
               <Text style={styles.topicTitle}>Categoria: </Text>
-              <Text>{props.food.categoria}</Text>
+              <Text>{food.category}</Text>
             </View>
             <View style={styles.contentTopic}>
               <Text style={styles.topicTitle}>Calorias: </Text>
-              <Text>{props.food.kcal}kcal</Text>
+              <Text>{food.kcal}kcal</Text>
             </View>
             <View style={styles.contentTopic}>
               <Text style={styles.topicTitle}>Carboidratos: </Text>
-              <Text>{props.food.carboidrato}g</Text>
+              <Text>{food.carbohydrates}g</Text>
             </View>
             <View style={styles.contentTopic}>
               <Text style={styles.topicTitle}>Proteínas: </Text>
-              <Text>{props.food.proteina}g</Text>
+              <Text>{food.protein}g</Text>
             </View>
             <View style={styles.contentTopic}>
               <Text style={styles.topicTitle}>Sódio: </Text>
-              <Text>{props.food.sodio}g</Text>
+              <Text>{food.sodium}g</Text>
             </View>
             <View style={styles.contentTopic}>
               <Text style={styles.topicTitle}>Ferro: </Text>
-              <Text>{props.food.ferro}g</Text>
+              <Text>{food.iron}g</Text>
             </View>
             <View style={styles.contentTopic}>
               <Text style={styles.topicTitle}>Cálcio: </Text>
-              <Text>{props.food.calcio}g</Text>
+              <Text>{food.calcium}g</Text>
             </View>
             <View style={styles.contentTopic}>
               <Text style={styles.topicTitle}>Magnésio: </Text>
-              <Text>{props.food.magnesio}g</Text>
+              <Text>{food.magnesium}g</Text>
             </View>
             <View style={styles.contentTopic}>
               <Text style={styles.topicTitle}>Potássio: </Text>
-              <Text>{props.food.potassio}g</Text>
+              <Text>{food.potassium}g</Text>
             </View>
             <View style={styles.contentTopic}>
               <Text style={styles.topicTitle}>Vitamina C: </Text>
-              <Text>{props.food.vitaminaC}g</Text>
+              <Text>{food.vitaminC}g</Text>
             </View>
             <View style={styles.contentTopic}>
               <Text style={styles.topicTitle}>Zinco: </Text>
-              <Text>{props.food.zinco}g</Text>
+              <Text>{food.zinc}g</Text>
             </View>
             <View style={styles.contentTopic}>
               <Text style={styles.topicTitle}>Gordura Saturada: </Text>
-              <Text>{props.food.gordura_saturada}g</Text>
+              <Text>{food.saturared}g</Text>
             </View>
             <View style={styles.contentTopic}>
               <Text style={styles.topicTitle}>Gordura Monoinsaturada: </Text>
-              <Text>{props.food.gordura_monoinsaturada}g</Text>
+              <Text>{food.monoinsaturared}g</Text>
             </View>
             <View style={styles.contentTopic}>
               <Text style={styles.topicTitle}>Gordura Poli-insaturada: </Text>
-              <Text>{props.food.gordura_poli_insaturada}g</Text>
+              <Text>{food.polyunsaturared}g</Text>
             </View>
           </View>
         </Dialog.Content>
@@ -81,7 +81,7 @@ const FoodDetailsModal = props => {
             <Button
               textColor="white"
               style={{ backgroundColor: 'green', borderRadius: 5, width: '85%' }}
-              onPress={props.onDismiss}
+              onPress={onDismiss}
             >
               Fechar
             </Button>
@@ -89,7 +89,7 @@ const FoodDetailsModal = props => {
               <MaterialIcons
                 name="favorite"
                 size={28}
-                color={props.food.isFavorite ? 'black' : 'white'}
+                color={food.isFavorite ? 'black' : 'white'}
                 style={{
                   padding: 5,
                   backgroundColor: 'green',

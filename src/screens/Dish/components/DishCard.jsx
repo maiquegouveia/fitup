@@ -2,10 +2,11 @@ import { StyleSheet, Text, View, TouchableOpacity, Alert } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
-const DishCard = ({ dishName, dishCategory, style, dishCarbo, dishProtein, dishKcal, dishId, onDeleteDish }) => {
+const DishCard = ({ style, dish, onDeleteDish }) => {
   const navigation = useNavigation();
+
   const alertShow = () => {
-    Alert.alert('', `Deseja deletar o prato (${dishName})?`, [
+    Alert.alert('', `Deseja deletar o prato (${dish.nome})?`, [
       {
         text: 'Cancelar',
         onPress: () => {},
@@ -13,7 +14,7 @@ const DishCard = ({ dishName, dishCategory, style, dishCarbo, dishProtein, dishK
 
       {
         text: 'Deletar',
-        onPress: () => onDeleteDish(dishId),
+        onPress: () => onDeleteDish(dish.prato_id),
       },
     ]);
   };
@@ -22,9 +23,9 @@ const DishCard = ({ dishName, dishCategory, style, dishCarbo, dishProtein, dishK
     <TouchableOpacity
       onPress={() =>
         navigation.navigate('EditDish', {
-          dishId: dishId,
-          dishName: dishName,
-          dishCategory: dishCategory,
+          dishId: dish.prato_id,
+          dishName: dish.nome,
+          dishCategory: dish.categoria_prato,
         })
       }
       activeOpacity={1}
@@ -32,28 +33,28 @@ const DishCard = ({ dishName, dishCategory, style, dishCarbo, dishProtein, dishK
     >
       <View style={{ paddingLeft: 5, paddingBottom: 5, flexDirection: 'row', justifyContent: 'space-between' }}>
         <View style={{ width: '90%' }}>
-          <Text style={styles.dishName}>{dishName}</Text>
+          <Text style={styles.dishName}>{dish.nome}</Text>
         </View>
         <TouchableOpacity onPress={alertShow} activeOpacity={0.7}>
-          <FontAwesome5 name="trash" size={20} color="#228B22" />
+          <FontAwesome5 name="trash" size={24} color="#228B22" />
         </TouchableOpacity>
       </View>
       <View style={styles.dishDetails}>
         <View style={{ flexDirection: 'row' }}>
           <Text style={styles.dishProperties}>Categoria: </Text>
-          <Text style={styles.dishDescription}>{dishCategory}</Text>
+          <Text style={styles.dishDescription}>{dish.categoria_prato}</Text>
         </View>
         <View style={{ flexDirection: 'row' }}>
           <Text style={styles.dishProperties}>Calorias: </Text>
-          <Text style={styles.dishDescription}>{dishKcal.toFixed(2)}kcal</Text>
+          <Text style={styles.dishDescription}>{dish.calorias.toFixed(2)}kcal</Text>
         </View>
         <View style={{ flexDirection: 'row' }}>
           <Text style={styles.dishProperties}>Carboidratos: </Text>
-          <Text style={styles.dishDescription}>{dishCarbo.toFixed(2)}g</Text>
+          <Text style={styles.dishDescription}>{dish.carboidratos.toFixed(2)}g</Text>
         </View>
         <View style={{ flexDirection: 'row' }}>
           <Text style={styles.dishProperties}>Proteínas: </Text>
-          <Text style={styles.dishDescription}>{dishProtein.toFixed(2)}g</Text>
+          <Text style={styles.dishDescription}>{dish.proteinas.toFixed(2)}g</Text>
         </View>
       </View>
     </TouchableOpacity>

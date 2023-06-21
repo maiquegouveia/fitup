@@ -1,62 +1,44 @@
-import { StyleSheet, Text, View, ScrollView, Alert, RefreshControl } from 'react-native';
-import { useState, useCallback } from 'react';
-import { TextInput, Button, ActivityIndicator, MD2Colors } from 'react-native-paper';
+import { StyleSheet, Text, View, ScrollView, RefreshControl } from 'react-native';
+import { useState, useCallback, useEffect } from 'react';
+import { Button, ActivityIndicator } from 'react-native-paper';
 import DishCard from './components/DishCard';
-import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native';
 import { ThemeContext } from '../../../contexts/ThemeProvider';
 import { useContext } from 'react';
-import getDishes from '../../../utilities/Dish/getDishes';
 import AppContext from '../../../AppContext';
 import deleteDish from '../../../utilities/Dish/deleteDish';
+import SearchBar from '../../components/SearchBar';
 
-const FavoriteDishes = () => {
-  const [searchInput, setSearchInput] = useState('');
-  const navigation = useNavigation();
-  const { params } = useContext(AppContext);
+const FavoriteDishes = ({ navigation }) => {
+  const { userObject, setUserObject } = useContext(AppContext);
   const { theme } = useContext(ThemeContext);
-  const [dishesData, setDishesData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [filteredData, setFilteredData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const isFocused = useIsFocused();
 
   const onChangeSearchInput = (text) => {
     if (text.length === 0) {
-      setSearchInput(text);
-      setFilteredData([...dishesData]);
+      setFilteredData(userObject.dishes);
       return;
     }
-    setSearchInput(text);
-    setFilteredData(dishesData.filter((dish) => dish.nome.startsWith(text)));
-  };
-
-  const onSaveChanges = () => {};
-
-  const showAlert = () => {
-    Alert.alert(
-      'Deseja Salvar as alterações?'[
-        ({ text: 'Sim', onPress: () => console.log('teste') },
-        { text: 'Cancelar', onPress: () => console.log('teste') })
-      ]
-    );
-  };
-
-  const onChangeDishesData = (data) => {
-    setDishesData(data);
+    setFilteredData(userObject.dishes.filter((dish) => dish.name.startsWith(text)));
   };
 
   const getDishesData = async () => {
     setIsLoading(true);
-    const data = await getDishes(params.usuario_id);
-    setDishesData(data);
-    setFilteredData(data);
+    await userObject.getDishes();
+    const updatedUserObject = userObject.clone();
+    setUserObject(updatedUserObject);
+    setFilteredData(updatedUserObject.dishes);
     setIsLoading(false);
   };
 
-  useFocusEffect(
-    useCallback(() => {
+  useEffect(() => {
+    if (isFocused) {
       getDishesData();
-    }, [])
-  );
+    }
+  }, [isFocused]);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -77,13 +59,11 @@ const FavoriteDishes = () => {
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
     >
       <View style={styles.searchBarContainer}>
-        <TextInput
+        <SearchBar
           placeholder="Busque um prato aqui..."
           placeholderTextColor="black"
-          mode="outlined"
-          activeOutlineColor="#256D1B"
-          right={<TextInput.Icon icon="food-fork-drink" iconColor="#256D1B" />}
-          onChangeText={onChangeSearchInput}
+          iconName="food-fork-drink"
+          onChange={onChangeSearchInput}
         />
         <Button
           textColor="white"
@@ -109,17 +89,7 @@ const FavoriteDishes = () => {
         {!isLoading &&
           filteredData?.length > 0 &&
           filteredData?.map((dish, index) => (
-            <DishCard
-              key={index}
-              dishId={dish.prato_id}
-              dishName={dish.nome}
-              dishCarbo={dish.carboidratos}
-              dishKcal={dish.calorias}
-              dishProtein={dish.proteinas}
-              dishCategory={dish.categoria_prato}
-              style={{ marginTop: 10 }}
-              onDeleteDish={onDeleteDish}
-            />
+            <DishCard key={index} dish={dish} style={{ marginTop: 10 }} onDeleteDish={onDeleteDish} />
           ))}
       </ScrollView>
     </ScrollView>

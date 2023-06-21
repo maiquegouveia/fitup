@@ -25,6 +25,19 @@ export const ThemeProvider = ({ children }) => {
       text: isDarkMode ? 'white' : 'black',
     },
     iconColor: isDarkMode ? 'white' : 'black',
+    drawer: {
+      fontColor: isDarkMode ? 'white' : 'black',
+      backgroundColor: isDarkMode ? '#303030' : 'white',
+      itemActive: {
+        backgroundColor: isDarkMode ? 'orange' : '#ccc',
+        fontColor: isDarkMode ? 'white' : 'black',
+      },
+      itemInactive: {
+        backgroundColor: isDarkMode ? 'orange' : '#ccc',
+        fontColor: isDarkMode ? 'white' : 'black',
+      },
+      iconColor: isDarkMode ? 'white' : 'black',
+    },
   };
 
   return <ThemeContext.Provider value={{ isDarkMode, setIsDarkMode, theme }}>{children}</ThemeContext.Provider>;
