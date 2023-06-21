@@ -27,6 +27,7 @@ import FavoriteFoods from './src/screens/FavoriteFoods/FavoriteFoods';
 import FavoriteDishes from './src/screens/Dish/FavoriteDishes';
 import WaterAmount from './src/screens/WaterAmount/WaterAmount';
 import CreateDish from './src/screens/Dish/CreateDish';
+import AccountRecovery from './src/screens/AccountRecovery/AccountRecovery';
 
 import User from './models/User';
 
@@ -59,6 +60,16 @@ function RootStack() {
         >
           <Stack.Screen name="InitialScreen" component={InitialScreen} options={{}} />
           <Stack.Screen
+            name="AccountRecovery"
+            component={AccountRecovery}
+            options={{
+              headerBackImageSource: leftArrow,
+              headerTintColor: 'rgba(81, 242, 5, 1)',
+              title: '',
+            }}
+          />
+
+          <Stack.Screen
             name="Cadastro"
             component={Cadastro}
             options={{
@@ -67,6 +78,7 @@ function RootStack() {
               title: '',
             }}
           />
+
           <Stack.Screen
             name="Login"
             component={Login}

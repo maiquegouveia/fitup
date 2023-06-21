@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, ImageBackground, Alert, ScrollView } from 'react-native';
+import { View, Text, SafeAreaView, ImageBackground, Alert, ScrollView, TouchableOpacity } from 'react-native';
 import { useEffect, useState, useContext } from 'react';
 import background from '../../../assets/home-img-2.png';
 import { useHeaderHeight } from '@react-navigation/elements';
@@ -20,6 +20,7 @@ const Login = () => {
 
   useEffect(() => {
     navigation.setOptions({
+      headerStyle: { backgroundColor: 'papayawhip' },
       headerTitle: '',
       headerLeft: () => <CustomBackButtonHeader navigation={navigation} screenName="InitialScreen" />,
     });
@@ -215,9 +216,9 @@ const Login = () => {
                   />
                 }
               />
-              <View style={styles.esqueceuContainer}>
+              <TouchableOpacity style={styles.esqueceuContainer} onPress={() => navigation.replace('AccountRecovery')}>
                 <Text style={styles.esqueceuText}>Esqueceu a senha?</Text>
-              </View>
+              </TouchableOpacity>
               <Button loading={isLoading} style={styles.btn} labelStyle={styles.btnText} onPress={onEntrarHandler}>
                 {isLoading ? '' : 'Entrar'}
               </Button>
