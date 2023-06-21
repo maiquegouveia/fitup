@@ -12,7 +12,7 @@ const HomeButtons = () => {
         Entrar
       </Button>
 
-      <Button style={styles.btn} labelStyle={styles.btnText} onPress={() => navigation.replace('Cadastro')}>
+      <Button style={styles.btn} labelStyle={styles.btnText} onPress={() => navigation.replace('NewCadastro')}>
         Cadastrar-se
       </Button>
     </>

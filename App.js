@@ -29,6 +29,7 @@ import WaterAmount from './src/screens/WaterAmount/WaterAmount';
 import CreateDish from './src/screens/Dish/CreateDish';
 import AccountRecovery from './src/screens/AccountRecovery/AccountRecovery';
 import ChangePassword from './src/screens/AccountRecovery/ChangePassword';
+import NewCadastro from './src/screens/NewCadastro/NewCadastro';
 
 import User from './models/User';
 
@@ -81,6 +82,8 @@ function RootStack() {
               title: '',
             }}
           />
+
+          <Stack.Screen name="NewCadastro" component={NewCadastro} />
 
           <Stack.Screen
             name="Login"
