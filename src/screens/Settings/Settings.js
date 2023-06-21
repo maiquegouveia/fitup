@@ -1,5 +1,5 @@
 import { Text, View, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
-import { Ionicons, AntDesign, SimpleLineIcons, MaterialIcons } from '@expo/vector-icons';
+import { Ionicons, AntDesign } from '@expo/vector-icons';
 import { useContext } from 'react';
 import { ThemeContext } from '../../../contexts/ThemeProvider';
 
@@ -37,7 +37,7 @@ const Settings = () => {
           }}
         >
           <TouchableOpacity>
-            <Text style={[styles.textBtn, { color: 'white', marginLeft: 0 }]}>Excluir conta</Text>
+            <Text style={[styles.textBtn, { color: 'white', marginLeft: 0 }]}>Excluir Conta</Text>
           </TouchableOpacity>
         </View>
         <View>

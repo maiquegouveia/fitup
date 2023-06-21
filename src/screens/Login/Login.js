@@ -153,12 +153,10 @@ const Login = () => {
   const onEntrarHandler = async () => {
     if (formIsValid) {
       setIsLoading(true);
-      const data = await getUserData(email.value);
-      const userData = data?.data;
-      setIsLoading(false);
+      const userData = await getUserData(email.value);
 
-      if (userData && userData[0].senha === senha.value) {
-        navigateToDrawerScreen(userData[0]);
+      if (userData && userData.senha === senha.value) {
+        navigateToDrawerScreen(userData);
       } else {
         Alert.alert('Email ou senha inválidos!', 'Verifique os campos de email e senha e tente novamente.');
       }
@@ -181,6 +179,7 @@ const Login = () => {
       }
       showDialog();
     }
+    setIsLoading(false);
   };
 
   return (
@@ -192,6 +191,7 @@ const Login = () => {
           <View style={styles.formContainer}>
             <View style={styles.form}>
               <TextInput
+                autoCapitalize="none"
                 underlineStyle={{ width: 0 }}
                 mode="flat"
                 label="Email"

@@ -12,7 +12,7 @@ export default async (email) => {
       return { error: 'INTERNAL_SERVER_ERROR' };
     } else {
       const data = await response.json();
-      return data;
+      return data.data[0];
     }
   } catch (err) {
     return { error: err };

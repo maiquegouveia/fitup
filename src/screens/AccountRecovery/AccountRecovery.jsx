@@ -18,6 +18,7 @@ const AccountRecovery = ({ navigation }) => {
   const [inputValue, setInputValue] = useState('');
   const [codeInputValue, setCodeInputValue] = useState('');
   const [randomCode, setRandomCode] = useState('');
+  const [userData, setUserData] = useState({});
 
   const handlerChangeText = (text) => setInputValue(text);
 
@@ -35,6 +36,7 @@ const AccountRecovery = ({ navigation }) => {
     if (isValid) {
       setIsLoading(true);
       const result = await getUserData(inputValue);
+      setUserData(result);
       if (result?.error) {
         showAlert('Email Inválido', 'Este email não pertence a nenhuma conta!');
       } else {
@@ -57,7 +59,7 @@ const AccountRecovery = ({ navigation }) => {
     if (+codeInputValue !== +randomCode) {
       showAlert('Código Inválido', 'Para recuperar a sua conta digite o código válido de recuperação!');
     } else {
-      showAlert('Success', 'Código válido!');
+      navigation.replace('ChangePassword', { params: userData });
     }
   };
 
@@ -81,6 +83,7 @@ const AccountRecovery = ({ navigation }) => {
               Digite o seu email
             </Text>
             <TextInput
+              placeholder="Email"
               disabled={emailInputDisabled}
               left={<TextInput.Icon icon="account" size={24} />}
               autoCapitalize="none"
