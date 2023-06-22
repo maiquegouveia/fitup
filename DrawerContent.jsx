@@ -24,7 +24,7 @@ export default function DrawerContent() {
         <View style={styles.userInfoSection}>
           <Avatar.Image
             source={{
-              uri: `https://i.ibb.co/${userObject.profilePicture}`,
+              uri: `${userObject.profilePicture}`,
             }}
             size={100}
           />

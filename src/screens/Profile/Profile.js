@@ -1,6 +1,6 @@
 import { View, SafeAreaView, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { Provider, Text, Button } from 'react-native-paper';
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import CircularProgress from 'react-native-circular-progress-indicator';
 import EditProfileContainer from './components/EditProfileContainer';
@@ -21,6 +21,16 @@ const ProfileScreen = () => {
   const { setUserIsAuthenticated, userObject, setUserObject } = useContext(AppContext);
   const { theme } = useContext(ThemeContext);
 
+  const getWaterProgress = () => {
+    if (userObject.consumedWater > 0) {
+      const progress = (userObject.consumedWater / userObject.totalWater) * 100;
+      if (progress > 100) return 100;
+      else return progress;
+    }
+    return 0;
+  };
+
+  const [waterProgress, setWaterProgress] = useState(getWaterProgress());
   const [showEditModal, setShowEditModal] = useState(false);
   const { modalContent } = useContext(EditProfileContext);
   const [showEditContainer, setShowEditContainer] = useState(false);
@@ -75,20 +85,11 @@ const ProfileScreen = () => {
     navigation.replace('InitialScreen');
   };
 
-  const getWaterProgress = () => {
-    if (userObject.consumedWater > 0) {
-      const progress = (userObject.consumedWater / userObject.totalWater) * 100;
-      if (progress > 100) return 100;
-    }
-    return 0;
-  };
-
   const handlerProfilePicture = async () => {
     const base64 = await getImageAndPermissions(setImage);
     setChangingPicture(true);
     if (base64) {
       let url = await postImage(base64);
-      url = url.replace('https://i.ibb.co/', '');
       const response = await changeProfilePicture(userObject.id, url);
       if (response?.error) {
         console.log('ERROR');
@@ -100,6 +101,12 @@ const ProfileScreen = () => {
     }
     setChangingPicture(false);
   };
+
+  useEffect(() => {
+    const progress = getWaterProgress();
+    console.log(progress);
+    setWaterProgress(progress);
+  }, [userObject.consumedWater]);
 
   return (
     <SafeAreaView style={[styles.mainContainer, { backgroundColor: theme.backgroundColor }]}>
@@ -121,11 +128,7 @@ const ProfileScreen = () => {
                   </View>
                 )}
                 {!changingPicture && (
-                  <Image
-                    source={{ uri: `https://i.ibb.co/${userObject.profilePicture}` }}
-                    resizeMode="contain"
-                    style={styles.image}
-                  />
+                  <Image source={{ uri: `${userObject.profilePicture}` }} resizeMode="contain" style={styles.image} />
                 )}
               </TouchableOpacity>
             </View>
@@ -146,7 +149,7 @@ const ProfileScreen = () => {
                     onPress={() => navigation.navigate('WaterAmount')}
                   >
                     <CircularProgress
-                      value={getWaterProgress()}
+                      value={waterProgress}
                       radius={60}
                       progressValueColor={'black'}
                       activeStrokeColor={'#16B6E9'}

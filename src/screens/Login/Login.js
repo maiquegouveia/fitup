@@ -13,6 +13,7 @@ import { useNavigation } from '@react-navigation/native';
 import AppContext from '../../../AppContext';
 import CustomBackButtonHeader from '../../components/CustomBackButtonHeader';
 import User from '../../../models/User';
+import authenticateUser from '../../../utilities/Login/authenticateUser';
 
 const Login = () => {
   const navigation = useNavigation();
@@ -61,35 +62,12 @@ const Login = () => {
 
   const hideDialog = () => setVisible(false);
 
-  const [email, setEmail] = useState({
-    value: '',
-    isValid: false,
-  });
+  const [email, setEmail] = useState('');
 
-  const [senha, setSenha] = useState({
-    value: '',
-    isValid: false,
-  });
+  const [senha, setSenha] = useState('');
 
-  const [formIsValid, setFormIsValid] = useState(false);
-
-  const onChangeEmail = function (text) {
-    setEmail((prev) => {
-      return {
-        ...prev,
-        value: text,
-      };
-    });
-  };
-
-  const onChangeSenha = function (text) {
-    setSenha((prev) => {
-      return {
-        ...prev,
-        value: text,
-      };
-    });
-  };
+  const onChangeEmail = (text) => setEmail(text);
+  const onChangeSenha = (text) => setSenha(text);
 
   const storeData = async (userId) => {
     let success;
@@ -103,83 +81,39 @@ const Login = () => {
     return success;
   };
 
-  useEffect(() => {
-    /// Este useEffect será executado toda vez que "email.value" sofrer alteração
-    /// Define se "email.value" é uma valor válido
-
-    if (validateEmail(email.value)) {
-      setEmail((prev) => {
-        return {
-          ...prev,
-          isValid: true,
-        };
-      });
-    } else {
-      setEmail((prev) => {
-        return {
-          ...prev,
-          isValid: false,
-        };
-      });
-    }
-  }, [email.value]);
-
-  useEffect(() => {
-    /// Este useEffect será executado toda vez que "senha.value" sofrer alteração
-    /// Define se "senha.value" é uma valor válido
-    if (senha.value.length > 8) {
-      setSenha((prev) => {
-        return {
-          ...prev,
-          isValid: true,
-        };
-      });
-    } else {
-      setSenha((prev) => {
-        return {
-          ...prev,
-          isValid: false,
-        };
-      });
-    }
-  }, [senha.value]);
-
-  useEffect(() => {
-    /// Este useEffect será executado toda vez que "email.isValid" ou "senha.isValid" sofrer alteração
-    /// Define se o formulário é válido
-    setFormIsValid(email.isValid && senha.isValid);
-  }, [email.isValid, senha.isValid]);
+  const showAlert = (title, message) => Alert.alert(title, message);
 
   const onEntrarHandler = async () => {
-    if (formIsValid) {
-      setIsLoading(true);
-      const userData = await getUserData(email.value);
+    const emailInput = email;
+    const senhaInput = senha;
 
-      if (userData && userData.senha === senha.value) {
-        navigateToDrawerScreen(userData);
-      } else {
-        Alert.alert('Email ou senha inválidos!', 'Verifique os campos de email e senha e tente novamente.');
-      }
-    } else {
-      if (email.isValid === false && senha.isValid === false) {
-        setDialog({
-          title: 'Email e senha inválidos!',
-          content: 'Digite um email válido e uma senha maior que 8 digitos.',
-        });
-      } else if (!email.isValid) {
-        setDialog({
-          title: 'Email inválido!',
-          content: 'Digite um email válido para fazer login.',
-        });
-      } else {
-        setDialog({
-          title: 'Senha inválida!',
-          content: 'A senha deve ser maior que 8 digitos.',
-        });
-      }
-      showDialog();
+    if (!validateEmail(emailInput)) {
+      showAlert('Email Inválido!', 'Por favor digite um email válido!');
+      return;
     }
-    setIsLoading(false);
+
+    if (senhaInput.length === 0 || senhaInput.includes(' ')) {
+      showAlert('Senha Inválida!', 'Por favor digite uma senha válida!');
+      return;
+    }
+
+    if (senhaInput.length < 6) {
+      showAlert('Senha Inválida!', 'Digite uma senha de no mínimo 6 dígitos!');
+      return;
+    }
+
+    const body = {
+      email: emailInput,
+      password: senhaInput,
+    };
+    setIsLoading(true);
+    const result = await authenticateUser(body);
+    if (result?.errorCode) {
+      showAlert('Erro no Login', result.message);
+      setIsLoading(false);
+      return;
+    }
+    navigateToDrawerScreen(result);
   };
 
   return (
@@ -196,16 +130,17 @@ const Login = () => {
                 mode="flat"
                 label="Email"
                 style={styles.input}
-                value={email.value}
+                value={email}
                 onChangeText={onChangeEmail}
               />
               <TextInput
+                autoCapitalize="none"
                 underlineStyle={{ width: 0 }}
                 mode="flat"
                 label="Senha"
                 style={[styles.input, { marginTop: 10 }]}
                 secureTextEntry={hidePassword}
-                value={senha.value}
+                value={senha}
                 onChangeText={onChangeSenha}
                 right={
                   <TextInput.Icon

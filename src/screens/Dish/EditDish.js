@@ -26,7 +26,7 @@ const EditDish = ({ route, navigation }) => {
     const data = await getDishItens(route.params.dishId);
     const itensId = data.map((food) => food.alimento_id);
     const cleanFavoriteList = userObject.favoriteFoods.filter((food) => {
-      if (!itensId.includes(food.alimento_id)) {
+      if (!itensId.includes(food.id)) {
         return food;
       }
     });
@@ -47,14 +47,15 @@ const EditDish = ({ route, navigation }) => {
 
     setFoodList(
       cleanFavoriteList.map((food) => {
+        console.log(food);
         return {
-          foodName: food.nome,
-          foodId: food.alimento_id,
+          foodName: food.name,
+          foodId: food.id,
           amount: 100,
-          carbo: food.carboidrato,
+          carbo: food.carbohydrates,
           kcal: food.kcal,
-          protein: food.proteina,
-          category: food.categoria,
+          protein: food.protein,
+          category: food.category,
         };
       })
     );

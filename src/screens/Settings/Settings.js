@@ -2,11 +2,21 @@ import { Text, View, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-na
 import { Ionicons, AntDesign } from '@expo/vector-icons';
 import { useContext } from 'react';
 import { ThemeContext } from '../../../contexts/ThemeProvider';
+import AppContext from '../../../AppContext';
+import deleteUser from '../../../utilities/deleteUser';
 
-const Settings = () => {
+const Settings = ({ navigation }) => {
   const { theme, setIsDarkMode } = useContext(ThemeContext);
+  const { userObject } = useContext(AppContext);
 
   const onChangeTheme = () => setIsDarkMode((prev) => !prev);
+
+  const onDeleteUser = async () => {
+    console.log('teste');
+    await deleteUser(userObject.id);
+    console.log('teste');
+    navigation.replace('InitialScreen');
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.backgroundColor }}>
@@ -36,7 +46,7 @@ const Settings = () => {
             justifyContent: 'center',
           }}
         >
-          <TouchableOpacity>
+          <TouchableOpacity onPress={onDeleteUser}>
             <Text style={[styles.textBtn, { color: 'white', marginLeft: 0 }]}>Excluir Conta</Text>
           </TouchableOpacity>
         </View>

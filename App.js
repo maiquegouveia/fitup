@@ -141,11 +141,7 @@ function DrawerStack({ userObject }) {
         ),
         headerRight: () => (
           <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate('Profile')}>
-            <Avatar.Image
-              style={{ marginRight: 10 }}
-              size={38}
-              source={{ uri: `https://i.ibb.co/${userObject.profilePicture}` }}
-            />
+            <Avatar.Image style={{ marginRight: 10 }} size={38} source={{ uri: `${userObject.profilePicture}` }} />
           </TouchableOpacity>
         ),
       }}

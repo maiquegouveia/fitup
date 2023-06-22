@@ -3,6 +3,7 @@ import { CheckIcon, Select } from 'native-base';
 import { MaterialIcons } from '@expo/vector-icons';
 import { ThemeContext } from '../../../../contexts/ThemeProvider';
 import { useContext } from 'react';
+
 const FoodSelect = ({ foodList, onSelectFood }) => {
   const [selectedFood, setSelectedFood] = useState('');
   const { theme } = useContext(ThemeContext);

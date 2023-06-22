@@ -10,6 +10,7 @@ export default async (userId, value) => {
         url: value,
       }),
     });
+    console.log(response);
     if (!response.ok) return { error: response.status };
   } catch (error) {
     console.log(error);

@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, SafeAreaView, ScrollView } from 'react-native';
 import { TextInput, Button, Provider } from 'react-native-paper';
 import { useState, useCallback, useContext } from 'react';
 import SearchFoodListItem from './components/SearchFoodListItem';
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import getFoodByName from '../../../utilities/SearchFood/getFoodByName';
 import FoodDetailsModal from './components/FoodDetailsModal';
 import AppContext from '../../../AppContext';
@@ -10,9 +10,11 @@ import MenuCategory from './components/MenuCategory';
 import changeFavoriteStatus from '../../../utilities/changeFavoriteStatus';
 import { ThemeContext } from '../../../contexts/ThemeProvider';
 import Food from '../../../models/Food';
+import { useEffect } from 'react';
 
 const SearchFood = () => {
-  const { userObject } = useContext(AppContext);
+  const isFocused = useIsFocused();
+  const { userObject, setUserObject } = useContext(AppContext);
   const [inputValue, setInputValue] = useState('');
   const [showResults, setShowResults] = useState(false);
   const [results, setResults] = useState([]);
@@ -25,6 +27,18 @@ const SearchFood = () => {
   const [modalDetails, setModalDetails] = useState({});
   const [errorMessage, setErrorMessage] = useState(null);
   const { theme } = useContext(ThemeContext);
+
+  const updateFavoriteFoodsList = async () => {
+    await userObject.getFavoriteFoods();
+    const updatedUserObject = userObject.clone();
+    setUserObject(updatedUserObject);
+  };
+
+  useEffect(() => {
+    if (!isFocused) {
+      updateFavoriteFoodsList();
+    }
+  }, [isFocused]);
 
   const handleCategoryPress = (value) => {
     setSelectedCategory(value);
