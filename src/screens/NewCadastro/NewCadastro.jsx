@@ -28,12 +28,21 @@ const NewCadastro = ({ navigation }) => {
 
   const handlerShowPassword = () => setHidePassword((prev) => !prev);
 
+  const hasSymbolCharacters = (str) => {
+    const regex = /[!@#$%^&*()+\-=[\]{};':"\\|,.<>/?]+/;
+    return regex.test(str);
+  };
+
   const handlerNextFirstStage = async () => {
     const nameInput = name.trim();
     const emailInput = email.trim();
 
     if (nameInput.length < 6) {
       showAlert('Nome Inválido!', 'Por favor digite um nome com pelo menos 6 caracteres!');
+      return;
+    }
+    if (hasSymbolCharacters(nameInput)) {
+      showAlert('Nome Inválido!', 'Por favor digite um nome sem caracteres especiais!');
       return;
     }
     if (!validateEmail(emailInput)) {

@@ -8,12 +8,13 @@ import AppContext from '../../../AppContext';
 import { useFocusEffect } from '@react-navigation/native';
 import postWaterConsume from '../../../utilities/WaterAmount/postWaterConsume';
 import { ThemeContext } from '../../../contexts/ThemeProvider';
+import AddWaterModel from './components/AddWaterModel';
 
 const WaterAmount = () => {
   const { userObject, setUserObject } = useContext(AppContext);
   const [animation] = useState(new Animated.Value(0));
   const [animationWidth] = useState(new Animated.Value(90));
-
+  const [showModal, setShowModal] = useState(false);
   const { theme } = useContext(ThemeContext);
 
   const startAnimation = (value) => {
@@ -62,8 +63,13 @@ const WaterAmount = () => {
     }, [userObject.consumedWater, userObject.weight])
   );
 
+  const handlerOutrosBtn = () => {
+    setShowModal(true);
+  };
+
   return (
     <SafeAreaView style={[styles.mainContainer, { backgroundColor: theme.backgroundColor }]}>
+      <AddWaterModel showModal={showModal} setShowModal={setShowModal} onPressAddWaterButton={onPressAddWaterButton} />
       <View style={styles.cupContainer}>
         <Cup
           consumedWater={userObject.consumedWater}
@@ -86,7 +92,7 @@ const WaterAmount = () => {
           <AddWaterButton amount="400" showIcon={true} onChangeConsume={() => onPressAddWaterButton(400)} />
         </View>
         <View style={{ alignItems: 'center', marginTop: 15 }}>
-          <AddWaterButton amount="Outros" onChangeConsume={() => {}} />
+          <AddWaterButton amount="Outros" onChangeConsume={handlerOutrosBtn} />
         </View>
       </View>
     </SafeAreaView>

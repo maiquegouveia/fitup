@@ -21,8 +21,10 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   esqueceuContainer: {
-    marginTop: 20,
+    marginTop: 5,
     marginBottom: 30,
+    alignItems: 'flex-start',
+    width: 250,
   },
   esqueceuText: {
     color: 'rgba(255, 255, 255, 1)',

@@ -5,7 +5,6 @@ import { useHeaderHeight } from '@react-navigation/elements';
 import Logo from '../../components/Logo';
 import { TextInput, Button, Provider } from 'react-native-paper';
 import validateEmail from '../../../utilities/validateEmail';
-import getUserData from '../../../utilities/getUserData';
 import styles from './Login.style';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Dialog from '../../components/Dialog';
@@ -32,6 +31,7 @@ const Login = () => {
   }, []);
 
   const navigateToDrawerScreen = async (userCredentials) => {
+    console.log(userCredentials);
     const updatedUserObject = new User(
       userCredentials.usuario_id,
       userCredentials.nome,
@@ -40,6 +40,7 @@ const Login = () => {
       userCredentials.altura,
       userCredentials.peso,
       userCredentials.telefone,
+      userCredentials.username,
       userCredentials.foto_perfil
     );
     setUserObject(updatedUserObject);

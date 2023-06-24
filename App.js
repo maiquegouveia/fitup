@@ -20,7 +20,6 @@ import Home from './src/screens/Home/Home';
 import Profile from './src/screens/Profile/Profile';
 import Settings from './src/screens/Settings/Settings';
 import InitialScreen from './src/screens/InitialScreen';
-import Cadastro from './src/screens/Cadastro/Cadastro';
 import { leftArrow } from './constants/icons';
 import SearchFood from './src/screens/SearchFood/SearchFood';
 import FavoriteFoods from './src/screens/FavoriteFoods/FavoriteFoods';
@@ -30,6 +29,7 @@ import CreateDish from './src/screens/Dish/CreateDish';
 import AccountRecovery from './src/screens/AccountRecovery/AccountRecovery';
 import ChangePassword from './src/screens/AccountRecovery/ChangePassword';
 import NewCadastro from './src/screens/NewCadastro/NewCadastro';
+import SearchUser from './src/screens/SearchUsers/SearchUser';
 
 import User from './models/User';
 
@@ -73,16 +73,6 @@ function RootStack() {
 
           <Stack.Screen name="ChangePassword" component={ChangePassword} />
 
-          <Stack.Screen
-            name="Cadastro"
-            component={Cadastro}
-            options={{
-              headerBackImageSource: leftArrow,
-              headerTintColor: 'rgba(81, 242, 5, 1)',
-              title: '',
-            }}
-          />
-
           <Stack.Screen name="NewCadastro" component={NewCadastro} />
 
           <Stack.Screen
@@ -115,7 +105,7 @@ function RootStack() {
                 }}
               >
                 <ThemeProvider>
-                  <DrawerStack userObject={userObject} />
+                  <DrawerStack userObject={userObject} setActiveScreen={setActiveScreen} />
                 </ThemeProvider>
               </AppContext.Provider>
             )}
@@ -126,8 +116,19 @@ function RootStack() {
   );
 }
 
-function DrawerStack({ userObject }) {
+function DrawerStack({ userObject, setActiveScreen }) {
   const navigation = useNavigation();
+
+  const handlerHeaderTitle = () => {
+    setActiveScreen('Home');
+    navigation.navigate('Home');
+  };
+
+  const handlerHeaderProfile = () => {
+    setActiveScreen('Profile');
+    navigation.navigate('Profile');
+  };
+
   return (
     <Drawer.Navigator
       drawerContent={() => <DrawerContent />}
@@ -135,12 +136,12 @@ function DrawerStack({ userObject }) {
         headerTitleAlign: 'center',
         headerStyle: { backgroundColor: '#59CA6B' },
         headerTitle: () => (
-          <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate('Home')}>
+          <TouchableOpacity activeOpacity={0.7} onPress={handlerHeaderTitle}>
             <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 25 }}>FitUP</Text>
           </TouchableOpacity>
         ),
         headerRight: () => (
-          <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate('Profile')}>
+          <TouchableOpacity activeOpacity={0.7} onPress={handlerHeaderProfile}>
             <Avatar.Image style={{ marginRight: 10 }} size={38} source={{ uri: `${userObject.profilePicture}` }} />
           </TouchableOpacity>
         ),
@@ -206,6 +207,13 @@ function DrawerStack({ userObject }) {
       <Drawer.Screen
         name="EditDish"
         component={EditDish}
+        options={{
+          title: '',
+        }}
+      />
+      <Drawer.Screen
+        name="SearchUser"
+        component={SearchUser}
         options={{
           title: '',
         }}

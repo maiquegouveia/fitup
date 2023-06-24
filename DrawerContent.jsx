@@ -29,7 +29,7 @@ export default function DrawerContent() {
             size={100}
           />
           <Title style={[styles.title, { color: theme.drawer.fontColor }]}>{userObject.name}</Title>
-          <Caption style={[styles.caption, { color: theme.drawer.fontColor }]}>@{userObject.name}</Caption>
+          <Caption style={[styles.caption, { color: theme.drawer.fontColor }]}>{userObject.username}</Caption>
           <View style={styles.row}>
             <View style={styles.section}>
               <Paragraph style={[styles.paragraph, styles.caption, { color: theme.drawer.fontColor }]}>
@@ -136,6 +136,22 @@ export default function DrawerContent() {
             )}
             label="Água Diária"
             onPress={() => onNavigate('WaterAmount')}
+            style={[styles.drawerItem]}
+          />
+          <Drawer.Item
+            active={activeScreen === 'SearchUser'}
+            theme={{
+              colors: {
+                onSecondaryContainer: theme.drawer.itemActive.fontColor,
+                secondaryContainer: theme.drawer.itemActive.backgroundColor,
+                onSurfaceVariant: theme.drawer.itemInactive.fontColor,
+              },
+            }}
+            icon={({ color, size }) => (
+              <MaterialCommunityIcons name="account" color={theme.drawer.iconColor} size={size} />
+            )}
+            label="Buscar Usuários "
+            onPress={() => onNavigate('SearchUser')}
             style={[styles.drawerItem]}
           />
           <Drawer.Item

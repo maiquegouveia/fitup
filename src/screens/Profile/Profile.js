@@ -104,7 +104,6 @@ const ProfileScreen = () => {
 
   useEffect(() => {
     const progress = getWaterProgress();
-    console.log(progress);
     setWaterProgress(progress);
   }, [userObject.consumedWater]);
 
@@ -133,7 +132,10 @@ const ProfileScreen = () => {
               </TouchableOpacity>
             </View>
             {!showEditContainer && (
-              <Text style={[styles.nameText, { color: theme.fontColor.title }]}>{userObject.name}</Text>
+              <>
+                <Text style={[styles.nameText, { color: theme.fontColor.title }]}>{userObject.name}</Text>
+                <Text style={[styles.nameText, { color: theme.fontColor.title }]}>{userObject.username}</Text>
+              </>
             )}
           </View>
           {!showEditContainer && (

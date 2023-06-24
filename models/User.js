@@ -13,6 +13,7 @@ export default class User {
     height,
     weight,
     phone,
+    username,
     profilePicture = 'https://i.ibb.co/tJBC4C4/default-profile.png'
   ) {
     this.id = id;
@@ -27,6 +28,7 @@ export default class User {
     this.favoriteFoods = [];
     this.dishes = [];
     this.totalWater = 0;
+    this.username = username;
   }
 
   setTotalWater() {
@@ -104,6 +106,7 @@ export default class User {
     clonedObject.phone = this.phone;
     clonedObject.consumedWater = this.consumedWater;
     clonedObject.totalWater = this.totalWater;
+    clonedObject.username = this.username;
     return clonedObject;
   }
 }

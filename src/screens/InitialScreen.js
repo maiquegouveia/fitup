@@ -29,6 +29,7 @@ const HomePage = () => {
         data.altura,
         data.peso,
         data.telefone,
+        data.username,
         data.foto_perfil
       );
       setUserObject(updatedUserObject);
