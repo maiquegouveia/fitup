@@ -1,7 +1,7 @@
 import { View, SafeAreaView, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { Provider, Text, Button } from 'react-native-paper';
 import { useState, useContext, useEffect } from 'react';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 import CircularProgress from 'react-native-circular-progress-indicator';
 import EditProfileContainer from './components/EditProfileContainer';
 import ButtonComponent from '../../components/ButtonComponent';
@@ -18,8 +18,9 @@ import postImage from '../../../utilities/Cadastro/postImage';
 import { ActivityIndicator } from 'react-native-paper';
 
 const ProfileScreen = () => {
-  const { setUserIsAuthenticated, userObject, setUserObject } = useContext(AppContext);
+  const { setUserIsAuthenticated, userObject, setUserObject, setActiveScreen } = useContext(AppContext);
   const { theme } = useContext(ThemeContext);
+  const isFocused = useIsFocused();
 
   const getWaterProgress = () => {
     if (userObject.consumedWater > 0) {
@@ -106,6 +107,10 @@ const ProfileScreen = () => {
     const progress = getWaterProgress();
     setWaterProgress(progress);
   }, [userObject.consumedWater]);
+
+  useEffect(() => {
+    if (isFocused) setActiveScreen('Profile');
+  }, [isFocused]);
 
   return (
     <SafeAreaView style={[styles.mainContainer, { backgroundColor: theme.backgroundColor }]}>

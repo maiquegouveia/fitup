@@ -8,6 +8,7 @@ import searchUsers from '../../../utilities/SearchUsers/searchUsers';
 import { useState } from 'react';
 import { useIsFocused } from '@react-navigation/native';
 import { useEffect } from 'react';
+import User from '../../../models/User';
 
 const SearchUser = () => {
   const { theme } = useContext(ThemeContext);
@@ -28,7 +29,8 @@ const SearchUser = () => {
   };
 
   const handlerSearch = async () => {
-    resetStates();
+    setShowList(false);
+    setData([]);
     if (inputValue.length === 0) {
       setErrorMessage('Digite um nome de usuário para buscar!');
       setShowError(true);
@@ -40,7 +42,23 @@ const SearchUser = () => {
       setErrorMessage(result.result.message);
       setShowError(true);
     } else {
-      setData(result.data);
+      setData(
+        result.data.map(
+          (user) =>
+            new User(
+              user.id,
+              user.name,
+              null,
+              null,
+              null,
+              user.weight,
+              null,
+              user.username,
+              user.type,
+              user.profilePicture
+            )
+        )
+      );
       setShowList(true);
       setShowError(false);
     }

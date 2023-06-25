@@ -17,7 +17,7 @@ export const ThemeContext = createContext();
 export const ThemeProvider = ({ children }) => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const theme = {
-    backgroundColor: isDarkMode ? '#303030' : 'white',
+    backgroundColor: isDarkMode ? '#2C3539' : 'white',
     backgroundTest: isDarkMode ? '#808080' : 'white',
     backgroundLine: isDarkMode ? 'white' : '#303030',
     fontColor: {
@@ -37,6 +37,13 @@ export const ThemeProvider = ({ children }) => {
         fontColor: isDarkMode ? 'white' : 'black',
       },
       iconColor: isDarkMode ? 'white' : 'black',
+    },
+    profile: {
+      backgroundColor: isDarkMode ? '#303030' : 'white',
+      card: {
+        backgroundColor: isDarkMode ? 'white' : '#303030',
+        fontColor: isDarkMode ? '#303030' : 'white',
+      },
     },
   };
 

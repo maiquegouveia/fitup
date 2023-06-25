@@ -41,6 +41,7 @@ const Login = () => {
       userCredentials.peso,
       userCredentials.telefone,
       userCredentials.username,
+      userCredentials.tipo_usuario,
       userCredentials.foto_perfil
     );
     setUserObject(updatedUserObject);

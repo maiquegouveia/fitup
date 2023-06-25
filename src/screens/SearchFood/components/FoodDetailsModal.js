@@ -68,7 +68,7 @@ const FoodDetailsModal = ({ food, onDismiss, setModalDetails, visible }) => {
             </View>
             <View style={styles.contentTopic}>
               <Text style={styles.topicTitle}>Gordura Monoinsaturada: </Text>
-              <Text>{food.monoinsaturared}g</Text>
+              <Text>{food.monounsaturated}g</Text>
             </View>
             <View style={styles.contentTopic}>
               <Text style={styles.topicTitle}>Gordura Poli-insaturada: </Text>

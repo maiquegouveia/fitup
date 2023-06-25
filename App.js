@@ -30,6 +30,8 @@ import AccountRecovery from './src/screens/AccountRecovery/AccountRecovery';
 import ChangePassword from './src/screens/AccountRecovery/ChangePassword';
 import NewCadastro from './src/screens/NewCadastro/NewCadastro';
 import SearchUser from './src/screens/SearchUsers/SearchUser';
+import ProfileSearch from './src/screens/SearchUsers/ProfileSearch';
+import ChatScreen from './src/screens/Dish/ChatScreen';
 
 import User from './models/User';
 
@@ -214,6 +216,20 @@ function DrawerStack({ userObject, setActiveScreen }) {
       <Drawer.Screen
         name="SearchUser"
         component={SearchUser}
+        options={{
+          title: '',
+        }}
+      />
+      <Drawer.Screen
+        name="ProfileSearch"
+        component={ProfileSearch}
+        options={{
+          title: '',
+        }}
+      />
+      <Drawer.Screen
+        name="ChatScreen"
+        component={ChatScreen}
         options={{
           title: '',
         }}

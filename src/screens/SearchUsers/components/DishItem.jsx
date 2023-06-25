@@ -1,49 +1,24 @@
-import { StyleSheet, Text, View, TouchableOpacity, Alert } from 'react-native';
-import { FontAwesome5 } from '@expo/vector-icons';
+import { useContext } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { ThemeContext } from '../../../../contexts/ThemeProvider';
 import { useNavigation } from '@react-navigation/native';
 
-const DishCard = ({ style, dish, onDeleteDish }) => {
+const DishItem = ({ style, dish, user }) => {
+  const { theme } = useContext(ThemeContext);
   const navigation = useNavigation();
-
-  const alertShow = () => {
-    Alert.alert('', `Deseja deletar o prato (${dish.nome})?`, [
-      {
-        text: 'Cancelar',
-        onPress: () => {},
-      },
-
-      {
-        text: 'Deletar',
-        onPress: () => onDeleteDish(dish.prato_id),
-      },
-    ]);
-  };
-
   return (
     <TouchableOpacity
-      onPress={() =>
-        navigation.navigate('EditDish', {
-          dishId: dish.prato_id,
-          dishName: dish.nome,
-          dishCategory: dish.categoria_prato,
-        })
-      }
-      activeOpacity={1}
-      style={[styles.dishContainer, style]}
+      activeOpacity={0.8}
+      onPress={() => navigation.navigate('ChatScreen', { dish, user })}
+      style={[styles.dishContainer, style, { backgroundColor: theme.backgroundColor }]}
     >
       <View style={{ paddingLeft: 5, paddingBottom: 5, flexDirection: 'row', justifyContent: 'space-between' }}>
         <View style={{ width: '90%' }}>
-          <Text style={styles.dishName}>{dish.name}</Text>
+          <Text style={[styles.dishName, { color: theme.fontColor.text }]}>{dish.name}</Text>
+          <Text style={[styles.dishDescription, { color: theme.fontColor.text }]}>{dish.category}</Text>
         </View>
-        <TouchableOpacity onPress={alertShow} activeOpacity={0.7}>
-          <FontAwesome5 name="trash" size={24} color="#228B22" />
-        </TouchableOpacity>
       </View>
       <View style={styles.dishDetails}>
-        <View style={{ flexDirection: 'row' }}>
-          <Text style={styles.dishProperties}>Categoria: </Text>
-          <Text style={styles.dishDescription}>{dish.category}</Text>
-        </View>
         <View style={{ flexDirection: 'row' }}>
           <Text style={styles.dishProperties}>Calorias: </Text>
           <Text style={styles.dishDescription}>{dish.kcal.toFixed(2)}kcal</Text>
@@ -61,11 +36,10 @@ const DishCard = ({ style, dish, onDeleteDish }) => {
   );
 };
 
-export default DishCard;
+export default DishItem;
 
 const styles = StyleSheet.create({
   dishContainer: {
-    backgroundColor: 'white',
     padding: 10,
     borderRadius: 5,
   },
@@ -82,7 +56,7 @@ const styles = StyleSheet.create({
   },
   dishDetails: {
     padding: 10,
-    backgroundColor: '#DFD9E2',
+    backgroundColor: 'skyblue',
   },
   dishControllerContainer: {
     flexDirection: 'column',

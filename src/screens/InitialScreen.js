@@ -30,6 +30,7 @@ const HomePage = () => {
         data.peso,
         data.telefone,
         data.username,
+        data.tipo_usuario,
         data.foto_perfil
       );
       setUserObject(updatedUserObject);

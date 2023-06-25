@@ -14,6 +14,7 @@ export default class User {
     weight,
     phone,
     username,
+    type,
     profilePicture = 'https://i.ibb.co/tJBC4C4/default-profile.png'
   ) {
     this.id = id;
@@ -28,6 +29,7 @@ export default class User {
     this.favoriteFoods = [];
     this.dishes = [];
     this.totalWater = 0;
+    this.type = type;
     this.username = username;
   }
 
@@ -71,7 +73,11 @@ export default class User {
   }
 
   async getDishes() {
-    this.dishes = await fetchUserDishes(this.id);
+    const data = await fetchUserDishes(this.id);
+    this.dishes = data.map(
+      (dish) =>
+        new Dish(dish.prato_id, dish.nome, dish.categoria_prato, dish.calorias, dish.carboidratos, dish.proteinas, [])
+    );
   }
 
   getFavoriteFoodsId() {
@@ -106,6 +112,7 @@ export default class User {
     clonedObject.phone = this.phone;
     clonedObject.consumedWater = this.consumedWater;
     clonedObject.totalWater = this.totalWater;
+    clonedObject.type = this.type;
     clonedObject.username = this.username;
     return clonedObject;
   }

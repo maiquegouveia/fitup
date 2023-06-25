@@ -1,20 +1,20 @@
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { useState } from 'react';
+import { ThemeContext } from '../../../../contexts/ThemeProvider';
+import { useContext } from 'react';
 
-const FoodItem = ({ food, showRemoveConfirmationModalHandler }) => {
+const FoodItem = ({ food, style }) => {
   const [seeMore, setSeeMore] = useState(false);
-
+  const { theme } = useContext(ThemeContext);
   const handlerSeeMore = () => setSeeMore((prev) => !prev);
 
-  const handlerDelete = () => showRemoveConfirmationModalHandler(food.id, food.name);
-
   return (
-    <View style={styles.container}>
-      <View style={{ width: '80%' }}>
-        <Text style={styles.foodName}>{food.name}</Text>
-        <Text style={styles.foodCategory}>{food.category} </Text>
-        <View style={{ backgroundColor: '#ccc', padding: 10, marginVertical: 5 }}>
+    <View style={[styles.container, { backgroundColor: theme.backgroundColor }, style]}>
+      <View style={{ width: '100%' }}>
+        <Text style={[styles.foodName, { color: theme.fontColor.text }]}>{food.name}</Text>
+        <Text style={[styles.foodCategory, { color: theme.fontColor.text }]}>{food.category} </Text>
+        <View style={{ backgroundColor: 'skyblue', padding: 10, marginVertical: 5 }}>
           <View style={styles.detailContainer}>
             <Text style={styles.topicTitle}>Calorias: </Text>
             <Text>{food.kcal}kcal</Text>
@@ -78,10 +78,6 @@ const FoodItem = ({ food, showRemoveConfirmationModalHandler }) => {
           </TouchableOpacity>
         </View>
       </View>
-
-      <TouchableOpacity onPress={handlerDelete} activeOpacity={0.7} style={{ padding: 10 }}>
-        <FontAwesome name="window-close" size={26} color="red" />
-      </TouchableOpacity>
     </View>
   );
 };
@@ -90,7 +86,6 @@ export default FoodItem;
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 5,
     backgroundColor: 'white',
     width: '100%',
     padding: 10,
