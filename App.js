@@ -3,14 +3,18 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import AppContext from './AppContext';
-import { EditProfileProvider } from './EditProfileContext';
-import { useState } from 'react';
+import { useState, useCallback, useContext } from 'react';
 import { TouchableOpacity, Text } from 'react-native';
 import { Avatar } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
-import { ThemeProvider } from './contexts/ThemeProvider';
+import { ThemeProvider, ThemeContext } from './contexts/ThemeProvider';
 import EditDish from './src/screens/Dish/EditDish';
 import DrawerContent from './DrawerContent';
+import { useFonts } from 'expo-font';
+import * as SplashScreen from 'expo-splash-screen';
+import SplashScreenComponent from './SplashScreenComponent';
+import { Entypo } from '@expo/vector-icons';
+import { NativeBaseProvider } from 'native-base';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -20,7 +24,6 @@ import Home from './src/screens/Home/Home';
 import Profile from './src/screens/Profile/Profile';
 import Settings from './src/screens/Settings/Settings';
 import InitialScreen from './src/screens/InitialScreen';
-import { leftArrow } from './constants/icons';
 import SearchFood from './src/screens/SearchFood/SearchFood';
 import FavoriteFoods from './src/screens/FavoriteFoods/FavoriteFoods';
 import FavoriteDishes from './src/screens/Dish/FavoriteDishes';
@@ -39,7 +42,30 @@ function RootStack() {
   const [params, setParams] = useState({});
   const [userIsAuthenticated, setUserIsAuthenticated] = useState(false);
   const [userObject, setUserObject] = useState(new User());
-  const [activeScreen, setActiveScreen] = useState('Home');
+  const [activeScreen, setActiveScreen] = useState('');
+  const [isLoadingTheme, setIsLoadingTheme] = useState(true);
+
+  const [fontsLoaded] = useFonts({
+    DMBold: require('./assets/fonts/DMSans-Bold.ttf'),
+    DMMedium: require('./assets/fonts/DMSans-Medium.ttf'),
+    DMRegular: require('./assets/fonts/DMSans-Regular.ttf'),
+    PoppinsBold: require('./assets/fonts/Poppins-Bold.ttf'),
+    PoppinsRegular: require('./assets/fonts/Poppins-Regular.ttf'),
+    PoppinsMedium: require('./assets/fonts/Poppins-Medium.ttf'),
+    PoppinsSemiBold: require('./assets/fonts/Poppins-SemiBold.ttf'),
+    PoppinsLight: require('./assets/fonts/Poppins-Light.ttf'),
+    BelanosimaBold: require('./assets/fonts/Belanosima-Bold.ttf'),
+    BelanosimaRegular: require('./assets/fonts/Belanosima-Regular.ttf'),
+    BelanosimaSemiBold: require('./assets/fonts/Belanosima-SemiBold.ttf'),
+  });
+
+  const onLayoutRootView = useCallback(async () => {
+    if (fontsLoaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
+
+  if (!fontsLoaded) return <SplashScreenComponent />;
 
   return (
     <AppContext.Provider
@@ -56,9 +82,11 @@ function RootStack() {
     >
       <NavigationContainer>
         <Stack.Navigator
+          onLayout={onLayoutRootView}
           initialRouteName="InitialScreen"
           screenOptions={{
             headerTransparent: true,
+            headerTintColor: '#FF7900',
             title: '',
           }}
         >
@@ -67,8 +95,6 @@ function RootStack() {
             name="AccountRecovery"
             component={AccountRecovery}
             options={{
-              headerBackImageSource: leftArrow,
-              headerTintColor: 'rgba(81, 242, 5, 1)',
               title: '',
             }}
           />
@@ -81,8 +107,15 @@ function RootStack() {
             name="Login"
             component={Login}
             options={{
-              headerBackImageSource: leftArrow,
-              headerTintColor: 'rgba(81, 242, 5, 1)',
+              headerRight: () => (
+                <Entypo
+                  onPress={() => {}}
+                  style={{ marginRight: 20 }}
+                  name="help-with-circle"
+                  size={24}
+                  color="#FF7900"
+                />
+              ),
               title: '',
             }}
           />
@@ -104,11 +137,13 @@ function RootStack() {
                   setUserObject,
                   activeScreen,
                   setActiveScreen,
+                  setIsLoadingTheme,
+                  isLoadingTheme,
                 }}
               >
-                <ThemeProvider>
-                  <DrawerStack userObject={userObject} setActiveScreen={setActiveScreen} />
-                </ThemeProvider>
+                <NativeBaseProvider>
+                  <ThemeProvider>{!isLoadingTheme && <DrawerStack userObject={userObject} />}</ThemeProvider>
+                </NativeBaseProvider>
               </AppContext.Provider>
             )}
           </Stack.Screen>
@@ -118,18 +153,9 @@ function RootStack() {
   );
 }
 
-function DrawerStack({ userObject, setActiveScreen }) {
+function DrawerStack({ userObject }) {
   const navigation = useNavigation();
-
-  const handlerHeaderTitle = () => {
-    setActiveScreen('Home');
-    navigation.navigate('Home');
-  };
-
-  const handlerHeaderProfile = () => {
-    setActiveScreen('Profile');
-    navigation.navigate('Profile');
-  };
+  const { theme } = useContext(ThemeContext);
 
   return (
     <Drawer.Navigator
@@ -138,12 +164,12 @@ function DrawerStack({ userObject, setActiveScreen }) {
         headerTitleAlign: 'center',
         headerStyle: { backgroundColor: '#59CA6B' },
         headerTitle: () => (
-          <TouchableOpacity activeOpacity={0.7} onPress={handlerHeaderTitle}>
+          <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate('Home')}>
             <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 25 }}>FitUP</Text>
           </TouchableOpacity>
         ),
         headerRight: () => (
-          <TouchableOpacity activeOpacity={0.7} onPress={handlerHeaderProfile}>
+          <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate('Profile')}>
             <Avatar.Image style={{ marginRight: 10 }} size={38} source={{ uri: `${userObject.profilePicture}` }} />
           </TouchableOpacity>
         ),
@@ -156,13 +182,9 @@ function DrawerStack({ userObject, setActiveScreen }) {
           title: 'Meu Perfil',
           headerRight: () => null,
         }}
-      >
-        {() => (
-          <EditProfileProvider>
-            <Profile />
-          </EditProfileProvider>
-        )}
-      </Drawer.Screen>
+        component={Profile}
+      />
+
       <Drawer.Screen
         name="Settings"
         component={Settings}
@@ -201,11 +223,12 @@ function DrawerStack({ userObject, setActiveScreen }) {
       />
       <Drawer.Screen
         name="CreateDish"
-        component={CreateDish}
         options={{
           title: 'Criar Prato',
         }}
-      />
+      >
+        {() => <CreateDish userObject={userObject} theme={theme} />}
+      </Drawer.Screen>
       <Drawer.Screen
         name="EditDish"
         component={EditDish}

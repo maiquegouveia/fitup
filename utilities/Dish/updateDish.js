@@ -1,12 +1,12 @@
-export default async (dish) => {
+export default async (dishId, foods) => {
   try {
-    const url = `https://fitup-api-production.up.railway.app/api/v1/dishes`;
+    const url = `https://fitup-api-sequelize.vercel.app/api/v3/dishes/${dishId}`;
     const response = await fetch(url, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(dish),
+      body: JSON.stringify(foods),
     });
 
     return { status: response.status };

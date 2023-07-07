@@ -1,6 +1,6 @@
 export default async (body) => {
   try {
-    const url = `https://fitup-api-production.up.railway.app/api/v2/users`;
+    const url = `https://fitup-api-sequelize.vercel.app/api/v3/users`;
     const result = await fetch(url, {
       method: 'POST',
       headers: {
@@ -10,9 +10,6 @@ export default async (body) => {
     });
 
     const data = await result.json();
-
-    if (!result.ok) {
-      return data?.result;
-    }
+    return data.result;
   } catch (error) {}
 };

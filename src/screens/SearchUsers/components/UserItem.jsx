@@ -6,10 +6,12 @@ import { MaterialIcons } from '@expo/vector-icons';
 import AppContext from '../../../../AppContext';
 import { useContext } from 'react';
 import { useNavigation } from '@react-navigation/native';
+import { ThemeContext } from '../../../../contexts/ThemeProvider';
 
 const UserItem = ({ user, style }) => {
   const navigation = useNavigation();
   const { userObject } = useContext(AppContext);
+  const { theme } = useContext(ThemeContext);
 
   const handlerOnPress = async () => {
     if (user.id === userObject.id) {
@@ -28,28 +30,38 @@ const UserItem = ({ user, style }) => {
 
   return (
     <TouchableOpacity onPress={handlerOnPress} activeOpacity={0.8} style={[styles.container, style]}>
-      <View style={{ marginRight: 10 }}>
+      <View style={styles.imageContainer}>
         <Avatar.Image size={50} source={{ uri: user.profilePicture }} />
       </View>
-      <View style={{ width: '60%' }}>
-        <Text
-          flexWrap="wrap"
-          lineHeight="xs"
-          fontSize={20}
-          fontWeight="bold"
-          color={user.type === 3 ? 'red.600' : 'black'}
-        >
-          {user.name}
-        </Text>
-        <Text lineHeight="xs" fontSize={14} fontWeight="semibold" marginTop={0}>
-          {user.username}
-        </Text>
-      </View>
-      {user.type !== 1 && (
-        <View style={{ marginLeft: 10 }}>
-          <MaterialIcons name="verified" size={30} color={user.type === 2 ? 'green' : 'red'} />
+      <View style={styles.mainDetailsContainer}>
+        <View style={styles.detailsContainer}>
+          <Text
+            flexWrap="wrap"
+            lineHeight="sm"
+            fontSize={16}
+            color={user.type === 3 ? 'red.600' : 'black'}
+            fontFamily={theme.font.bold}
+          >
+            {user.name}
+          </Text>
+          <Text lineHeight="sm" fontSize={12} fontFamilt={theme.font.regular}>
+            {user.username}
+          </Text>
+          <Text lineHeight="sm" fontSize={12} fontFamilt={theme.font.regular}>
+            Membro desde: {user.getCreatedAt()}
+          </Text>
+          {user.type === 2 && (
+            <Text lineHeight="sm" fontSize={12} fontFamily={theme.font.semiBold}>
+              NUTRICIONISTA
+            </Text>
+          )}
         </View>
-      )}
+        {user.type !== 1 && (
+          <View style={styles.verifiedContainer}>
+            <MaterialIcons name="verified" size={30} color={user.type === 2 ? 'green' : 'red'} />
+          </View>
+        )}
+      </View>
     </TouchableOpacity>
   );
 };
@@ -62,6 +74,25 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+
+  mainDetailsContainer: {
+    width: '78%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  imageContainer: {
+    width: '20%',
+    alignItems: 'center',
+  },
+  detailsContainer: {
+    width: '77%',
+  },
+  verifiedContainer: {
+    width: '20%',
     alignItems: 'center',
   },
 });

@@ -4,7 +4,7 @@ import { useContext } from 'react';
 import { ThemeContext } from '../../../contexts/ThemeProvider';
 import AppContext from '../../../AppContext';
 import deleteUser from '../../../utilities/deleteUser';
-import removeUserAsyncStorage from '../../../utilities/removeUserCredentialsFromStorage';
+import removeAsyncStorage from '../../../utilities/removeAsyncStorage';
 
 const Settings = ({ navigation }) => {
   const { theme, setIsDarkMode } = useContext(ThemeContext);
@@ -14,9 +14,9 @@ const Settings = ({ navigation }) => {
 
   const onDeleteUser = async () => {
     await deleteUser(userObject.id);
-    await removeUserAsyncStorage();
+    await removeAsyncStorage();
     setUserIsAuthenticated(false);
-    navigation.replace('InitialScreen');
+    navigation.goBack();
   };
   const AlertShow = () => {
     Alert.alert('', 'Deseja deletar sua conta?', [
@@ -27,7 +27,7 @@ const Settings = ({ navigation }) => {
       {
         text: 'Confirmar',
         onPress: () => {
-          onDeleteUser;
+          onDeleteUser();
         },
       },
     ]);

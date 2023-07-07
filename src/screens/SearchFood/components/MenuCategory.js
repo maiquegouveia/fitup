@@ -26,18 +26,18 @@ const MyDropdownMenu = ({
               />
               <Text>Todas</Text>
             </TouchableOpacity>
-            {categories.map(option => (
+            {categories.map((category) => (
               <TouchableOpacity
-                key={option.name}
-                style={styles.optionButton}
-                onPress={() => handleCategoryPress(option.name)}
+                key={category.name}
+                style={styles.categoryButton}
+                onPress={() => handleCategoryPress(category.name)}
               >
                 <MaterialCommunityIcons
-                  name={option.name === selectedCategory ? 'checkbox-marked-outline' : 'checkbox-blank-outline'}
+                  name={category.name === selectedCategory ? 'checkbox-marked-outline' : 'checkbox-blank-outline'}
                   size={24}
                   color="black"
                 />
-                <Text>{option.name}</Text>
+                <Text>{category.name}</Text>
               </TouchableOpacity>
             ))}
           </View>
@@ -61,10 +61,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   dropdownMenu: {
+    width: '50%',
     backgroundColor: 'white',
-    borderRadius: 4,
-    paddingVertical: 10,
-    paddingHorizontal: 12,
+    borderRadius: 10,
+    padding: 10,
   },
   optionButton: {
     flexDirection: 'row',

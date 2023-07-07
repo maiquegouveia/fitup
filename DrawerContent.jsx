@@ -19,7 +19,10 @@ export default function DrawerContent() {
   };
 
   return (
-    <DrawerContentScrollView contentContainerStyle={{ backgroundColor: theme.drawer.backgroundColor, flex: 1 }}>
+    <DrawerContentScrollView
+      showsVerticalScrollIndicator={false}
+      contentContainerStyle={{ backgroundColor: theme.drawer.backgroundColor }}
+    >
       <View style={styles.drawerContent}>
         <View style={styles.userInfoSection}>
           <Avatar.Image
@@ -28,20 +31,25 @@ export default function DrawerContent() {
             }}
             size={100}
           />
-          <Title style={[styles.title, { color: theme.drawer.fontColor }]}>{userObject.name}</Title>
-          <Caption style={[styles.caption, { color: theme.drawer.fontColor }]}>{userObject.username}</Caption>
+          <Title style={[styles.title, { color: theme.drawer.fontColor, fontFamily: theme.font.bold }]}>
+            {userObject.name}
+          </Title>
+          <Caption style={[styles.caption, { color: theme.drawer.fontColor, fontFamily: theme.font.semiBold }]}>
+            {userObject.username}
+          </Caption>
+          <Caption style={[styles.caption, { color: theme.drawer.fontColor, fontFamily: theme.font.semiBold }]}>
+            Membro desde: {userObject.getCreatedAt()}
+          </Caption>
           <View style={styles.row}>
             <View style={styles.section}>
-              <Paragraph style={[styles.paragraph, styles.caption, { color: theme.drawer.fontColor }]}>
-                {userObject.favoriteFoods.length}
-              </Paragraph>
-              <Caption style={[styles.caption, { color: theme.drawer.fontColor }]}>Alimentos Favoritos</Caption>
+              <Caption style={[styles.caption, { color: theme.drawer.fontColor, fontFamily: theme.font.regular }]}>
+                {userObject.favoriteFoods.length} Alimentos Favoritos
+              </Caption>
             </View>
             <View style={styles.section}>
-              <Paragraph style={[styles.paragraph, styles.caption, { color: theme.drawer.fontColor }]}>
-                {userObject.dishes.length}
-              </Paragraph>
-              <Caption style={[styles.caption, { color: theme.drawer.fontColor }]}>Pratos</Caption>
+              <Caption style={[styles.caption, { color: theme.drawer.fontColor, fontFamily: theme.font.regular }]}>
+                {userObject.dishes.length} Pratos
+              </Caption>
             </View>
           </View>
         </View>
@@ -204,11 +212,10 @@ const styles = StyleSheet.create({
   },
   title: {
     marginTop: 20,
-    fontWeight: 'bold',
   },
   caption: {
-    fontSize: 14,
-    lineHeight: 14,
+    fontSize: 13,
+    lineHeight: 15,
   },
   row: {
     marginTop: 20,

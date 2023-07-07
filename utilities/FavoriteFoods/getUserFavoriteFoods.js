@@ -1,9 +1,8 @@
 export default async (userId) => {
   try {
-    const response = await fetch(`https://fitup-api-production.up.railway.app/api/v1/favoriteFoods/${userId}`);
-    if (response.status === 500) return [];
-    if (response.status === 404) return [];
+    const url = `https://fitup-api-sequelize.vercel.app/api/v3/favoriteFoods/userId/${userId}`;
+    const response = await fetch(url);
     const data = await response.json();
-    return data.data;
+    return data.result;
   } catch (error) {}
 };

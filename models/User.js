@@ -1,8 +1,11 @@
 import fetchUserFavoriteFoods from '../utilities/FavoriteFoods/getUserFavoriteFoods';
 import fetchUserDailyWaterConsume from '../utilities/getUserDailyWaterConsume';
 import fetchUserDishes from '../utilities/Dish/getDishes';
+import timestampToDate from '../utilities/timestampToDate';
 import Food from './Food';
 import Dish from './Dish';
+import DishCategory from './DishCategory';
+import DishItem from './DishItem';
 
 export default class User {
   constructor(
@@ -15,6 +18,7 @@ export default class User {
     phone,
     username,
     type,
+    createdAt,
     profilePicture = 'https://i.ibb.co/tJBC4C4/default-profile.png'
   ) {
     this.id = id;
@@ -31,6 +35,7 @@ export default class User {
     this.totalWater = 0;
     this.type = type;
     this.username = username;
+    this.createdAt = createdAt;
   }
 
   setTotalWater() {
@@ -45,44 +50,76 @@ export default class User {
 
   async getFavoriteFoods() {
     const foods = await fetchUserFavoriteFoods(this.id);
-    if (!foods.error) {
+    if (foods.length > 0) {
       this.favoriteFoods = foods.map(
         (food) =>
           new Food(
-            food.alimento_id,
-            food.categoria,
-            food.nome,
-            food.kcal,
-            food.carboidrato,
-            food.proteina,
-            food.calcio,
-            food.ferro,
-            food.gordura_saturada,
-            food.gordura_monoinsaturada,
-            food.gordura_poli_insaturada,
-            food.magnesio,
-            food.sodio,
-            food.zinco,
-            food.potassio,
-            food.vitaminaC
+            food.Food.food_id,
+            food.Food.FoodCategory.name,
+            food.Food.name,
+            food.Food.kcal,
+            food.Food.carbohydrates,
+            food.Food.protein,
+            food.Food.calcium,
+            food.Food.iron,
+            food.Food.saturated,
+            food.Food.monounsaturated,
+            food.Food.polyunsaturated,
+            food.Food.magnesium,
+            food.Food.sodium,
+            food.Food.zinc,
+            food.Food.potassium,
+            food.Food.vitaminC,
+            food.favorite_food_id
           )
       );
     } else {
-      this.favoriteFoods = foods;
+      this.favoriteFoods = [];
     }
   }
 
   async getDishes() {
-    const data = await fetchUserDishes(this.id);
-    this.dishes = data.map(
-      (dish) =>
-        new Dish(dish.prato_id, dish.nome, dish.categoria_prato, dish.calorias, dish.carboidratos, dish.proteinas, [])
-    );
+    const dishes = await fetchUserDishes(this.id);
+    this.dishes = dishes.map((dish) => {
+      const { DishItems } = dish;
+      const dishCategory = new DishCategory(dish.DishCategory.id, dish.DishCategory.name);
+      const items = DishItems.map((item) => {
+        const { FavoriteFood } = item;
+        return new DishItem(item.amount, FavoriteFood.favorite_food_id, FavoriteFood.Food);
+      });
+      return new Dish(
+        dish.dish_id,
+        dish.name,
+        dishCategory,
+        dish.kcal,
+        dish.carbohydrates,
+        dish.protein,
+        dish.vitaminC,
+        dish.saturated,
+        dish.monounsaturated,
+        dish.polyunsaturated,
+        dish.sodium,
+        dish.iron,
+        dish.calcium,
+        dish.potassium,
+        dish.magnesium,
+        dish.zinc,
+        items
+      );
+    });
   }
 
   getFavoriteFoodsId() {
-    if (!this.favoriteFoods.error) return this.favoriteFoods.map((food) => food.id);
-    else return [];
+    if (this.favoriteFoods.length > 0) {
+      return this.favoriteFoods.map((food) => {
+        return {
+          foodId: food.id,
+          favoriteId: food.favoriteFoodId,
+        };
+      });
+    } else {
+      return [];
+    }
   }
 
   getRegistrationProgress() {
@@ -96,6 +133,10 @@ export default class User {
     if (this.password === null) per -= x;
     if (this.name === null) per -= x;
     return per;
+  }
+
+  getCreatedAt() {
+    return timestampToDate(this.createdAt);
   }
 
   clone() {
@@ -114,6 +155,7 @@ export default class User {
     clonedObject.totalWater = this.totalWater;
     clonedObject.type = this.type;
     clonedObject.username = this.username;
+    clonedObject.createdAt = this.createdAt;
     return clonedObject;
   }
 }

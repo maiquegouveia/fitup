@@ -27,7 +27,6 @@ export default StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     marginTop: 50,
-    backgroundColor: 'white',
     padding: 10,
     borderRadius: 10,
   },
@@ -43,8 +42,20 @@ export default StyleSheet.create({
     borderRadius: 10,
   },
   nameText: {
-    fontSize: 20,
-    fontWeight: 'bold',
+    fontSize: 24,
     flexWrap: 'wrap',
+  },
+  usernameText: {
+    fontSize: 16,
+    flexWrap: 'wrap',
+  },
+  btn: {
+    width: '40%',
+    borderRadius: 5,
+    backgroundColor: '#FF7900',
+  },
+  btnText: {
+    fontSize: 16,
+    color: 'white',
   },
 });

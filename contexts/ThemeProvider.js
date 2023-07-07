@@ -1,4 +1,7 @@
-import { createContext, useState } from 'react';
+import { createContext, useState, useEffect, useContext } from 'react';
+import changeThemeAsyncStorage from './changeThemeAsyncStorage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import AppContext from '../AppContext';
 
 export const ThemeContext = createContext();
 
@@ -15,8 +18,32 @@ export const ThemeContext = createContext();
 // // Dark indigo: #4B0082
 
 export const ThemeProvider = ({ children }) => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(null);
+  const { setIsLoadingTheme } = useContext(AppContext);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const data = await AsyncStorage.getItem('fitupData');
+        const { isDarkMode: darkMode } = JSON.parse(data);
+        setIsDarkMode(darkMode);
+        setIsLoadingTheme(false);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
+    changeThemeAsyncStorage(isDarkMode);
+  }, [isDarkMode]);
+
   const theme = {
+    font: {
+      bold: 'PoppinsBold',
+      semiBold: 'PoppinsSemiBold',
+      regular: 'PoppinsRegular',
+    },
     backgroundColor: isDarkMode ? '#2C3539' : 'white',
     backgroundTest: isDarkMode ? '#808080' : 'white',
     backgroundLine: isDarkMode ? 'white' : '#303030',

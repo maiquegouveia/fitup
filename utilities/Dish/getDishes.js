@@ -1,10 +1,10 @@
 export default async (userId) => {
   try {
-    const url = `https://fitup-api-production.up.railway.app/api/v1/dishes/${userId}`;
-    const response = await fetch(url, { method: 'GET' });
+    const url = `https://fitup-api-sequelize.vercel.app/api/v3/dishes/userId/${userId}`;
+    const response = await fetch(url);
     if (!response.ok) return [];
-    const data = await response.json();
-    return data.data;
+    const { result } = await response.json();
+    return result;
   } catch (error) {
     console.log(error);
   }

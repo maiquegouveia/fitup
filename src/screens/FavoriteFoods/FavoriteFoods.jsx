@@ -29,16 +29,22 @@ const FavoriteFoods = () => {
     }
   };
 
-  const showRemoveConfirmationModalHandler = (foodId, foodName) => {
+  const showRemoveConfirmationModalHandler = (foodId, foodName, favoriteFoodId) => {
     setFoodDelete({
       name: foodName,
       foodId: foodId,
+      favoriteFoodId,
     });
     setShowRemoveConfirmationModal(true);
   };
 
   const onDeleteFoodHandler = async () => {
-    const result = await changeFavoriteStatus(userObject.id, foodDelete.foodId, (operation = 'remove'));
+    const result = await changeFavoriteStatus(
+      userObject.id,
+      foodDelete.foodId,
+      foodDelete.favoriteFoodId,
+      (operation = 'remove')
+    );
     if (result?.error) {
       hideRemoveConfirmationModalHandler();
       return;

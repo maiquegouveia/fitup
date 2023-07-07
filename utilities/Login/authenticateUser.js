@@ -1,7 +1,7 @@
 export default async (body) => {
   try {
-    const url = 'https://fitup-api-production.up.railway.app/api/v2/users/authenticate';
-    const result = await fetch(url, {
+    const url = 'https://fitup-api-sequelize.vercel.app/api/v3/users/authentication';
+    const response = await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -9,7 +9,9 @@ export default async (body) => {
       body: JSON.stringify(body),
     });
 
-    const data = await result.json();
-    return data?.result;
-  } catch (error) {}
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
 };

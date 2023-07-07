@@ -1,16 +1,17 @@
-import { StyleSheet, View, SafeAreaView, ScrollView, TouchableOpacity, Alert } from 'react-native';
-import { TextInput } from 'react-native-paper';
-import { Text, Button, NativeBaseProvider } from 'native-base';
-import { useEffect, useState } from 'react';
-import CustomBackButtonHeader from '../../components/CustomBackButtonHeader';
+import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import { Button, NativeBaseProvider } from 'native-base';
+import { useEffect, useState, useContext } from 'react';
 import { useHeaderHeight } from '@react-navigation/elements';
 import Form from './components/Form';
 import { Ionicons } from '@expo/vector-icons';
 import validateEmail from '../../../utilities/validateEmail';
-import getUserData from '../../../utilities/getUserData';
 import generateRandomCode from '../../../utilities/generateRandomCode';
 import sendCodeConfirmation from '../../../utilities/AccountRecovery/sendCodeConfirmation';
 import createUser from '../../../utilities/NewCadastro/createUser';
+import hasSymbolCharacters from '../../../utilities/NewCadastro/hasSymbolCharacters';
+import AppContext from '../../../AppContext';
+import storeAsyncStorage from '../../../utilities/Login/storeAsyncStorage';
+import checkEmailRegistered from '../../../utilities/NewCadastro/checkEmailRegistered';
 
 const NewCadastro = ({ navigation }) => {
   const headerHeight = useHeaderHeight();
@@ -23,15 +24,11 @@ const NewCadastro = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [randomCode, setRandomCode] = useState(null);
   const [hidePassword, setHidePassword] = useState(true);
+  const { userObject, setUserObject, setUserIsAuthenticated } = useContext(AppContext);
 
   const showAlert = (title, message) => Alert.alert(title, message);
 
   const handlerShowPassword = () => setHidePassword((prev) => !prev);
-
-  const hasSymbolCharacters = (str) => {
-    const regex = /[!@#$%^&*()+\-=[\]{};':"\\|,.<>/?]+/;
-    return regex.test(str);
-  };
 
   const handlerNextFirstStage = async () => {
     const nameInput = name.trim();
@@ -50,8 +47,8 @@ const NewCadastro = ({ navigation }) => {
       return;
     } else {
       setIsLoading(true);
-      const result = await getUserData(emailInput);
-      if (!result?.error) {
+      const result = await checkEmailRegistered(emailInput);
+      if (result?.error) {
         showAlert('Email Inválido!', 'Este email já está cadastrado!');
       } else {
         const random = generateRandomCode();
@@ -91,7 +88,6 @@ const NewCadastro = ({ navigation }) => {
       name,
       email,
       password,
-      profilePicture: '',
       type: 1,
     };
     setIsLoading(true);
@@ -100,8 +96,21 @@ const NewCadastro = ({ navigation }) => {
       showAlert(`ERROR ${errorCode}`, result.message);
       setIsLoading(false);
     } else {
-      showAlert('Sucesso!', 'Conta criada com sucesso!');
-      navigation.replace('Login');
+      userObject.id = result.user_id;
+      userObject.name = result.name;
+      userObject.username = result.username;
+      userObject.email = result.email;
+      userObject.profilePicture = result.profile_picture;
+      userObject.type = result.type;
+      userObject.weight = null;
+      userObject.height = null;
+      userObject.phone = null;
+      userObject.createdAt = result.createdAt;
+      const clonedObject = userObject.clone();
+      setUserObject(clonedObject);
+      setUserIsAuthenticated(true);
+      await storeAsyncStorage({ userId: clonedObject.id, isDarkMode: false });
+      navigation.replace('DrawerStack', { screen: 'Home' });
     }
   };
 
@@ -117,7 +126,7 @@ const NewCadastro = ({ navigation }) => {
       }
       setFinalStage(updatedStage);
     } else {
-      navigation.replace('InitialScreen');
+      navigation.goBack();
     }
   };
 
@@ -136,7 +145,7 @@ const NewCadastro = ({ navigation }) => {
       headerTitle: '',
       headerLeft: () => (
         <TouchableOpacity style={{ marginLeft: 15 }} onPress={handlerBackBtn}>
-          <Ionicons name="arrow-back" size={28} color="#51F205" />
+          <Ionicons name="arrow-back" size={28} color="#FF7900" />
         </TouchableOpacity>
       ),
     });
@@ -146,9 +155,9 @@ const NewCadastro = ({ navigation }) => {
     <ScrollView contentContainerStyle={styles.mainContainer}>
       <NativeBaseProvider>
         <View style={[styles.container, { marginTop: headerHeight }]}>
-          <Text fontSize={40} fontWeight="bold" lineHeight="sm">
-            Crie seu cadastro no FITUP!
-          </Text>
+          <View style={styles.titleContainer}>
+            <Text style={styles.title}>Crie seu cadastro no FITUP!</Text>
+          </View>
           <Form
             finalStage={finalStage}
             setNameInput={setName}
@@ -166,7 +175,7 @@ const NewCadastro = ({ navigation }) => {
           />
 
           <Button isLoading={isLoading} onPress={handlerBtn} marginTop={5} width="100%" backgroundColor="green.700">
-            Próximo
+            {finalStage !== 3 ? 'Próximo' : 'Finalizar'}
           </Button>
         </View>
       </NativeBaseProvider>
@@ -180,10 +189,17 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     backgroundColor: 'white',
+    padding: 20,
   },
   container: {
     flex: 1,
-    padding: 20,
-    alignItems: 'center',
+  },
+  titleContainer: {
+    width: '100%',
+  },
+  title: {
+    fontSize: 35,
+    fontFamily: 'PoppinsBold',
+    color: '#FF7900',
   },
 });

@@ -1,10 +1,8 @@
 import { StyleSheet, View, SafeAreaView, Alert } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import { Button, NativeBaseProvider, Text } from 'native-base';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useHeaderHeight } from '@react-navigation/elements';
-import CustomBackButtonHeader from '../../components/CustomBackButtonHeader';
-import CustomHelpButtonHeader from './components/CustomHelpButtonHeader';
 import validateEmail from '../../../utilities/validateEmail';
 import getUserData from '../../../utilities/getUserData';
 import sendCodeConfirmation from '../../../utilities/AccountRecovery/sendCodeConfirmation';
@@ -63,20 +61,12 @@ const AccountRecovery = ({ navigation }) => {
     }
   };
 
-  useEffect(() => {
-    navigation.setOptions({
-      headerTitle: '',
-      headerLeft: () => <CustomBackButtonHeader navigation={navigation} screenName="Login" />,
-      headerRight: () => <CustomHelpButtonHeader onPress={() => {}} />,
-    });
-  }, []);
-
   return (
     <NativeBaseProvider>
       <SafeAreaView style={{ backgroundColor: 'white', flex: 1 }}>
         <View style={[styles.mainContainer, { marginTop: headerHeight }]}>
           <View style={styles.formContainer}>
-            <Text fontSize={36} fontWeight="bold" lineHeight="sm" marginBottom="5">
+            <Text color="#FF7900" fontSize={36} fontWeight="bold" lineHeight="sm" marginBottom="5">
               Recuperação de Conta
             </Text>
             <Text fontSize={16} fontWeight="semibold">

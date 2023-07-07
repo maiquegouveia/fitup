@@ -2,7 +2,6 @@ import { View, SafeAreaView, Image, ScrollView } from 'react-native';
 import { Provider, Text, Button } from 'react-native-paper';
 import { useState, useContext, useEffect } from 'react';
 import CircularProgress from 'react-native-circular-progress-indicator';
-import ButtonComponent from '../../components/ButtonComponent';
 import styles from './ProfileSearch.style';
 import AppContext from '../../../AppContext';
 import { ThemeContext } from '../../../contexts/ThemeProvider';

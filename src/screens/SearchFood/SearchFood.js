@@ -46,7 +46,7 @@ const SearchFood = () => {
     if (value === 'Todas') {
       setFilteredResults(results);
     } else {
-      setFilteredResults(results.filter((curr) => curr.categoria === value));
+      setFilteredResults(results.filter((food) => food.category === value));
     }
   };
 
@@ -73,33 +73,35 @@ const SearchFood = () => {
     if (data.error_message) {
       setErrorMessage(data.error_message);
     } else {
-      const dataWithFavoriteStatus = data.map(
-        (food) =>
-          new Food(
-            food.alimento_id,
-            food.categoria,
-            food.nome,
-            food.kcal,
-            food.carboidrato,
-            food.proteina,
-            food.calcio,
-            food.ferro,
-            food.gordura_saturada,
-            food.gordura_monoinsaturada,
-            food.gordura_poli_insaturada,
-            food.magnesio,
-            food.sodio,
-            food.zinco,
-            food.potassio,
-            food.vitaminaC,
-            favoriteFoodsId?.includes(food.alimento_id)
-          )
-      );
+      const dataWithFavoriteStatus = data.map((food) => {
+        const index = favoriteFoodsId.findIndex((curr) => curr.foodId === food.food_id);
 
-      setResults([...dataWithFavoriteStatus]);
-      setFilteredResults([...dataWithFavoriteStatus]);
+        return new Food(
+          food.food_id,
+          food.FoodCategory.name,
+          food.name,
+          food.kcal,
+          food.carbohydrates,
+          food.protein,
+          food.calcium,
+          food.iron,
+          food.saturated,
+          food.monounsaturated,
+          food.polyunsaturated,
+          food.magnesium,
+          food.sodium,
+          food.zinc,
+          food.potassium,
+          food.vitaminC,
+          index !== -1 ? favoriteFoodsId[index].favoriteId : 0,
+          index !== -1
+        );
+      });
 
-      const categories = [...new Set(data.map((curr) => curr.categoria))];
+      setResults(dataWithFavoriteStatus);
+      setFilteredResults(dataWithFavoriteStatus);
+
+      const categories = [...new Set(data.map((food) => food.FoodCategory.name))];
       setCategories(
         categories.map((curr) => {
           return { name: curr, active: false };
@@ -130,7 +132,12 @@ const SearchFood = () => {
           setFilteredResults(updatedFilteredResults);
         }
       } else {
-        const result = await changeFavoriteStatus(userObject.id, modalDetails.id, (operation = 'remove'));
+        const result = await changeFavoriteStatus(
+          userObject.id,
+          modalDetails.id,
+          modalDetails.favoriteFoodId,
+          (operation = 'remove')
+        );
         if (!result?.error) {
           updatedFilteredResults[currentFoodIndex].isFavorite = modalDetails.isFavorite;
           setFilteredResults(updatedFilteredResults);

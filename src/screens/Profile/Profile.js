@@ -1,18 +1,14 @@
 import { View, SafeAreaView, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { Provider, Text, Button } from 'react-native-paper';
 import { useState, useContext, useEffect } from 'react';
-import { useNavigation, useIsFocused } from '@react-navigation/native';
+import { useNavigation, useIsFocused, StackActions } from '@react-navigation/native';
 import CircularProgress from 'react-native-circular-progress-indicator';
 import EditProfileContainer from './components/EditProfileContainer';
-import ButtonComponent from '../../components/ButtonComponent';
-import EditProfileModal from './components/EditProfileModal';
 import styles from './Profile.style';
 import AppContext from '../../../AppContext';
-import { EditProfileContext } from '../../../EditProfileContext';
 import { ThemeContext } from '../../../contexts/ThemeProvider';
 import getImageAndPermissions from '../../../utilities/getImageAndPermissions';
-import removeUserCredentialsFromStorage from '../../../utilities/removeUserCredentialsFromStorage';
-import editUserCredentials from '../../../utilities/editUserCredentials';
+import removeAsyncStorage from '../../../utilities/removeAsyncStorage';
 import changeProfilePicture from '../../../utilities/Profile/changeProfilePicture';
 import postImage from '../../../utilities/Cadastro/postImage';
 import { ActivityIndicator } from 'react-native-paper';
@@ -32,11 +28,7 @@ const ProfileScreen = () => {
   };
 
   const [waterProgress, setWaterProgress] = useState(getWaterProgress());
-  const [showEditModal, setShowEditModal] = useState(false);
-  const { modalContent } = useContext(EditProfileContext);
   const [showEditContainer, setShowEditContainer] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
   const [changingPicture, setChangingPicture] = useState(false);
   const [image, setImage] = useState({
     uri: '',
@@ -45,45 +37,21 @@ const ProfileScreen = () => {
 
   const navigation = useNavigation();
 
-  const onShowEditModal = () => {
-    setErrorMessage('');
-    setShowEditModal(true);
-  };
-
-  const onCloseEditModal = () => {
-    setShowEditModal(false);
-  };
-
-  const onSaveEditModal = async () => {
-    setIsLoading(true);
-    const response = await editUserCredentials(
-      userObject.id,
-      modalContent.field.name,
-      modalContent.field.type,
-      modalContent.value
-    );
-    setIsLoading(false);
-    if (response.status === 204) {
-      userObject[`${modalContent.field.userObject}`] = modalContent.value;
-      const updatedUserObject = userObject.clone();
-
-      updatedUserObject.setTotalWater();
-
-      setUserObject(updatedUserObject);
-      setShowEditModal(false);
-    } else if (response.status === 500 && response?.errorCode === 'ER_DUP_ENTRY') {
-      setErrorMessage(`${modalContent.inputLabel} já cadastrado!`);
-    }
-  };
-
-  const onCloseEditHandler = () => {
+  const handleShowContainer = () => {
     setShowEditContainer((prev) => !prev);
   };
 
   const onLogoutHandler = () => {
     setUserIsAuthenticated(false);
-    removeUserCredentialsFromStorage();
-    navigation.replace('InitialScreen');
+    removeAsyncStorage();
+
+    const stackNavigation = navigation.getParent();
+    const routes = stackNavigation.getState().routes;
+    if (routes.length > 1) {
+      navigation.dispatch(StackActions.popToTop());
+    } else {
+      navigation.replace('InitialScreen');
+    }
   };
 
   const handlerProfilePicture = async () => {
@@ -138,16 +106,22 @@ const ProfileScreen = () => {
             </View>
             {!showEditContainer && (
               <>
-                <Text style={[styles.nameText, { color: theme.fontColor.title }]}>{userObject.name}</Text>
-                <Text style={[styles.nameText, { color: theme.fontColor.title }]}>{userObject.username}</Text>
+                <Text style={[styles.nameText, { color: theme.fontColor.title, fontFamily: theme.font.bold }]}>
+                  {userObject.name}
+                </Text>
+                <Text style={[styles.usernameText, { color: theme.fontColor.title, fontFamily: theme.font.semiBold }]}>
+                  {userObject.username}
+                </Text>
               </>
             )}
           </View>
           {!showEditContainer && (
             <View style={{ paddingHorizontal: 20 }}>
-              <View style={styles.statsContainer}>
-                <View style={{ width: '100%', marginBottom: 40, alignItems: 'center' }}>
-                  <Text style={{ fontSize: 24, fontWeight: 'bold' }}>Estatísticas</Text>
+              <View style={[styles.statsContainer, { backgroundColor: theme.profile.card.backgroundColor }]}>
+                <View style={{ width: '100%', marginBottom: 20, alignItems: 'center' }}>
+                  <Text style={{ fontSize: 21, fontFamily: theme.font.bold, color: theme.profile.card.fontColor }}>
+                    Estatísticas
+                  </Text>
                 </View>
                 <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-between' }}>
                   <TouchableOpacity
@@ -158,7 +132,7 @@ const ProfileScreen = () => {
                     <CircularProgress
                       value={waterProgress}
                       radius={60}
-                      progressValueColor={'black'}
+                      progressValueColor={theme.profile.card.fontColor}
                       activeStrokeColor={'#16B6E9'}
                       inActiveStrokeColor={'#D9D9D9'}
                       inActiveStrokeOpacity={0.5}
@@ -169,13 +143,13 @@ const ProfileScreen = () => {
                     />
                   </TouchableOpacity>
                   <View style={styles.statsWaterController}>
-                    <Text>Água Consumida</Text>
+                    <Text style={{ fontFamily: theme.font.bold }}>Água Consumida</Text>
                     <Button
-                      textColor="black"
+                      labelStyle={{ fontFamily: theme.font.semiBold, fontSize: 12, color: 'black' }}
                       style={{ backgroundColor: '#00F0FF', borderRadius: 5, marginTop: 5 }}
                       onPress={() => navigation.navigate('WaterAmount')}
                     >
-                      Adicionar Água
+                      Consumir Água
                     </Button>
                   </View>
                 </View>
@@ -192,25 +166,24 @@ const ProfileScreen = () => {
                     marginBottom: 40,
                   }}
                 ></View>
-                <ButtonComponent
-                  styles={{ marginBottom: 10 }}
-                  btnText="Editar Perfil"
+                <Button
+                  labelStyle={[styles.btnText, { fontFamily: theme.font.semiBold }]}
+                  style={[styles.btn, { marginBottom: 10 }]}
                   onPress={() => setShowEditContainer(true)}
-                />
-                <ButtonComponent btnText="Sair" onPress={onLogoutHandler} />
+                >
+                  Editar Perfil
+                </Button>
+                <Button
+                  labelStyle={[styles.btnText, { fontFamily: theme.font.semiBold }]}
+                  style={styles.btn}
+                  onPress={onLogoutHandler}
+                >
+                  Sair
+                </Button>
               </>
             )}
             {showEditContainer && (
-              <View style={{ width: '100%', padding: 20 }}>
-                <EditProfileModal
-                  isLoading={isLoading}
-                  errorMessage={errorMessage}
-                  showEditModal={showEditModal}
-                  onCloseEditModal={onCloseEditModal}
-                  onSaveEditModal={onSaveEditModal}
-                />
-                <EditProfileContainer onCloseEditHandler={onCloseEditHandler} onShowEditModal={onShowEditModal} />
-              </View>
+              <EditProfileContainer showEditContainer={showEditContainer} handleShowContainer={handleShowContainer} />
             )}
           </View>
         </ScrollView>

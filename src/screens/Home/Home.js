@@ -36,15 +36,17 @@ const Home = () => {
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.backgroundColor }}>
       <ScrollView contentContainerStyle={styles.mainContainer} showsVerticalScrollIndicator={false}>
         <View style={styles.welcomeContainer}>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Text style={[styles.welcomeText, { color: theme.fontColor.title }]}>Funcionalidades</Text>
-            <TouchableOpacity onPress={() => console.log(userObject)}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <Text style={[styles.welcomeText, { color: theme.fontColor.title, fontFamily: theme.font.bold }]}>
+              Home
+            </Text>
+            <TouchableOpacity onPress={() => console.log(userObject.dishes)}>
               <Ionicons name="notifications" size={26} color={theme.iconColor} />
             </TouchableOpacity>
           </View>
           {progressBar !== 1 && (
             <View style={styles.registrationProgressContainer}>
-              <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#0B5563' }}>Complete o seu cadastro...</Text>
+              <Text style={[styles.progressBarText, { fontFamily: theme.font.bold }]}>Complete o seu cadastro...</Text>
               <ProgressBar progress={progressBar} color="#E57A44" style={{ height: 5 }} />
             </View>
           )}
@@ -78,8 +80,6 @@ const styles = StyleSheet.create({
   },
   welcomeText: {
     fontSize: 34,
-    fontWeight: 'bold',
-    color: '#0B5563',
   },
   nutriContainer: {
     backgroundColor: 'green',
@@ -88,6 +88,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#DFD9E2',
     padding: 10,
     borderRadius: 5,
-    marginTop: '5%',
+    marginTop: 10,
+  },
+  progressBarText: {
+    fontSize: 18,
+    color: '#0B5563',
   },
 });

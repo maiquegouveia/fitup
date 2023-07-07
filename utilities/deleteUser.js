@@ -1,8 +1,10 @@
 export default async (userId) => {
   try {
-    const url = `https://fitup-api-production.up.railway.app/api/v2/users/${userId}`;
+    const url = `https://fitup-api-sequelize.vercel.app/api/v3/users/${userId}`;
     const response = await fetch(url, {
       method: 'DELETE',
     });
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 };

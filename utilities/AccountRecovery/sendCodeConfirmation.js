@@ -1,6 +1,6 @@
 export default async (email, codeClient) => {
   try {
-    const url = `https://fitup-api-production.up.railway.app/api/v1/mailer/accountConfirmation`;
+    const url = `https://fitup-api-sequelize.vercel.app/api/v3/mailer/accountConfirmation`;
     const response = await fetch(url, {
       method: 'POST',
       headers: {

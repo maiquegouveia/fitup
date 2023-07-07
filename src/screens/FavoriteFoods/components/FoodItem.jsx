@@ -7,7 +7,7 @@ const FoodItem = ({ food, showRemoveConfirmationModalHandler }) => {
 
   const handlerSeeMore = () => setSeeMore((prev) => !prev);
 
-  const handlerDelete = () => showRemoveConfirmationModalHandler(food.id, food.name);
+  const handlerDelete = () => showRemoveConfirmationModalHandler(food.id, food.name, food.favoriteFoodId);
 
   return (
     <View style={styles.container}>

@@ -8,27 +8,19 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   formContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  form: {
-    width: 315,
-    height: 336,
-    borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 20,
   },
   esqueceuContainer: {
     marginTop: 5,
-    marginBottom: 30,
     alignItems: 'flex-start',
     width: 250,
   },
   esqueceuText: {
     color: 'rgba(255, 255, 255, 1)',
     fontSize: 16,
+    fontFamily: 'PoppinsMedium',
   },
   input: {
     width: 250,
@@ -39,13 +31,28 @@ const styles = StyleSheet.create({
   },
   btn: {
     width: 250,
-    backgroundColor: 'rgba(255, 255, 255, 1)',
+    backgroundColor: '#FF7900',
     borderRadius: 5,
+    marginTop: 20,
   },
   btnText: {
     color: 'rgba(29, 29, 41, 0.6)',
-    fontSize: 20,
-    fontWeight: 'bold',
+    fontSize: 18,
+    fontFamily: 'DMBold',
+  },
+  container: {
+    flex: 1,
+  },
+  titleContainer: {
+    width: '100%',
+    padding: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  title: {
+    fontSize: 46,
+    color: '#FF7900',
+    fontFamily: 'PoppinsBold',
   },
 });
 

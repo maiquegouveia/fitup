@@ -1,6 +1,6 @@
 export default async (username) => {
   try {
-    const url = `https://fitup-api-production.up.railway.app/api/v2/users/${username}`;
+    const url = `https://fitup-api-sequelize.vercel.app/api/v3/users/username/${username}`;
     const response = await fetch(url, {
       method: 'GET',
     });

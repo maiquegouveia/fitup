@@ -1,12 +1,15 @@
 import { StyleSheet, Text, View, ImageBackground, TouchableOpacity } from 'react-native';
-import React from 'react';
+import { useContext } from 'react';
+import { ThemeContext } from '../../../../contexts/ThemeProvider';
 
-const CardFeature = props => {
+const CardFeature = (props) => {
+  const { theme } = useContext(ThemeContext);
+
   return (
     <TouchableOpacity style={styles.cardFeature} activeOpacity={0.8} onPress={props.onPress}>
       <ImageBackground resizeMode="cover" source={props.cardBackground} style={styles.image}>
         <View style={styles.cardInside}>
-          <Text style={styles.title}>{props.title}</Text>
+          <Text style={[styles.title, { fontFamily: theme.font.bold }]}>{props.title}</Text>
         </View>
       </ImageBackground>
     </TouchableOpacity>
@@ -27,14 +30,13 @@ const styles = StyleSheet.create({
   },
   cardInside: {
     backgroundColor: 'rgba(223, 217, 226, 0.9)',
-    padding: 5,
+    paddingHorizontal: 5,
     borderRadius: 5,
     justifyContent: 'center',
     alignItems: 'center',
   },
   title: {
-    fontSize: 21,
-    fontWeight: 'bold',
+    fontSize: 18,
     color: '#0B5563',
     alignItems: 'center',
   },

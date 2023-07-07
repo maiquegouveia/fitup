@@ -1,14 +1,23 @@
-import { ImageBackground, View } from 'react-native';
+import { StyleSheet, Image, View } from 'react-native';
 import React from 'react';
 import { logo } from '../../constants/images';
-import styles from '../styles/Logo.style';
 
-const Logo = ({ style }) => {
+export default function Logo() {
   return (
-    <View style={[styles.logoContainer, style]}>
-      <ImageBackground source={logo} resizeMode="contain" style={styles.logo} />
+    <View style={styles.mainContainer}>
+      <Image style={styles.image} source={logo} resizeMode="contain" />
     </View>
   );
-};
+}
 
-export default Logo;
+const styles = StyleSheet.create({
+  mainContainer: {
+    width: 156,
+    height: 156,
+    marginBottom: 250,
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+  },
+});

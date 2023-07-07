@@ -3,10 +3,10 @@ import updateUserCredentials from './updateUserCredentials';
 
 export default async () => {
   try {
-    const userId = await AsyncStorage.getItem('fitUpUserId');
-
-    if (userId !== null) {
-      const updatedCredentials = await updateUserCredentials(JSON.parse(userId));
+    const data = await AsyncStorage.getItem('fitupData');
+    if (data !== null) {
+      const { userId } = JSON.parse(data);
+      const updatedCredentials = await updateUserCredentials(userId);
       return updatedCredentials;
     } else {
       return { error: 404 };

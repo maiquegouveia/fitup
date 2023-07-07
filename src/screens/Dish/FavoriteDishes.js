@@ -65,11 +65,7 @@ const FavoriteDishes = ({ navigation }) => {
           iconName="food-fork-drink"
           onChange={onChangeSearchInput}
         />
-        <Button
-          textColor="white"
-          style={{ backgroundColor: '#256D1B', borderRadius: 5, marginTop: 10 }}
-          onPress={() => navigation.navigate('CreateDish')}
-        >
+        <Button textColor="white" style={styles.btn} onPress={() => navigation.navigate('CreateDish')}>
           Criar Prato
         </Button>
       </View>
@@ -79,9 +75,9 @@ const FavoriteDishes = ({ navigation }) => {
         {!isLoading && (
           <View style={styles.dishesTitleContainer}>
             {filteredData?.length > 0 ? (
-              <Text style={styles.dishesTitle}>Pratos ({filteredData?.length})</Text>
+              <Text style={[styles.dishesTitle, { fontFamily: theme.font.bold }]}>Pratos ({filteredData?.length})</Text>
             ) : (
-              <Text style={styles.dishesTitle}>Nenhum prato encontrado!</Text>
+              <Text style={[styles.dishesTitle, { fontFamily: theme.font.bold }]}>Nenhum prato encontrado!</Text>
             )}
           </View>
         )}
@@ -108,26 +104,20 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   dishesScrollView: {
-    backgroundColor: '#256D1B',
+    backgroundColor: '#FF7900',
     padding: 15,
     borderRadius: 5,
   },
   dishesTitle: {
-    fontSize: 23,
-    fontWeight: 'bold',
+    fontSize: 18,
     color: 'white',
   },
   dishesTitleContainer: {
     alignItems: 'center',
   },
-  saveBtn: {
-    backgroundColor: 'white',
-    width: '50%',
+  btn: {
+    backgroundColor: '#FF7900',
     borderRadius: 5,
-    marginTop: 15,
-  },
-  addDishBtn: {
-    backgroundColor: 'green',
-    borderRadius: 5,
+    marginTop: 10,
   },
 });

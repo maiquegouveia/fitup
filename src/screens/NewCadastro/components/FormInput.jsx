@@ -1,7 +1,6 @@
 import { StyleSheet, View } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import { Text } from 'native-base';
-import React from 'react';
 
 const FormInput = (props) => {
   const { label, placeholder, onChange, iconName, autoCapitalize, value, keyboardType } = props;
@@ -19,6 +18,7 @@ const FormInput = (props) => {
         placeholder={placeholder}
         mode="outlined"
         onChangeText={onChange}
+        activeOutlineColor="#FF7900"
       />
     </View>
   );

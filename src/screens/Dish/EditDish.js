@@ -1,122 +1,79 @@
-import { StyleSheet, Text, View, ScrollView, RefreshControl, TouchableOpacity, Alert } from 'react-native';
-import { ActivityIndicator } from 'react-native-paper';
-import { useContext, useState, useEffect, useCallback } from 'react';
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import { useContext, useState, useEffect } from 'react';
 import { NativeBaseProvider, Button } from 'native-base';
 import { useIsFocused } from '@react-navigation/native';
 import { FontAwesome5 } from '@expo/vector-icons';
-import getDishItens from '../../../utilities/Dish/getDishItens';
 import FoodListItem from './components/FoodListItem';
 import FoodSelect from './components/FoodSelect';
 import { ThemeContext } from '../../../contexts/ThemeProvider';
 import AppContext from '../../../AppContext';
 import updateDish from '../../../utilities/Dish/updateDish';
 import deleteDish from '../../../utilities/Dish/deleteDish';
+import DishCardInfo from './components/DishCardInfo';
 
 const EditDish = ({ route, navigation }) => {
   const { theme } = useContext(ThemeContext);
   const { userObject } = useContext(AppContext);
-  const [isLoading, setIsLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [foodAddedList, setFoodAddedList] = useState([]);
   const [foodList, setFoodList] = useState([]);
-  const [refreshing, setRefreshing] = useState(false);
+  const [seeMore, setSeeMore] = useState(false);
+  const { dish } = route.params;
   const isFocused = useIsFocused();
 
-  const getData = async () => {
-    const data = await getDishItens(route.params.dishId);
-    const itensId = data.map((food) => food.alimento_id);
-    const cleanFavoriteList = userObject.favoriteFoods.filter((food) => {
-      if (!itensId.includes(food.id)) {
-        return food;
-      }
-    });
-
-    setFoodAddedList(
-      data.map((food) => {
-        return {
-          foodName: food.nome,
-          foodId: food.alimento_id,
-          amount: food.quantidade,
-          carbo: food.carboidrato,
-          kcal: food.kcal,
-          protein: food.proteina,
-          category: food.categoria,
-        };
-      })
-    );
-
-    setFoodList(
-      cleanFavoriteList.map((food) => {
-        console.log(food);
-        return {
-          foodName: food.name,
-          foodId: food.id,
-          amount: 100,
-          carbo: food.carbohydrates,
-          kcal: food.kcal,
-          protein: food.protein,
-          category: food.category,
-        };
-      })
-    );
-    setIsLoading(false);
-  };
+  const handlerSeeMore = () => setSeeMore((prev) => !prev);
 
   const resetStates = () => {
-    setIsLoading(true);
-    setFoodAddedList([]);
-    setFoodList([]);
+    setSeeMore(false);
+    setSaving(false);
   };
-
-  const onRefresh = useCallback(() => {
-    setRefreshing(true);
-    resetStates();
-    getData();
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 0);
-  }, []);
 
   useEffect(() => {
     if (!isFocused) {
       resetStates();
     } else {
-      getData();
+      const foodIds = dish.dishItems.map((item) => item.food.food_id);
+      const dishFoods = dish.dishItems.map((item) => {
+        return {
+          ...item.food,
+          category: item.food.FoodCategory.name,
+          amount: item.amount,
+          favoriteFoodId: item.favoriteFoodId,
+        };
+      });
+      setFoodAddedList(dishFoods);
+      const userFoods = userObject.favoriteFoods.filter((food) => !foodIds.includes(food.id));
+      setFoodList(
+        userFoods.map((food) => {
+          return {
+            ...food,
+            food_id: food.id,
+            amount: 100,
+          };
+        })
+      );
     }
   }, [isFocused]);
 
-  const getTotalKcal = () => {
-    const total = foodAddedList.reduce((acc, food) => acc + (food.kcal * food.amount) / 100, 0);
-    return total.toFixed(2);
-  };
-  const getTotalCarbo = () => {
-    const total = foodAddedList.reduce((acc, food) => acc + (food.carbo * food.amount) / 100, 0);
-    return total.toFixed(2);
-  };
-  const getTotalProtein = () => {
-    const total = foodAddedList.reduce((acc, food) => acc + (food.protein * food.amount) / 100, 0);
-    return total.toFixed(2);
-  };
-
   const handleOnSave = async () => {
     setSaving(true);
-    const dish = {
-      dishId: route.params.dishId,
-      totalCarbo: +getTotalCarbo(),
-      totalKcal: +getTotalKcal(),
-      totalProtein: +getTotalProtein(),
-      foods: [...foodAddedList],
-    };
-    const response = await updateDish(dish);
+    const foods = {};
+    foods.foods = foodAddedList.map((food) => {
+      return {
+        favorite_food_id: food.favoriteFoodId,
+        amount: food.amount,
+      };
+    });
+    const response = await updateDish(dish.id, foods);
     if (response.status === 204) {
       navigation.navigate('FavoriteDishes');
-      setSaving(false);
     }
+    setSaving(false);
   };
 
   const onSelectFood = (foodId) => {
-    const updatedFoodList = [...foodList];
-    const foodAddedIndex = updatedFoodList.findIndex((food) => food.foodId === foodId);
+    const updatedFoodList = foodList;
+    const foodAddedIndex = updatedFoodList.findIndex((food) => food.food_id === foodId);
     const updatedFoodAddedList = [...foodAddedList];
     updatedFoodAddedList.push(updatedFoodList[foodAddedIndex]);
     updatedFoodList.splice(foodAddedIndex, 1);
@@ -127,15 +84,17 @@ const EditDish = ({ route, navigation }) => {
   const onRemove = (foodId) => {
     const updatedFoodList = [...foodList];
     const updatedFoodAddedList = [...foodAddedList];
-    const foodIndex = updatedFoodAddedList.findIndex((food) => food.foodId === foodId);
-    updatedFoodList.push(updatedFoodAddedList[foodIndex]);
+    const foodIndex = updatedFoodAddedList.findIndex((food) => food.food_id === foodId);
+    const food = updatedFoodAddedList[foodIndex];
+    food.amount = 100;
+    updatedFoodList.push(food);
     updatedFoodAddedList.splice(foodIndex, 1);
     setFoodAddedList(updatedFoodAddedList);
     setFoodList(updatedFoodList);
   };
 
   const onDeleteDish = async () => {
-    const response = await deleteDish(route.params.dishId);
+    const response = await deleteDish(dish.dish_id);
     if (response) {
       navigation.navigate('FavoriteDishes');
     }
@@ -155,87 +114,100 @@ const EditDish = ({ route, navigation }) => {
     ]);
   };
 
+  const getTotal = (info) => {
+    try {
+      const total = foodAddedList.reduce((acc, food) => {
+        return acc + (food[info] * food.amount) / 100;
+      }, 0);
+      return total.toFixed(1);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <NativeBaseProvider>
-      <ScrollView
-        nestedScrollEnabled={true}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-        contentContainerStyle={[styles.background, { backgroundColor: theme.backgroundColor }]}
-      >
-        <View style={styles.dishCard}>
-          <View
-            style={{
-              alignItems: 'center',
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-            }}
-          >
-            <View style={{ width: '80%' }}>
-              <Text style={[styles.dishName]}>{route.params.dishName}</Text>
+      <View style={{ flex: 1, backgroundColor: theme.backgroundColor }}>
+        <ScrollView nestedScrollEnabled={true} contentContainerStyle={[styles.background]}>
+          <View style={styles.dishCard}>
+            <View
+              style={{
+                alignItems: 'center',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}
+            >
+              <View style={{ width: '80%' }}>
+                <Text style={[styles.dishName, { fontFamily: theme.font.bold }]}>{dish.name}</Text>
+              </View>
+              <TouchableOpacity onPress={alertShow} activeOpacity={0.7}>
+                <FontAwesome5 name="trash" size={20} color="red" />
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity onPress={alertShow} activeOpacity={0.7}>
-              <FontAwesome5 name="trash" size={20} color="red" />
-            </TouchableOpacity>
-          </View>
-          <View style={{ backgroundColor: '#CD853F', marginVertical: 10, padding: 10, borderRadius: 5 }}>
-            <View style={{ flexDirection: 'row' }}>
-              <Text style={{ fontWeight: 'bold', color: theme.fontColor.text }}>Categoria: </Text>
-              <Text style={{ color: theme.fontColor.text }}>{route.params.dishCategory}</Text>
-            </View>
-            <View style={{ flexDirection: 'row' }}>
-              <Text style={{ fontWeight: 'bold', color: theme.fontColor.text }}>Calorias: </Text>
-              <Text style={{ color: theme.fontColor.text }}>{getTotalKcal()}kcal</Text>
-            </View>
-            <View style={{ flexDirection: 'row' }}>
-              <Text style={{ fontWeight: 'bold', color: theme.fontColor.text }}>Carboidratos: </Text>
-              <Text style={{ color: theme.fontColor.text }}>{getTotalCarbo()}g</Text>
-            </View>
-            <View style={{ flexDirection: 'row' }}>
-              <Text style={{ fontWeight: 'bold', color: theme.fontColor.text }}>Proteínas: </Text>
-              <Text style={{ color: theme.fontColor.text }}>{getTotalProtein()}g</Text>
-            </View>
-          </View>
-          {!isLoading && <FoodSelect foodList={foodList} onSelectFood={onSelectFood} />}
+            <View style={{ backgroundColor: '#CD853F', marginBottom: 10, padding: 10, borderRadius: 5 }}>
+              <DishCardInfo label="Categoria" value={dish.category.name} />
+              <DishCardInfo label="Carboidratos" value={getTotal('carbohydrates')} suffix="g" />
+              <DishCardInfo label="Proteínas" value={getTotal('protein')} suffix="g" />
+              <DishCardInfo label="Calorias" value={getTotal('kcal')} suffix="kcal" />
 
-          <View style={{ marginTop: 10, maxHeight: '50%', borderRadius: 5, backgroundColor: '#256D1B' }}>
-            {!isLoading && (
-              <View style={{ alignItems: 'center', padding: 10 }}>
-                <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'white' }}>
+              {seeMore && (
+                <>
+                  <DishCardInfo label="Sódio" value={getTotal('sodium')} suffix="g" />
+                  <DishCardInfo label="Ferro" value={getTotal('iron')} suffix="g" />
+                  <DishCardInfo label="Cálcio" value={getTotal('calcium')} suffix="g" />
+                  <DishCardInfo label="Potássio" value={getTotal('potassium')} suffix="g" />
+                  <DishCardInfo label="Magnésio" value={getTotal('magnesium')} suffix="g" />
+                  <DishCardInfo label="Zinco" value={getTotal('zinc')} suffix="g" />
+                  <DishCardInfo label="Vitamina C" value={getTotal('vitaminC')} suffix="g" />
+                  <DishCardInfo label="Gordura Saturada" value={getTotal('saturated')} suffix="g" />
+                  <DishCardInfo label="Gordura Monosaturada" value={getTotal('monounsaturated')} suffix="g" />
+                  <DishCardInfo label="Gordura Poli-insaturada" value={getTotal('polyunsaturated')} suffix="g" />
+                </>
+              )}
+              <TouchableOpacity style={styles.seeMoreContainer} activeOpacity={1} onPress={handlerSeeMore}>
+                <Text style={[styles.seeMore, { fontFamily: theme.font.semiBold }]}>
+                  {!seeMore ? 'Ver Mais...' : 'Ver Menos...'}
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <FoodSelect foodList={foodList} onSelectFood={onSelectFood} />
+            <View style={styles.subContainer}>
+              <View style={styles.subTitleContainer}>
+                <Text style={[styles.subTitle, { fontFamily: theme.font.bold }]}>
                   Alimentos ({foodAddedList.length})
                 </Text>
               </View>
-            )}
-            <ScrollView nestedScrollEnabled={true} contentContainerStyle={styles.foodScroll} indicatorStyle="white">
-              {isLoading && <ActivityIndicator animating={isLoading} color="white" />}
-              {foodAddedList.length > 0 &&
-                foodAddedList.map((food, index) => (
-                  <FoodListItem
-                    index={index}
-                    key={index}
-                    foodName={food.foodName}
-                    amount={food.amount}
-                    onRemove={onRemove}
-                    foodId={food.foodId}
-                    style={{ marginBottom: index === foodAddedList.length - 1 ? 0 : 10 }}
-                    foodKcal={food.kcal}
-                    foodCarbo={food.carbo}
-                    foodProtein={food.protein}
-                    foodCategory={food.category}
-                    foodAddedList={foodAddedList}
-                    setFoodAddedList={setFoodAddedList}
-                  />
-                ))}
-            </ScrollView>
-          </View>
-          {foodAddedList.length > 0 && (
-            <View style={{ alignItems: 'center', marginTop: 10 }}>
-              <Button style={styles.button} onPress={handleOnSave} isLoading={saving}>
-                Salvar
-              </Button>
+              <ScrollView nestedScrollEnabled={true} contentContainerStyle={styles.foodScroll} indicatorStyle="white">
+                {foodAddedList.length > 0 &&
+                  foodAddedList.map((food, index) => (
+                    <FoodListItem
+                      index={index}
+                      key={index}
+                      foodName={food?.name}
+                      amount={food?.amount}
+                      onRemove={onRemove}
+                      foodId={food?.food_id}
+                      style={{ marginBottom: index === foodAddedList.length - 1 ? 0 : 10 }}
+                      foodKcal={food?.kcal}
+                      foodCarbo={food?.carbohydrates}
+                      foodProtein={food?.protein}
+                      foodCategory={food?.category}
+                      foodAddedList={foodAddedList}
+                      setFoodAddedList={setFoodAddedList}
+                    />
+                  ))}
+              </ScrollView>
             </View>
-          )}
-        </View>
-      </ScrollView>
+            {foodAddedList.length > 0 && (
+              <View style={{ alignItems: 'center', marginTop: 10 }}>
+                <Button isLoading={saving} disabled={saving} style={styles.button} onPress={handleOnSave}>
+                  Salvar
+                </Button>
+              </View>
+            )}
+          </View>
+        </ScrollView>
+      </View>
     </NativeBaseProvider>
   );
 };
@@ -244,14 +216,13 @@ export default EditDish;
 
 const styles = StyleSheet.create({
   background: {
-    flex: 1,
     alignItems: 'center',
   },
   dishCard: {
+    marginVertical: 20,
     backgroundColor: '#ccc',
     padding: 10,
     width: '90%',
-    marginTop: 50,
     borderRadius: 10,
   },
   dishCategory: {
@@ -265,9 +236,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   dishName: {
-    // top: '15%',
     fontSize: 24,
-    fontWeight: 'bold',
     color: 'black',
   },
   button: {
@@ -275,5 +244,23 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     width: 150,
     marginTop: 20,
+  },
+  subTitleContainer: {
+    alignItems: 'center',
+    paddingTop: 10,
+  },
+  subTitle: {
+    fontSize: 20,
+    color: 'white',
+  },
+  subContainer: {
+    marginTop: 10,
+    maxHeight: '50%',
+    borderRadius: 5,
+    backgroundColor: '#256D1B',
+  },
+  seeMoreContainer: {
+    flex: 1,
+    alignSelf: 'flex-start',
   },
 });

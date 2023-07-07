@@ -16,6 +16,7 @@ export default class Food {
     zinc,
     potassium,
     vitaminC,
+    favoriteFoodId = 0,
     isFavorite = true
   ) {
     this.id = id;
@@ -34,6 +35,7 @@ export default class Food {
     this.potassium = potassium;
     this.zinc = zinc;
     this.vitaminC = vitaminC;
+    this.favoriteFoodId = favoriteFoodId;
     this.isFavorite = isFavorite;
   }
 }

@@ -1,12 +1,10 @@
-export default async (userId, foodId, operation = 'add') => {
+export default async (userId, foodId, favoriteFoodId, operation = 'add') => {
   if (operation === 'add') {
     try {
-      const response = await fetch(
-        `https://fitup-api-production.up.railway.app/api/v1/favoriteFoods/${userId}/${foodId}`,
-        {
-          method: 'POST',
-        }
-      );
+      const url = `https://fitup-api-sequelize.vercel.app/api/v3/favoriteFoods/userId/${userId}/food/${foodId}`;
+      const response = await fetch(url, {
+        method: 'POST',
+      });
       if (!response.ok) return { error: 'Tente novamente mais tarde!' };
       const data = await response.json();
       return data;
@@ -16,7 +14,7 @@ export default async (userId, foodId, operation = 'add') => {
   } else {
     try {
       const response = await fetch(
-        `https://fitup-api-production.up.railway.app/api/v1/favoriteFoods/${userId}/${foodId}`,
+        `https://fitup-api-sequelize.vercel.app/api/v3/favoriteFoods/${favoriteFoodId}`,
         {
           method: 'DELETE',
         }

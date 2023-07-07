@@ -1,6 +1,10 @@
 import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
+  mainContainer: {
+    width: '100%',
+    padding: 20,
+  },
   container: {
     alignItems: 'center',
     backgroundColor: '#ccc',
@@ -9,7 +13,22 @@ export default StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
     marginBottom: 30,
+  },
+  btn: {
+    marginTop: 10,
+    width: '40%',
+    borderRadius: 5,
+    backgroundColor: '#FF7900',
+  },
+  btnClose: {
+    marginTop: 10,
+    width: '40%',
+    borderRadius: 5,
+    backgroundColor: 'green',
+  },
+  btnText: {
+    fontSize: 16,
+    color: 'white',
   },
 });

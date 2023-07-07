@@ -18,6 +18,7 @@ const FormInput = (props) => {
         placeholder={placeholder}
         mode="outlined"
         onChangeText={onChange}
+        activeUnderlineColor="#FF7900"
       />
     </View>
   );

@@ -1,40 +1,35 @@
-import { SafeAreaView, ImageBackground, View } from 'react-native';
-import image from '../../assets/home-img-1.png';
+import { ImageBackground, View } from 'react-native';
+import background from '../../assets/home-img-1.png';
 import Logo from '../components/Logo';
-import HomeButtons from '../components/HomeButtons';
-import { useHeaderHeight } from '@react-navigation/elements';
 import styles from '../styles/InitialScreen.style';
 import getUserCredentials from '../../utilities/getUserCredentials';
 import { useEffect, useContext, useState } from 'react';
 import AppContext from '../../AppContext';
 import { useNavigation } from '@react-navigation/native';
-import { ActivityIndicator } from 'react-native-paper';
-import User from '../../models/User';
+import { ActivityIndicator, Button } from 'react-native-paper';
 
 const HomePage = () => {
-  const [isLoading, setIsLoading] = useState(true);
-  const headerHeight = useHeaderHeight();
-  const { setParams, setUserIsAuthenticated, userObject, setUserObject } = useContext(AppContext);
+  const [isLoading, setIsLoading] = useState(false);
+  const { setUserIsAuthenticated, userObject, setUserObject } = useContext(AppContext);
   const navigation = useNavigation();
 
   const getData = async () => {
     setIsLoading(true);
-    const data = await getUserCredentials();
-    if (!data?.error) {
-      const updatedUserObject = new User(
-        data.usuario_id,
-        data.nome,
-        data.email,
-        data.senha,
-        data.altura,
-        data.peso,
-        data.telefone,
-        data.username,
-        data.tipo_usuario,
-        data.foto_perfil
-      );
+    const userData = await getUserCredentials();
+    if (!userData?.error) {
+      userObject.id = userData.user_id;
+      userObject.name = userData.name;
+      userObject.email = userData.email;
+      userObject.password = userData.password;
+      userObject.height = userData.height;
+      userObject.weight = userData.weight;
+      userObject.phone = userData.phone;
+      userObject.username = userData.username;
+      userObject.type = userData.type;
+      userObject.createdAt = userData.createdAt;
+      userObject.profilePicture = userData.profile_picture;
+      const updatedUserObject = userObject.clone();
       setUserObject(updatedUserObject);
-      setParams(data);
       setUserIsAuthenticated(true);
       navigation.replace('DrawerStack', { screen: 'Home' });
     } else {
@@ -46,16 +41,26 @@ const HomePage = () => {
     getData();
   }, []);
 
+  const handlerLoginBtn = () => navigation.navigate('Login');
+  const handlerRegisterBtn = () => navigation.navigate('NewCadastro');
+
   return (
-    <SafeAreaView style={styles.mainContainer}>
-      <ImageBackground source={image} resizeMode="cover" style={styles.image}>
-        <Logo style={{ marginTop: headerHeight }} />
-        <View style={{ flex: 0.5, alignItems: 'center', justifyContent: 'center' }}>
-          {isLoading && <ActivityIndicator animating={true} color="white" size={58} />}
-          {!isLoading && <HomeButtons />}
-        </View>
-      </ImageBackground>
-    </SafeAreaView>
+    <ImageBackground style={styles.mainContainer} source={background}>
+      <Logo />
+      <View style={styles.container}>
+        {isLoading && <ActivityIndicator animating={true} color="white" size={50} />}
+        {!isLoading && (
+          <>
+            <Button onPress={handlerLoginBtn} labelStyle={styles.btnLabel} style={styles.btn}>
+              Fazer Login
+            </Button>
+            <Button onPress={handlerRegisterBtn} labelStyle={styles.btnLabel} style={[styles.btn, { marginTop: 10 }]}>
+              Cadastrar-se
+            </Button>
+          </>
+        )}
+      </View>
+    </ImageBackground>
   );
 };
 

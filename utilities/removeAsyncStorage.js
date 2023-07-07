@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default async () => {
   try {
-    await AsyncStorage.removeItem('fitUpUserId');
+    await AsyncStorage.removeItem('fitupData');
   } catch (error) {
     console.log(error);
   }
