@@ -28,7 +28,7 @@ const FoodSelect = ({ foodList, onSelectFood }) => {
       onValueChange={(itemValue) => onSelectFood(itemValue)}
     >
       {foodList.map((food) => (
-        <Select.Item key={food.food_id} label={food.name} value={food.food_id} />
+        <Select.Item key={food.id} label={food.name} value={food.id} />
       ))}
     </Select>
   );

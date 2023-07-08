@@ -1,8 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Button } from 'react-native-paper';
-import { StyleSheet, ScrollView, View, Alert } from 'react-native';
-import DishCard from './components/DishCard';
-import Dish from '../../../models/Dish';
+import { StyleSheet, Alert, FlatList } from 'react-native';
 import DishCategory from '../../../models/DishCategory';
 import { useIsFocused } from '@react-navigation/native';
 import DishCreateCard from './components/DishCreateCard';
@@ -11,6 +9,8 @@ import Title from '../../../global/components/Title';
 import InputWithLabelAndPlaceholder from '../../../global/components/InputWithLabelAndPlaceholder';
 import Picker from '../../../global/components/Picker';
 import FoodItem from './components/FoodItem';
+import createDish from '../../../utilities/Dish/createDish';
+import { useNavigation } from '@react-navigation/native';
 
 const CreateDish = ({ theme, userObject }) => {
   const [dishName, setDishName] = useState('');
@@ -19,8 +19,10 @@ const CreateDish = ({ theme, userObject }) => {
   const [dishCategories, setDishCategories] = useState([]);
   const [favoriteFoods, setFavoriteFoods] = useState([]);
   const [addedFoods, setAddedFoods] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const isFocused = useIsFocused();
   const inputRef = useRef(null);
+  const navigation = useNavigation();
 
   const getCategories = async () => {
     const categories = await DishCategory.getCategories();
@@ -38,6 +40,7 @@ const CreateDish = ({ theme, userObject }) => {
     setSelectedDishCategory();
     setSelectedFavoriteFood();
     setDishName('');
+    setIsSubmitting(false);
   };
 
   useEffect(() => {
@@ -60,12 +63,12 @@ const CreateDish = ({ theme, userObject }) => {
 
   const handlerAddFood = () => {
     if (selectedFavoriteFood) {
-      const updatedFavoriteFoods = [...favoriteFoods];
+      const updatedFavoriteFoods = favoriteFoods.slice();
       const index = updatedFavoriteFoods.findIndex((food) => food.id === selectedFavoriteFood);
       const food = updatedFavoriteFoods[index];
       food.amount = 100;
-      const updatedAddedFoods = [...addedFoods];
-      updatedAddedFoods.push(food);
+      const updatedAddedFoods = addedFoods.slice();
+      updatedAddedFoods.unshift(food);
       updatedFavoriteFoods.splice(index, 1);
       setFavoriteFoods(updatedFavoriteFoods);
       setAddedFoods(updatedAddedFoods);
@@ -76,21 +79,22 @@ const CreateDish = ({ theme, userObject }) => {
   };
 
   const handlerRemoveFood = (foodId) => {
-    const updatedAddedFoods = [...addedFoods];
-    const index = updatedAddedFoods.findIndex((food) => (food.id = foodId));
+    const updatedAddedFoods = addedFoods.slice();
+    const index = updatedAddedFoods.findIndex((food) => food.id === foodId);
     const food = updatedAddedFoods[index];
     updatedAddedFoods.splice(index, 1);
-    const updatedFavoriteFoods = [...favoriteFoods];
+    const updatedFavoriteFoods = favoriteFoods.slice();
     updatedFavoriteFoods.push(food);
     setFavoriteFoods(updatedFavoriteFoods);
     setAddedFoods(updatedAddedFoods);
+    setSelectedFavoriteFood(updatedFavoriteFoods[updatedFavoriteFoods.length - 1].id);
   };
 
   const handlerChangeInput = (text) => {
     setDishName(text);
   };
 
-  const handlerCreateDish = () => {
+  const handlerCreateDish = async () => {
     const name = dishName.trim();
     if (!name) {
       showAlert('Nome do prato inválido!', 'Por favor dê um nome para criar o prato.');
@@ -112,8 +116,13 @@ const CreateDish = ({ theme, userObject }) => {
       user_id: userObject.id,
       foods,
     };
-
-    console.log(dish);
+    setIsSubmitting(true);
+    const result = await createDish(dish);
+    if (!result.error) {
+      navigation.navigate('FavoriteDishes');
+    } else {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -121,7 +130,7 @@ const CreateDish = ({ theme, userObject }) => {
       <Title containerStyles={styles.titleContainer} titleStyles={styles.title} theme={theme}>
         Criar Prato
       </Title>
-      <DishCreateCard theme={theme} />
+      <DishCreateCard addedFoods={addedFoods} theme={theme} />
       <InputWithLabelAndPlaceholder
         handlerChange={handlerChangeInput}
         value={dishName}
@@ -164,21 +173,28 @@ const CreateDish = ({ theme, userObject }) => {
       >
         Adicionar
       </Button>
-      <View style={styles.scrollContainer}>
-        <ScrollView showsHorizontalScrollIndicator={false} horizontal contentContainerStyle={styles.foodsContainer}>
-          {addedFoods?.map((food, index) => (
-            <FoodItem
-              key={index}
-              theme={theme}
-              food={food}
-              style={{ marginRight: index === addedFoods.length - 1 ? 0 : 10 }}
-              handlerRemove={handlerRemoveFood}
-            />
-          ))}
-        </ScrollView>
-      </View>
+
+      <FlatList
+        contentContainerStyle={styles.scrollContainer}
+        showsHorizontalScrollIndicator={false}
+        horizontal
+        data={addedFoods}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item, index }) => (
+          <FoodItem
+            theme={theme}
+            food={item}
+            handlerRemove={handlerRemoveFood}
+            addedFoods={addedFoods}
+            setAddedFoods={setAddedFoods}
+            style={{ marginRight: index === addedFoods.length - 1 ? 0 : 10 }}
+          />
+        )}
+      />
+
       {addedFoods.length > 0 && (
         <Button
+          loading={isSubmitting}
           onPress={handlerCreateDish}
           labelStyle={{ fontFamily: theme.font.semiBold }}
           textColor="white"
@@ -219,7 +235,6 @@ const styles = StyleSheet.create({
   },
   foodsContainer: {},
   scrollContainer: {
-    width: '100%',
     marginTop: 15,
   },
 });

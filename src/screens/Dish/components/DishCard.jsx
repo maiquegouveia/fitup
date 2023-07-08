@@ -1,17 +1,19 @@
-import { StyleSheet, Text, View, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Alert } from 'react-native';
+import { Text } from 'native-base';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { useState, useContext } from 'react';
 import DishCardInfo from './DishCardInfo';
 import { ThemeContext } from '../../../../contexts/ThemeProvider';
 
-const DishCard = ({ style, dish, onDeleteDish }) => {
+const DishCard = ({ style, dish, onDeleteDish, openChat }) => {
   const navigation = useNavigation();
   const { theme } = useContext(ThemeContext);
   const [seeMore, setSeeMore] = useState(false);
 
   const alertShow = () => {
-    Alert.alert('', `Deseja deletar o prato (${dish.nome})?`, [
+    Alert.alert('', `Deseja deletar o prato (${dish.name})?`, [
       {
         text: 'Cancelar',
         onPress: () => {},
@@ -19,7 +21,7 @@ const DishCard = ({ style, dish, onDeleteDish }) => {
 
       {
         text: 'Deletar',
-        onPress: () => onDeleteDish(dish.prato_id),
+        onPress: () => onDeleteDish(dish.id),
       },
     ]);
   };
@@ -36,14 +38,17 @@ const DishCard = ({ style, dish, onDeleteDish }) => {
       activeOpacity={1}
       style={[styles.dishContainer, style]}
     >
-      <View style={{ paddingLeft: 5, paddingBottom: 5, flexDirection: 'row', justifyContent: 'space-between' }}>
-        <View style={{ width: '90%' }}>
+      <View style={styles.mainContainer}>
+        <View style={{ width: '75%' }}>
           <Text style={[styles.dishName, { fontFamily: theme.font.bold }]}>{dish.name}</Text>
           <Text style={{ fontFamily: theme.font.semiBold, fontSize: 12 }}>Qtd. Alimentos: {dish.dishItems.length}</Text>
+          <Text style={{ fontFamily: theme.font.semiBold, fontSize: 12 }}>Criado em: {dish.getCreatedAt()}</Text>
         </View>
-        <TouchableOpacity onPress={alertShow} activeOpacity={0.7}>
-          <FontAwesome5 name="trash" size={24} color="#FF7900" />
-        </TouchableOpacity>
+        <View style={styles.dishFeatures}>
+          <FontAwesome5 onPress={alertShow} name="trash" size={24} color="#FF7900" />
+
+          <Ionicons onPress={() => openChat(dish)} name="chatbox" size={26} color="#FF7900" />
+        </View>
       </View>
       <View style={styles.dishDetails}>
         <DishCardInfo label="Categoria" value={dish.category.name} />
@@ -52,15 +57,15 @@ const DishCard = ({ style, dish, onDeleteDish }) => {
         <DishCardInfo label="Calorias" value={dish.kcal} suffix="kcal" />
         {seeMore && (
           <>
-            <DishCardInfo label="Sódio" value={dish.sodium} suffix="g" />
-            <DishCardInfo label="Ferro" value={dish.iron} suffix="g" />
-            <DishCardInfo label="Cálcio" value={dish.calcium} suffix="g" />
-            <DishCardInfo label="Potássio" value={dish.potassium} suffix="g" />
-            <DishCardInfo label="Magnésio" value={dish.magnesium} suffix="g" />
-            <DishCardInfo label="Zinco" value={dish.zinc} suffix="g" />
-            <DishCardInfo label="Vitamina C" value={dish.vitaminC} suffix="g" />
+            <DishCardInfo label="Sódio" value={dish.sodium} suffix="mg" />
+            <DishCardInfo label="Ferro" value={dish.iron} suffix="mg" />
+            <DishCardInfo label="Cálcio" value={dish.calcium} suffix="mg" />
+            <DishCardInfo label="Potássio" value={dish.potassium} suffix="mg" />
+            <DishCardInfo label="Magnésio" value={dish.magnesium} suffix="mg" />
+            <DishCardInfo label="Zinco" value={dish.zinc} suffix="mg" />
+            <DishCardInfo label="Vitamina C" value={dish.vitaminC} suffix="mg" />
             <DishCardInfo label="Gordura Saturada" value={dish.saturated} suffix="g" />
-            <DishCardInfo label="Gordura Monosaturada" value={dish.monounsaturated} suffix="g" />
+            <DishCardInfo label="Gordura Monoinsaturada" value={dish.monounsaturated} suffix="g" />
             <DishCardInfo label="Gordura Poli-insaturada" value={dish.polyunsaturated} suffix="g" />
           </>
         )}
@@ -77,6 +82,10 @@ const DishCard = ({ style, dish, onDeleteDish }) => {
 export default DishCard;
 
 const styles = StyleSheet.create({
+  mainContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
   dishContainer: {
     backgroundColor: 'white',
     padding: 10,
@@ -88,6 +97,7 @@ const styles = StyleSheet.create({
   dishDetails: {
     padding: 10,
     backgroundColor: '#DFD9E2',
+    borderRadius: 5,
   },
   dishControllerContainer: {
     flexDirection: 'column',
@@ -99,5 +109,11 @@ const styles = StyleSheet.create({
   seeMoreContainer: {
     flex: 1,
     alignSelf: 'flex-start',
+  },
+  dishFeatures: {
+    flexDirection: 'row',
+
+    width: '20%',
+    justifyContent: 'space-between',
   },
 });

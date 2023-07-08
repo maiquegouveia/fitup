@@ -1,15 +1,15 @@
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Alert, FlatList } from 'react-native';
 import { useContext, useState, useEffect } from 'react';
 import { NativeBaseProvider, Button } from 'native-base';
 import { useIsFocused } from '@react-navigation/native';
 import { FontAwesome5 } from '@expo/vector-icons';
-import FoodListItem from './components/FoodListItem';
 import FoodSelect from './components/FoodSelect';
 import { ThemeContext } from '../../../contexts/ThemeProvider';
 import AppContext from '../../../AppContext';
 import updateDish from '../../../utilities/Dish/updateDish';
 import deleteDish from '../../../utilities/Dish/deleteDish';
 import DishCardInfo from './components/DishCardInfo';
+import FoodItem from '../Dish/components/FoodItem';
 
 const EditDish = ({ route, navigation }) => {
   const { theme } = useContext(ThemeContext);
@@ -39,19 +39,13 @@ const EditDish = ({ route, navigation }) => {
           category: item.food.FoodCategory.name,
           amount: item.amount,
           favoriteFoodId: item.favoriteFoodId,
+          id: item.food.food_id,
         };
       });
       setFoodAddedList(dishFoods);
       const userFoods = userObject.favoriteFoods.filter((food) => !foodIds.includes(food.id));
-      setFoodList(
-        userFoods.map((food) => {
-          return {
-            ...food,
-            food_id: food.id,
-            amount: 100,
-          };
-        })
-      );
+
+      setFoodList(userFoods);
     }
   }, [isFocused]);
 
@@ -72,21 +66,21 @@ const EditDish = ({ route, navigation }) => {
   };
 
   const onSelectFood = (foodId) => {
-    const updatedFoodList = foodList;
-    const foodAddedIndex = updatedFoodList.findIndex((food) => food.food_id === foodId);
-    const updatedFoodAddedList = [...foodAddedList];
-    updatedFoodAddedList.push(updatedFoodList[foodAddedIndex]);
+    const updatedFoodList = foodList.slice();
+    const foodAddedIndex = updatedFoodList.findIndex((food) => food.id === foodId);
+    const updatedFoodAddedList = foodAddedList.slice();
+    updatedFoodList[foodAddedIndex].amount = 100;
+    updatedFoodAddedList.unshift(updatedFoodList[foodAddedIndex]);
     updatedFoodList.splice(foodAddedIndex, 1);
     setFoodAddedList(updatedFoodAddedList);
     setFoodList(updatedFoodList);
   };
 
   const onRemove = (foodId) => {
-    const updatedFoodList = [...foodList];
-    const updatedFoodAddedList = [...foodAddedList];
-    const foodIndex = updatedFoodAddedList.findIndex((food) => food.food_id === foodId);
+    const updatedFoodList = foodList.slice();
+    const updatedFoodAddedList = foodAddedList.slice();
+    const foodIndex = updatedFoodAddedList.findIndex((food) => food.id === foodId);
     const food = updatedFoodAddedList[foodIndex];
-    food.amount = 100;
     updatedFoodList.push(food);
     updatedFoodAddedList.splice(foodIndex, 1);
     setFoodAddedList(updatedFoodAddedList);
@@ -152,13 +146,13 @@ const EditDish = ({ route, navigation }) => {
 
               {seeMore && (
                 <>
-                  <DishCardInfo label="Sódio" value={getTotal('sodium')} suffix="g" />
-                  <DishCardInfo label="Ferro" value={getTotal('iron')} suffix="g" />
-                  <DishCardInfo label="Cálcio" value={getTotal('calcium')} suffix="g" />
-                  <DishCardInfo label="Potássio" value={getTotal('potassium')} suffix="g" />
-                  <DishCardInfo label="Magnésio" value={getTotal('magnesium')} suffix="g" />
-                  <DishCardInfo label="Zinco" value={getTotal('zinc')} suffix="g" />
-                  <DishCardInfo label="Vitamina C" value={getTotal('vitaminC')} suffix="g" />
+                  <DishCardInfo label="Sódio" value={getTotal('sodium')} suffix="mg" />
+                  <DishCardInfo label="Ferro" value={getTotal('iron')} suffix="mg" />
+                  <DishCardInfo label="Cálcio" value={getTotal('calcium')} suffix="mg" />
+                  <DishCardInfo label="Potássio" value={getTotal('potassium')} suffix="mg" />
+                  <DishCardInfo label="Magnésio" value={getTotal('magnesium')} suffix="mg" />
+                  <DishCardInfo label="Zinco" value={getTotal('zinc')} suffix="mg" />
+                  <DishCardInfo label="Vitamina C" value={getTotal('vitaminC')} suffix="mg" />
                   <DishCardInfo label="Gordura Saturada" value={getTotal('saturated')} suffix="g" />
                   <DishCardInfo label="Gordura Monosaturada" value={getTotal('monounsaturated')} suffix="g" />
                   <DishCardInfo label="Gordura Poli-insaturada" value={getTotal('polyunsaturated')} suffix="g" />
@@ -177,26 +171,23 @@ const EditDish = ({ route, navigation }) => {
                   Alimentos ({foodAddedList.length})
                 </Text>
               </View>
-              <ScrollView nestedScrollEnabled={true} contentContainerStyle={styles.foodScroll} indicatorStyle="white">
-                {foodAddedList.length > 0 &&
-                  foodAddedList.map((food, index) => (
-                    <FoodListItem
-                      index={index}
-                      key={index}
-                      foodName={food?.name}
-                      amount={food?.amount}
-                      onRemove={onRemove}
-                      foodId={food?.food_id}
-                      style={{ marginBottom: index === foodAddedList.length - 1 ? 0 : 10 }}
-                      foodKcal={food?.kcal}
-                      foodCarbo={food?.carbohydrates}
-                      foodProtein={food?.protein}
-                      foodCategory={food?.category}
-                      foodAddedList={foodAddedList}
-                      setFoodAddedList={setFoodAddedList}
-                    />
-                  ))}
-              </ScrollView>
+              <FlatList
+                horizontal
+                contentContainerStyle={styles.scrollContainer}
+                showsHorizontalScrollIndicator={false}
+                data={foodAddedList}
+                keyExtractor={(item) => item.id}
+                renderItem={({ item, index }) => (
+                  <FoodItem
+                    theme={theme}
+                    food={item}
+                    handlerRemove={onRemove}
+                    addedFoods={foodAddedList}
+                    setAddedFoods={setFoodAddedList}
+                    style={{ marginRight: index === foodAddedList.length - 1 ? 0 : 10 }}
+                  />
+                )}
+              />
             </View>
             {foodAddedList.length > 0 && (
               <View style={{ alignItems: 'center', marginTop: 10 }}>
@@ -232,9 +223,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  foodScroll: {
-    padding: 10,
-  },
   dishName: {
     fontSize: 24,
     color: 'black',
@@ -247,7 +235,6 @@ const styles = StyleSheet.create({
   },
   subTitleContainer: {
     alignItems: 'center',
-    paddingTop: 10,
   },
   subTitle: {
     fontSize: 20,
@@ -255,9 +242,9 @@ const styles = StyleSheet.create({
   },
   subContainer: {
     marginTop: 10,
-    maxHeight: '50%',
     borderRadius: 5,
     backgroundColor: '#256D1B',
+    padding: 10,
   },
   seeMoreContainer: {
     flex: 1,

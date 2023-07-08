@@ -1,3 +1,5 @@
+import timestampToDate from '../utilities/timestampToDate';
+
 export default class Dish {
   constructor(
     id,
@@ -16,7 +18,9 @@ export default class Dish {
     potassium,
     magnesium,
     zinc,
-    dishItems
+    dishItems,
+    dishComments,
+    createdAt
   ) {
     this.id = id;
     this.name = name;
@@ -35,6 +39,8 @@ export default class Dish {
     this.magnesium = magnesium;
     this.zinc = zinc;
     this.dishItems = dishItems;
+    this.dishComments = dishComments;
+    this.createdAt = createdAt;
   }
 
   getTotalInformation(information) {
@@ -46,5 +52,9 @@ export default class Dish {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  getCreatedAt() {
+    return timestampToDate(this.createdAt);
   }
 }

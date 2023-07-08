@@ -165,7 +165,7 @@ function DrawerStack({ userObject }) {
         headerStyle: { backgroundColor: '#59CA6B' },
         headerTitle: () => (
           <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate('Home')}>
-            <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 25 }}>FitUP</Text>
+            <Text style={{ fontSize: 25, fontFamily: theme.font.bold }}>FitUP</Text>
           </TouchableOpacity>
         ),
         headerRight: () => (
@@ -202,11 +202,12 @@ function DrawerStack({ userObject }) {
       />
       <Drawer.Screen
         name="FavoriteFoods"
-        component={FavoriteFoods}
         options={{
           title: 'Alimentos Favoritos',
         }}
-      />
+      >
+        {() => <FavoriteFoods userObject={userObject} theme={theme} />}
+      </Drawer.Screen>
       <Drawer.Screen
         name="FavoriteDishes"
         component={FavoriteDishes}
@@ -238,11 +239,12 @@ function DrawerStack({ userObject }) {
       />
       <Drawer.Screen
         name="SearchUser"
-        component={SearchUser}
         options={{
           title: '',
         }}
-      />
+      >
+        {() => <SearchUser userObject={userObject} theme={theme} />}
+      </Drawer.Screen>
       <Drawer.Screen
         name="ProfileSearch"
         component={ProfileSearch}

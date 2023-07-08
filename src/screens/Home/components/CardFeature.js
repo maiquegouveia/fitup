@@ -22,16 +22,16 @@ const styles = StyleSheet.create({
   cardFeature: {
     justifyContent: 'center',
     alignItems: 'center',
-    height: 150,
+    height: 120,
     borderColor: '#256D1B',
     borderWidth: 3,
-    borderRadius: 5,
+    borderRadius: 10,
     margin: 5,
   },
   cardInside: {
     backgroundColor: 'rgba(223, 217, 226, 0.9)',
     paddingHorizontal: 5,
-    borderRadius: 5,
+    borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -45,5 +45,6 @@ const styles = StyleSheet.create({
     height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
+    borderRadius: 10,
   },
 });

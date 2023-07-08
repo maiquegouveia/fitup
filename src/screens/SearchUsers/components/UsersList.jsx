@@ -3,11 +3,11 @@ import { React, useState } from 'react';
 import UserItem from './UserItem';
 import { Text } from 'native-base';
 
-const UsersList = ({ usersList }) => {
+const UsersList = ({ usersList, theme }) => {
   return (
     <View style={styles.container}>
       <View style={{ alignItems: 'center', marginBottom: 10 }}>
-        <Text fontWeight="semibold" fontSize={18}>
+        <Text fontFamily={theme.font.bold} fontSize={18}>
           {usersList.length > 1 ? `Resultados (${usersList.length})` : `Resultado (${usersList.length})`}
         </Text>
       </View>

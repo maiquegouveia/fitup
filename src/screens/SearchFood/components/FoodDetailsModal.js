@@ -19,60 +19,74 @@ const FoodDetailsModal = ({ food, onDismiss, setModalDetails, visible }) => {
         <Dialog.Content>
           <View style={{ width: '80%' }}>
             <View style={styles.contentTopic}>
-              <Text style={styles.topicTitle}>Categoria: </Text>
-              <Text>{food.category}</Text>
+              <Text style={styles.topicTitle}>
+                Categoria: <Text>{food.category}</Text>
+              </Text>
             </View>
             <View style={styles.contentTopic}>
-              <Text style={styles.topicTitle}>Calorias: </Text>
-              <Text>{food.kcal}kcal</Text>
+              <Text style={styles.topicTitle}>
+                Calorias: <Text>{food.kcal}kcal</Text>
+              </Text>
             </View>
             <View style={styles.contentTopic}>
-              <Text style={styles.topicTitle}>Carboidratos: </Text>
-              <Text>{food.carbohydrates}g</Text>
+              <Text style={styles.topicTitle}>
+                Carboidratos: <Text>{food.carbohydrates}g</Text>
+              </Text>
             </View>
             <View style={styles.contentTopic}>
-              <Text style={styles.topicTitle}>Proteínas: </Text>
-              <Text>{food.protein}g</Text>
+              <Text style={styles.topicTitle}>
+                Proteínas: <Text>{food.protein}g</Text>
+              </Text>
             </View>
             <View style={styles.contentTopic}>
-              <Text style={styles.topicTitle}>Sódio: </Text>
-              <Text>{food.sodium}g</Text>
+              <Text style={styles.topicTitle}>
+                Sódio: <Text>{food.sodium}mg</Text>
+              </Text>
             </View>
             <View style={styles.contentTopic}>
-              <Text style={styles.topicTitle}>Ferro: </Text>
-              <Text>{food.iron}g</Text>
+              <Text style={styles.topicTitle}>
+                Ferro: <Text>{food.iron}mg</Text>
+              </Text>
             </View>
             <View style={styles.contentTopic}>
-              <Text style={styles.topicTitle}>Cálcio: </Text>
-              <Text>{food.calcium}g</Text>
+              <Text style={styles.topicTitle}>
+                Cálcio: <Text>{food.calcium}mg</Text>
+              </Text>
             </View>
             <View style={styles.contentTopic}>
-              <Text style={styles.topicTitle}>Magnésio: </Text>
-              <Text>{food.magnesium}g</Text>
+              <Text style={styles.topicTitle}>
+                Magnésio: <Text>{food.magnesium}mg</Text>
+              </Text>
             </View>
             <View style={styles.contentTopic}>
-              <Text style={styles.topicTitle}>Potássio: </Text>
-              <Text>{food.potassium}g</Text>
+              <Text style={styles.topicTitle}>
+                Potássio: <Text>{food.potassium}mg</Text>
+              </Text>
             </View>
             <View style={styles.contentTopic}>
-              <Text style={styles.topicTitle}>Vitamina C: </Text>
-              <Text>{food.vitaminC}g</Text>
+              <Text style={styles.topicTitle}>
+                Vitamina C: <Text>{food.vitaminC}mg</Text>
+              </Text>
             </View>
             <View style={styles.contentTopic}>
-              <Text style={styles.topicTitle}>Zinco: </Text>
-              <Text>{food.zinc}g</Text>
+              <Text style={styles.topicTitle}>
+                Zinco: <Text>{food.zinc}mg</Text>
+              </Text>
             </View>
             <View style={styles.contentTopic}>
-              <Text style={styles.topicTitle}>Gordura Saturada: </Text>
-              <Text>{food.saturared}g</Text>
+              <Text style={styles.topicTitle}>
+                Gordura Saturada: <Text>{food.saturated}g</Text>
+              </Text>
             </View>
             <View style={styles.contentTopic}>
-              <Text style={styles.topicTitle}>Gordura Monoinsaturada: </Text>
-              <Text>{food.monounsaturated}g</Text>
+              <Text style={styles.topicTitle}>
+                Gordura Monoinsaturada: <Text>{food.monounsaturated}g</Text>
+              </Text>
             </View>
             <View style={styles.contentTopic}>
-              <Text style={styles.topicTitle}>Gordura Poli-insaturada: </Text>
-              <Text>{food.polyunsaturared}g</Text>
+              <Text style={styles.topicTitle}>
+                Gordura Poli-insaturada: <Text>{food.polyunsaturated}g</Text>
+              </Text>
             </View>
           </View>
         </Dialog.Content>

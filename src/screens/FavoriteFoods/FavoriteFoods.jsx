@@ -5,11 +5,10 @@ import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { ActivityIndicator, Provider, Button } from 'react-native-paper';
 import DeleteDialog from './components/DeleteDialog';
 import changeFavoriteStatus from '../../../utilities/changeFavoriteStatus';
-import { ThemeContext } from '../../../contexts/ThemeProvider';
 import FoodItem from './components/FoodItem';
 import SearchBar from '../../components/SearchBar';
 
-const FavoriteFoods = () => {
+const FavoriteFoods = ({ theme }) => {
   const navigation = useNavigation();
   const { userObject, setUserObject, setActiveScreen } = useContext(AppContext);
   const [isLoading, setIsLoading] = useState(false);
@@ -17,7 +16,6 @@ const FavoriteFoods = () => {
   const [showRemoveConfirmationModal, setShowRemoveConfirmationModal] = useState(false);
   const [foodDelete, setFoodDelete] = useState('');
   const [filteredFoodsData, setFilteredFoodsData] = useState([]);
-  const { theme } = useContext(ThemeContext);
   const isFocused = useIsFocused();
 
   const onChangeInput = (text) => {
@@ -102,7 +100,7 @@ const FavoriteFoods = () => {
         >
           <SearchBar placeholder="Busque um alimento aqui..." iconName="food" onChange={onChangeInput} />
           <Button
-            textColor="white"
+            labelStyle={{ fontFamily: theme.font.semiBold, color: 'white' }}
             style={{ backgroundColor: '#256D1B', borderRadius: 5, marginTop: 10 }}
             onPress={() => onPressNavigate('SearchFood')}
           >
@@ -110,20 +108,21 @@ const FavoriteFoods = () => {
           </Button>
           <View style={styles.listContainer}>
             {!isLoading && filteredFoodsData.length > 0 && (
-              <Text style={{ fontSize: 18, fontWeight: 'bold', marginVertical: 10, color: 'white' }}>
-                {`Alimentos Favoritos (${filteredFoodsData.length})`}
-              </Text>
+              <Text
+                style={[styles.title, { fontFamily: theme.font.bold }]}
+              >{`Alimentos Favoritos (${filteredFoodsData.length})`}</Text>
             )}
             {isLoading && <ActivityIndicator animating={true} color="white" />}
 
             {!isLoading && (filteredFoodsData.length === 0 || filteredFoodsData.error) && (
-              <Text style={styles.textError}>Nenhum alimento encontrado!</Text>
+              <Text style={[styles.title, { fontFamily: theme.font.bold }]}>Nenhum alimento encontrado!</Text>
             )}
 
             {!isLoading &&
               !filteredFoodsData.error &&
               filteredFoodsData.map((food) => (
                 <FoodItem
+                  theme={theme}
                   key={food.id}
                   food={food}
                   showRemoveConfirmationModalHandler={showRemoveConfirmationModalHandler}
@@ -151,9 +150,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: 20,
   },
-  textError: {
+  title: {
     fontSize: 18,
     color: 'white',
-    fontWeight: 'bold',
   },
 });

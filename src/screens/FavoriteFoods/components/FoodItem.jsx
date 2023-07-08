@@ -1,8 +1,9 @@
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { useState } from 'react';
+import { Text } from 'native-base';
 
-const FoodItem = ({ food, showRemoveConfirmationModalHandler }) => {
+const FoodItem = ({ food, showRemoveConfirmationModalHandler, theme }) => {
   const [seeMore, setSeeMore] = useState(false);
 
   const handlerSeeMore = () => setSeeMore((prev) => !prev);
@@ -12,69 +13,86 @@ const FoodItem = ({ food, showRemoveConfirmationModalHandler }) => {
   return (
     <View style={styles.container}>
       <View style={{ width: '80%' }}>
-        <Text style={styles.foodName}>{food.name}</Text>
-        <Text style={styles.foodCategory}>{food.category} </Text>
-        <View style={{ backgroundColor: '#ccc', padding: 10, marginVertical: 5 }}>
+        <Text style={[styles.foodName, { fontFamily: theme.font.bold }]}>{food.name}</Text>
+        <Text style={[styles.foodCategory, { fontFamily: theme.font.semiBold }]}>{food.category}</Text>
+        <View style={{ backgroundColor: '#ccc', padding: 10, marginVertical: 5, borderRadius: 10 }}>
           <View style={styles.detailContainer}>
-            <Text style={styles.topicTitle}>Calorias: </Text>
-            <Text>{food.kcal}kcal</Text>
+            <Text style={[styles.topicTitle, { fontFamily: theme.font.semiBold }]}>
+              Calorias: <Text style={{ fontFamily: theme.font.regular }}>{food.kcal}kcal</Text>
+            </Text>
           </View>
           <View style={styles.detailContainer}>
-            <Text style={styles.topicTitle}>Carboidratos: </Text>
-            <Text>{food.carbohydrates}g</Text>
+            <Text style={[styles.topicTitle, { fontFamily: theme.font.semiBold }]}>
+              Carboidratos: <Text style={{ fontFamily: theme.font.regular }}>{food.carbohydrates}g</Text>
+            </Text>
           </View>
           <View style={styles.detailContainer}>
-            <Text style={styles.topicTitle}>Proteínas: </Text>
-            <Text>{food.protein}g</Text>
+            <Text style={[styles.topicTitle, { fontFamily: theme.font.semiBold }]}>
+              Proteínas: <Text style={{ fontFamily: theme.font.regular }}>{food.protein}g</Text>
+            </Text>
           </View>
           <View style={styles.detailContainer}>
-            <Text style={styles.topicTitle}>Sódio: </Text>
-            <Text>{food.sodium}g</Text>
+            <Text style={[styles.topicTitle, { fontFamily: theme.font.semiBold }]}>
+              Sódio: <Text style={{ fontFamily: theme.font.regular }}>{food.sodium}mg</Text>
+            </Text>
           </View>
 
           {seeMore && (
             <>
               <View style={styles.detailContainer}>
-                <Text style={styles.topicTitle}>Ferro: </Text>
-                <Text>{food.iron}g</Text>
+                <Text style={[styles.topicTitle, { fontFamily: theme.font.semiBold }]}>
+                  Ferro: <Text style={{ fontFamily: theme.font.regular }}>{food.iron}mg</Text>
+                </Text>
               </View>
               <View style={styles.detailContainer}>
-                <Text style={styles.topicTitle}>Cálcio: </Text>
-                <Text>{food.calcium}g</Text>
+                <Text style={[styles.topicTitle, { fontFamily: theme.font.semiBold }]}>
+                  Cálcio: <Text style={{ fontFamily: theme.font.regular }}>{food.calcium}mg</Text>{' '}
+                </Text>
               </View>
               <View style={styles.detailContainer}>
-                <Text style={styles.topicTitle}>Magnésio: </Text>
-                <Text>{food.magnesium}g</Text>
+                <Text style={[styles.topicTitle, { fontFamily: theme.font.semiBold }]}>
+                  Magnésio: <Text style={{ fontFamily: theme.font.regular }}>{food.magnesium}mg</Text>
+                </Text>
               </View>
               <View style={styles.detailContainer}>
-                <Text style={styles.topicTitle}>Potássio: </Text>
-                <Text>{food.potassium}g</Text>
+                <Text style={[styles.topicTitle, { fontFamily: theme.font.semiBold }]}>
+                  Potássio: <Text style={{ fontFamily: theme.font.regular }}>{food.potassium}mg</Text>
+                </Text>
               </View>
               <View style={styles.detailContainer}>
-                <Text style={styles.topicTitle}>Vitamina C: </Text>
-                <Text>{food.vitaminC}g</Text>
+                <Text style={[styles.topicTitle, { fontFamily: theme.font.semiBold }]}>
+                  Vitamina C: <Text style={{ fontFamily: theme.font.regular }}>{food.vitaminC}mg</Text>
+                </Text>
               </View>
               <View style={styles.detailContainer}>
-                <Text style={styles.topicTitle}>Zinco: </Text>
-                <Text>{food.zinc}g</Text>
+                <Text style={[styles.topicTitle, { fontFamily: theme.font.semiBold }]}>
+                  Zinco: <Text style={{ fontFamily: theme.font.regular }}>{food.zinc}mg</Text>
+                </Text>
               </View>
               <View style={styles.detailContainer}>
-                <Text style={styles.topicTitle}>Gordura Saturada: </Text>
-                <Text>{food.saturared}g</Text>
+                <Text style={[styles.topicTitle, { fontFamily: theme.font.semiBold }]}>
+                  Gordura Saturada: <Text style={{ fontFamily: theme.font.regular }}>{food.saturated}g</Text>
+                </Text>
               </View>
               <View style={styles.detailContainer}>
-                <Text style={styles.topicTitle}>Gordura Monoinsaturada: </Text>
-                <Text>{food.monounsaturated}g</Text>
+                <Text style={[styles.topicTitle, { fontFamily: theme.font.semiBold }]}>
+                  Gordura Monoinsaturada:{' '}
+                  <Text style={{ fontFamily: theme.font.regular }}>{food.monounsaturated}g</Text>
+                </Text>
               </View>
               <View style={styles.detailContainer}>
-                <Text style={styles.topicTitle}>Gordura Poli-insaturada: </Text>
-                <Text>{food.polyunsaturared}g</Text>
+                <Text style={[styles.topicTitle, { fontFamily: theme.font.semiBold }]}>
+                  Gordura Poli-insaturada:{' '}
+                  <Text style={{ fontFamily: theme.font.regular }}>{food.polyunsaturated}g</Text>
+                </Text>
               </View>
             </>
           )}
 
           <TouchableOpacity activeOpacity={1} onPress={handlerSeeMore}>
-            <Text style={styles.seeMore}>{!seeMore ? 'Ver Mais...' : 'Ver Menos...'}</Text>
+            <Text style={[styles.seeMore, { fontFamily: theme.font.semiBold }]}>
+              {!seeMore ? 'Ver Mais...' : 'Ver Menos...'}
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -100,23 +118,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   foodName: {
-    color: 'black',
-    fontWeight: 'bold',
     fontSize: 18,
   },
   foodCategory: {
-    color: 'black',
     fontSize: 14,
   },
   detailContainer: {
     flexDirection: 'row',
     width: '100%',
   },
-  topicTitle: {
-    fontWeight: 'bold',
-  },
+  topicTitle: {},
   seeMore: {
-    fontWeight: 'bold',
     fontSize: 16,
   },
 });

@@ -4,13 +4,16 @@ import { Text, Input, InputGroup, InputRightAddon } from 'native-base';
 import FoodInfoCard from './FoodInfoCard';
 import { FontAwesome } from '@expo/vector-icons';
 
-const FoodItem = ({ food, theme, style, handlerRemove }) => {
+const FoodItem = ({ food, theme, style, handlerRemove, addedFoods, setAddedFoods }) => {
   const [inputValue, setInputValue] = useState(food.amount);
 
   const validateInput = (text) => {
     const numberPattern = /^(?!0)\d*$/;
     if (numberPattern.test(text)) {
       if (text.length <= 3) {
+        const updatedAddedFoods = addedFoods.slice();
+        updatedAddedFoods[updatedAddedFoods.findIndex((curr) => curr.id === food.id)].amount = +text || 0;
+        setAddedFoods(updatedAddedFoods);
         setInputValue(text);
       }
     }

@@ -1,16 +1,13 @@
 import { StyleSheet, View, Alert, TouchableWithoutFeedback } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
 import { Text, NativeBaseProvider } from 'native-base';
-import { ThemeContext } from '../../../contexts/ThemeProvider';
-import { useContext } from 'react';
 import UsersList from './components/UsersList';
 import searchUsers from '../../../utilities/SearchUsers/searchUsers';
 import { useState, useEffect, useRef } from 'react';
 import { useIsFocused } from '@react-navigation/native';
 import User from '../../../models/User';
 
-const SearchUser = () => {
-  const { theme } = useContext(ThemeContext);
+const SearchUser = ({ theme }) => {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [inputValue, setInputValue] = useState('');
@@ -103,7 +100,7 @@ const SearchUser = () => {
               </Text>
             </View>
           )}
-          {showList && <UsersList usersList={data} />}
+          {showList && <UsersList theme={theme} usersList={data} />}
         </View>
       </TouchableWithoutFeedback>
     </NativeBaseProvider>

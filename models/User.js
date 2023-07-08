@@ -6,6 +6,7 @@ import Food from './Food';
 import Dish from './Dish';
 import DishCategory from './DishCategory';
 import DishItem from './DishItem';
+import DishComment from './DishComment';
 
 export default class User {
   constructor(
@@ -81,11 +82,27 @@ export default class User {
   async getDishes() {
     const dishes = await fetchUserDishes(this.id);
     this.dishes = dishes.map((dish) => {
-      const { DishItems } = dish;
+      const { DishItems, DishComments } = dish;
       const dishCategory = new DishCategory(dish.DishCategory.id, dish.DishCategory.name);
       const items = DishItems.map((item) => {
         const { FavoriteFood } = item;
         return new DishItem(item.amount, FavoriteFood.favorite_food_id, FavoriteFood.Food);
+      });
+      const dishComments = DishComments.map((comment) => {
+        const user = new User(
+          comment.User.user_id,
+          comment.User.name,
+          null,
+          null,
+          null,
+          null,
+          null,
+          comment.User.username,
+          comment.User.type,
+          null,
+          comment.User.profile_picture
+        );
+        return new DishComment(comment.comment_id, comment.text, comment.createdAt, user);
       });
       return new Dish(
         dish.dish_id,
@@ -104,7 +121,9 @@ export default class User {
         dish.potassium,
         dish.magnesium,
         dish.zinc,
-        items
+        items,
+        dishComments,
+        dish.createdAt
       );
     });
   }

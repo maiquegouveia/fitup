@@ -27,13 +27,13 @@ const FoodInfoCard = ({ theme, food, amount }) => {
 
       {seeMore && (
         <>
-          <DishCardInfo label="Sódio" value={getTotal('sodium')} suffix="g" />
-          <DishCardInfo label="Ferro" value={getTotal('iron')} suffix="g" />
-          <DishCardInfo label="Cálcio" value={getTotal('calcium')} suffix="g" />
-          <DishCardInfo label="Potássio" value={getTotal('potassium')} suffix="g" />
-          <DishCardInfo label="Magnésio" value={getTotal('magnesium')} suffix="g" />
-          <DishCardInfo label="Zinco" value={getTotal('zinc')} suffix="g" />
-          <DishCardInfo label="Vitamina C" value={getTotal('vitaminC')} suffix="g" />
+          <DishCardInfo label="Sódio" value={getTotal('sodium')} suffix="mg" />
+          <DishCardInfo label="Ferro" value={getTotal('iron')} suffix="mg" />
+          <DishCardInfo label="Cálcio" value={getTotal('calcium')} suffix="mg" />
+          <DishCardInfo label="Potássio" value={getTotal('potassium')} suffix="mg" />
+          <DishCardInfo label="Magnésio" value={getTotal('magnesium')} suffix="mg" />
+          <DishCardInfo label="Zinco" value={getTotal('zinc')} suffix="mg" />
+          <DishCardInfo label="Vitamina C" value={getTotal('vitaminC')} suffix="mg" />
           <DishCardInfo label="Gordura Saturada" value={getTotal('saturated')} suffix="g" />
           <DishCardInfo label="Gordura Monosaturada" value={getTotal('monounsaturated')} suffix="g" />
           <DishCardInfo label="Gordura Poli-insaturada" value={getTotal('polyunsaturated')} suffix="g" />

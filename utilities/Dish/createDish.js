@@ -1,6 +1,6 @@
 export default async (dish) => {
   try {
-    const url = 'https://fitup-api-production.up.railway.app/api/v1/dishes';
+    const url = 'https://fitup-api-sequelize.vercel.app/api/v3/dishes';
     const requestOptions = {
       method: 'POST',
       headers: {

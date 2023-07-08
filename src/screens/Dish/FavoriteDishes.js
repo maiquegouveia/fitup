@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, ScrollView, RefreshControl } from 'react-native';
-import { useState, useCallback, useEffect } from 'react';
+import { StyleSheet, Text, View, ScrollView, RefreshControl, FlatList } from 'react-native';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { Button, ActivityIndicator } from 'react-native-paper';
 import DishCard from './components/DishCard';
 import { useIsFocused } from '@react-navigation/native';
@@ -8,13 +8,16 @@ import { useContext } from 'react';
 import AppContext from '../../../AppContext';
 import deleteDish from '../../../utilities/Dish/deleteDish';
 import SearchBar from '../../components/SearchBar';
+import Modalize from './components/Modalize';
 
 const FavoriteDishes = ({ navigation }) => {
-  const { userObject, setUserObject } = useContext(AppContext);
-  const { theme } = useContext(ThemeContext);
   const [isLoading, setIsLoading] = useState(true);
   const [filteredData, setFilteredData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [dishChat, setDishChat] = useState(null);
+  const modalizeRef = useRef(null);
+  const { userObject, setUserObject } = useContext(AppContext);
+  const { theme } = useContext(ThemeContext);
   const isFocused = useIsFocused();
 
   const onChangeSearchInput = (text) => {
@@ -53,42 +56,62 @@ const FavoriteDishes = ({ navigation }) => {
     getDishesData();
   };
 
+  const onOpenModalize = (dish) => {
+    setDishChat(dish);
+    modalizeRef.current?.open();
+  };
+
   return (
-    <ScrollView
-      contentContainerStyle={[styles.mainContainer, { backgroundColor: theme.backgroundColor }]}
-      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-    >
-      <View style={styles.searchBarContainer}>
-        <SearchBar
-          placeholder="Busque um prato aqui..."
-          placeholderTextColor="black"
-          iconName="food-fork-drink"
-          onChange={onChangeSearchInput}
-        />
-        <Button textColor="white" style={styles.btn} onPress={() => navigation.navigate('CreateDish')}>
-          Criar Prato
-        </Button>
-      </View>
+    <>
+      {dishChat && <Modalize theme={theme} dish={dishChat} ref={modalizeRef} />}
+      <ScrollView
+        contentContainerStyle={[styles.mainContainer, { backgroundColor: theme.backgroundColor }]}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+      >
+        <View style={styles.searchBarContainer}>
+          <SearchBar
+            placeholder="Busque um prato aqui..."
+            placeholderTextColor="black"
+            iconName="food-fork-drink"
+            onChange={onChangeSearchInput}
+          />
+          <Button
+            labelStyle={{ color: 'white', fontFamily: theme.font.semiBold }}
+            style={styles.btn}
+            onPress={() => navigation.navigate('CreateDish')}
+          >
+            Criar Prato
+          </Button>
+        </View>
 
-      <ScrollView contentContainerStyle={styles.dishesScrollView} showsVerticalScrollIndicator={false}>
-        {isLoading && <ActivityIndicator animating={isLoading} color="white" />}
-        {!isLoading && (
-          <View style={styles.dishesTitleContainer}>
-            {filteredData?.length > 0 ? (
-              <Text style={[styles.dishesTitle, { fontFamily: theme.font.bold }]}>Pratos ({filteredData?.length})</Text>
-            ) : (
-              <Text style={[styles.dishesTitle, { fontFamily: theme.font.bold }]}>Nenhum prato encontrado!</Text>
-            )}
-          </View>
-        )}
+        <ScrollView contentContainerStyle={styles.dishesScrollView} showsVerticalScrollIndicator={false}>
+          {isLoading && <ActivityIndicator animating={isLoading} color="white" />}
+          {!isLoading && (
+            <View style={styles.dishesTitleContainer}>
+              {filteredData?.length > 0 ? (
+                <Text style={[styles.dishesTitle, { fontFamily: theme.font.bold }]}>
+                  Pratos ({filteredData?.length})
+                </Text>
+              ) : (
+                <Text style={[styles.dishesTitle, { fontFamily: theme.font.bold }]}>Nenhum prato encontrado!</Text>
+              )}
+            </View>
+          )}
 
-        {!isLoading &&
-          filteredData?.length > 0 &&
-          filteredData?.map((dish, index) => (
-            <DishCard key={index} dish={dish} style={{ marginTop: 10 }} onDeleteDish={onDeleteDish} />
-          ))}
+          {!isLoading &&
+            filteredData?.length > 0 &&
+            filteredData?.map((dish, index) => (
+              <DishCard
+                key={index}
+                dish={dish}
+                style={{ marginTop: 10 }}
+                onDeleteDish={onDeleteDish}
+                openChat={onOpenModalize}
+              />
+            ))}
+        </ScrollView>
       </ScrollView>
-    </ScrollView>
+    </>
   );
 };
 
@@ -105,7 +128,7 @@ const styles = StyleSheet.create({
   },
   dishesScrollView: {
     backgroundColor: '#FF7900',
-    padding: 15,
+    padding: 10,
     borderRadius: 5,
   },
   dishesTitle: {
