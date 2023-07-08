@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, ScrollView, TouchableWithoutFeedback } from 'react-native';
+import { ScrollView, TouchableWithoutFeedback } from 'react-native';
 
 export default TouchableScrollContainer = ({ theme, style, children, onPress }) => {
   return (

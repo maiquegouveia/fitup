@@ -1,6 +1,6 @@
 import * as yup from 'yup';
 
-const nameRegex = `^[a-zA-Z0-9]+$`;
+const nameRegex = `^[a-zA-Z0-9\s]+$`;
 
 export default yup.object().shape({
   name: yup

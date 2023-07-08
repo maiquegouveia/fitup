@@ -8,9 +8,9 @@ export default class Food {
     protein,
     calcium,
     iron,
-    saturared,
+    saturated,
     monounsaturated,
-    polyunsaturared,
+    polyunsaturated,
     magnesium,
     sodium,
     zinc,
@@ -27,9 +27,9 @@ export default class Food {
     this.protein = protein;
     this.calcium = calcium;
     this.iron = iron;
-    this.saturared = saturared;
+    this.saturated = saturated;
     this.monounsaturated = monounsaturated;
-    this.polyunsaturared = polyunsaturared;
+    this.polyunsaturated = polyunsaturated;
     this.magnesium = magnesium;
     this.sodium = sodium;
     this.potassium = potassium;

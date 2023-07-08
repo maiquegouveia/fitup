@@ -1,0 +1,62 @@
+import { useState } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import DishCardInfo from './DishCardInfo';
+
+const Container = ({ children }) => {
+  return <View style={styles.mainContainer}>{children}</View>;
+};
+
+const FoodInfoCard = ({ theme, food, amount }) => {
+  const [seeMore, setSeeMore] = useState(false);
+  const handlerSeeMore = () => setSeeMore((prev) => !prev);
+
+  const getTotal = (information) => {
+    try {
+      const total = (food[information] * amount) / 100;
+      return total.toFixed(1);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return (
+    <Container>
+      <DishCardInfo label="Carboidratos" value={getTotal('carbohydrates')} suffix="g" />
+      <DishCardInfo label="Proteínas" value={getTotal('protein')} suffix="g" />
+      <DishCardInfo label="Calorias" value={getTotal('kcal')} suffix="kcal" />
+
+      {seeMore && (
+        <>
+          <DishCardInfo label="Sódio" value={getTotal('sodium')} suffix="g" />
+          <DishCardInfo label="Ferro" value={getTotal('iron')} suffix="g" />
+          <DishCardInfo label="Cálcio" value={getTotal('calcium')} suffix="g" />
+          <DishCardInfo label="Potássio" value={getTotal('potassium')} suffix="g" />
+          <DishCardInfo label="Magnésio" value={getTotal('magnesium')} suffix="g" />
+          <DishCardInfo label="Zinco" value={getTotal('zinc')} suffix="g" />
+          <DishCardInfo label="Vitamina C" value={getTotal('vitaminC')} suffix="g" />
+          <DishCardInfo label="Gordura Saturada" value={getTotal('saturated')} suffix="g" />
+          <DishCardInfo label="Gordura Monosaturada" value={getTotal('monounsaturated')} suffix="g" />
+          <DishCardInfo label="Gordura Poli-insaturada" value={getTotal('polyunsaturated')} suffix="g" />
+        </>
+      )}
+      <TouchableOpacity style={styles.seeMoreContainer} activeOpacity={1} onPress={handlerSeeMore}>
+        <Text style={[styles.seeMore, { fontFamily: theme.font.semiBold }]}>
+          {!seeMore ? 'Ver Mais...' : 'Ver Menos...'}
+        </Text>
+      </TouchableOpacity>
+    </Container>
+  );
+};
+
+export default FoodInfoCard;
+
+const styles = StyleSheet.create({
+  mainContainer: {
+    width: '100%',
+    backgroundColor: '#ccc',
+    marginTop: 10,
+    padding: 10,
+    justifyContent: 'center',
+    borderRadius: 10,
+  },
+});

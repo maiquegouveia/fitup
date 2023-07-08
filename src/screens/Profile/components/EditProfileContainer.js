@@ -56,8 +56,8 @@ const EditProfileContainer = ({ handleShowContainer, showEditContainer }) => {
       phone: userObject.phone || '',
       password: '',
       confirmPassword: '',
-      weight: userObject.weight.toString() || '',
-      height: userObject.height.toString() || '',
+      weight: userObject.weight?.toString() || '',
+      height: userObject.height?.toString() || '',
     },
     validationSchema: profileEdit,
     onSubmit,
@@ -71,8 +71,8 @@ const EditProfileContainer = ({ handleShowContainer, showEditContainer }) => {
         phone: userObject.phone || '',
         password: '',
         confirmPassword: '',
-        weight: userObject.weight.toString() || '',
-        height: userObject.height.toString() || '',
+        weight: userObject.weight?.toString() || '',
+        height: userObject.height?.toString() || '',
       },
     });
   }, [showEditContainer]);

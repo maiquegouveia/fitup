@@ -13,7 +13,7 @@ export default ({
   theme,
   options,
   selectedValue,
-  setSelectedValue,
+  handlerSelect,
 }) => {
   return (
     <View style={style}>
@@ -24,7 +24,7 @@ export default ({
           dropdownIconColor={theme.fontColor.text}
           prompt={prompt}
           mode={mode}
-          onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
+          onValueChange={(itemValue, itemIndex) => handlerSelect(itemValue)}
         >
           {options?.map((option, index) => (
             <Picker.Item key={index} style={itemStyle} label={option.name} value={option.id} />

@@ -26,6 +26,7 @@ const Input = ({
         onBlur={handleBlur}
         outlineColor={error ? 'red' : 'gray'}
         onChangeText={handleChange}
+        activeOutlineColor="gray"
         style={styles.input}
         value={value}
         mode="outlined"

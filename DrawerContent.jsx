@@ -21,9 +21,9 @@ export default function DrawerContent() {
   return (
     <DrawerContentScrollView
       showsVerticalScrollIndicator={false}
-      contentContainerStyle={{ backgroundColor: theme.drawer.backgroundColor }}
+      contentContainerStyle={{ backgroundColor: theme.drawer.backgroundColor, minHeight: '100%' }}
     >
-      <View style={styles.drawerContent}>
+      <View style={[styles.drawerContent, { backgroundColor: theme.drawer.backgroundColor }]}>
         <View style={styles.userInfoSection}>
           <Avatar.Image
             source={{
@@ -188,7 +188,7 @@ export default function DrawerContent() {
             <View style={styles.preference}>
               <Text style={{ color: theme.drawer.fontColor, fontWeight: 'bold' }}>Dark Mode</Text>
               <View pointerEvents="none">
-                <Switch value={isDarkMode} />
+                <Switch color="orange" value={isDarkMode} />
               </View>
             </View>
           </TouchableRipple>

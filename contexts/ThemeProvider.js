@@ -72,6 +72,12 @@ export const ThemeProvider = ({ children }) => {
         fontColor: isDarkMode ? '#303030' : 'white',
       },
     },
+    createDish: {
+      foodCard: {
+        backgroundColor: isDarkMode ? 'white' : '#303030',
+        fontColor: isDarkMode ? '#303030' : 'white',
+      },
+    },
   };
 
   return <ThemeContext.Provider value={{ isDarkMode, setIsDarkMode, theme }}>{children}</ThemeContext.Provider>;

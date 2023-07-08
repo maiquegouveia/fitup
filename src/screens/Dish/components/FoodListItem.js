@@ -20,7 +20,7 @@ const FoodListItem = ({
   const [inputValue, setInputValue] = useState(amount);
 
   const validateInput = (text) => {
-    const numberPattern = /^\d*\d*$/;
+    const numberPattern = /^(?!0)\d*$/;
 
     if (numberPattern.test(text)) {
       if (text.length <= 3) {

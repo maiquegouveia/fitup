@@ -40,7 +40,7 @@ const Home = () => {
             <Text style={[styles.welcomeText, { color: theme.fontColor.title, fontFamily: theme.font.bold }]}>
               Home
             </Text>
-            <TouchableOpacity onPress={() => console.log(userObject.dishes)}>
+            <TouchableOpacity onPress={() => console.log(userObject)}>
               <Ionicons name="notifications" size={26} color={theme.iconColor} />
             </TouchableOpacity>
           </View>
