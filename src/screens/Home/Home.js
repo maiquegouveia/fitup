@@ -17,7 +17,7 @@ const Home = () => {
 
   useEffect(() => {
     const getData = async () => {
-      await userObject.getDailyWaterConsume();
+      await userObject.setWaterConsume();
       await userObject.getFavoriteFoods();
       await userObject.getDishes();
       const updatedUserObject = userObject.clone();
@@ -40,7 +40,7 @@ const Home = () => {
             <Text style={[styles.welcomeText, { color: theme.fontColor.title, fontFamily: theme.font.bold }]}>
               Home
             </Text>
-            <TouchableOpacity onPress={() => console.log(userObject)}>
+            <TouchableOpacity onPress={() => console.log(userObject.consumedWater.getDaily())}>
               <Ionicons name="notifications" size={26} color={theme.iconColor} />
             </TouchableOpacity>
           </View>

@@ -49,18 +49,17 @@ const WaterAmount = () => {
   const onPressAddWaterButton = async (amount) => {
     const response = await postWaterConsume(userObject.id, amount);
     if (!response?.error) {
-      const newConsumed = userObject.consumedWater + amount;
-      userObject.consumedWater += amount;
+      userObject.consumedWater.addConsume(amount);
       const updatedUserObject = userObject.clone();
       setUserObject(updatedUserObject);
-      onChangeConsume(newConsumed);
+      onChangeConsume(updatedUserObject.consumedWater.getDaily());
     }
   };
 
   useFocusEffect(
     useCallback(() => {
-      onChangeConsume(userObject.consumedWater);
-    }, [userObject.consumedWater, userObject.weight])
+      onChangeConsume(userObject.consumedWater.getDaily());
+    }, [userObject.consumedWater.consumedWater, userObject.weight])
   );
 
   const handlerOutrosBtn = () => {
@@ -72,7 +71,7 @@ const WaterAmount = () => {
       <AddWaterModel showModal={showModal} setShowModal={setShowModal} onPressAddWaterButton={onPressAddWaterButton} />
       <View style={styles.cupContainer}>
         <Cup
-          consumedWater={userObject.consumedWater}
+          consumedWater={userObject.consumedWater.getDaily()}
           animation={animation}
           animationWidth={animationWidth}
           totalWater={userObject.totalWater}

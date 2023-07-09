@@ -5,17 +5,10 @@ import MessageItem from '../components/MessageItem';
 const Chat = ({ data }) => {
   return (
     <View style={styles.mainContainer}>
-      <ScrollView contentContainerStyle={styles.scrollStyle}>
-        <MessageItem item={{ text: 'Teste mensagem', createdAt: '01/11/2002', name: 'Maique Gouveia' }} />
-        <MessageItem item={{ text: 'Teste mensagem', createdAt: '01/11/2002', name: 'Victor Menezes' }} />
-        <MessageItem
-          item={{
-            text:
-              'Teste mensagemTeste mensagemTeste e mensagemTeste mensagemTeste mensagemTeste mensagemTeste mensagemTeste mensagemTeste mensagemTeste e mensagemTeste mensagemTeste mensagemTeste mensagemTeste mensagemTeste mensagemTeste mensagemTeste e mensagemTeste mensagemTeste mensagemTeste mensagemTeste mensagemTeste mensagemTeste mensagemTeste e mensagemTeste mensagemTeste mensagemTeste mensagemTeste mensagem',
-            createdAt: '01/11/2002',
-            name: 'Pedro Henrique',
-          }}
-        />
+      <ScrollView showsHorizontalScrollIndicator={false} contentContainerStyle={styles.scrollStyle}>
+        {data.map((item, index) => (
+          <MessageItem key={index} item={item} />
+        ))}
       </ScrollView>
     </View>
   );

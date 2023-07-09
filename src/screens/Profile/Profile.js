@@ -18,16 +18,7 @@ const ProfileScreen = () => {
   const { theme } = useContext(ThemeContext);
   const isFocused = useIsFocused();
 
-  const getWaterProgress = () => {
-    if (userObject.consumedWater > 0) {
-      const progress = (userObject.consumedWater / userObject.totalWater) * 100;
-      if (progress > 100) return 100;
-      else return progress;
-    }
-    return 0;
-  };
-
-  const [waterProgress, setWaterProgress] = useState(getWaterProgress());
+  const [waterProgress, setWaterProgress] = useState(0);
   const [showEditContainer, setShowEditContainer] = useState(false);
   const [changingPicture, setChangingPicture] = useState(false);
   const [image, setImage] = useState({
@@ -72,12 +63,11 @@ const ProfileScreen = () => {
   };
 
   useEffect(() => {
-    const progress = getWaterProgress();
-    setWaterProgress(progress);
-  }, [userObject.consumedWater]);
-
-  useEffect(() => {
-    if (isFocused) setActiveScreen('Profile');
+    if (isFocused) {
+      setActiveScreen('Profile');
+      const progress = userObject.consumedWater.getDailyProgress(userObject.totalWater);
+      setWaterProgress(progress);
+    }
   }, [isFocused]);
 
   return (

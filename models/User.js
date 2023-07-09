@@ -1,5 +1,5 @@
 import fetchUserFavoriteFoods from '../utilities/FavoriteFoods/getUserFavoriteFoods';
-import fetchUserDailyWaterConsume from '../utilities/getUserDailyWaterConsume';
+import getWaterConsume from '../utilities/getWaterConsume';
 import fetchUserDishes from '../utilities/Dish/getDishes';
 import timestampToDate from '../utilities/timestampToDate';
 import Food from './Food';
@@ -7,6 +7,7 @@ import Dish from './Dish';
 import DishCategory from './DishCategory';
 import DishItem from './DishItem';
 import DishComment from './DishComment';
+import ConsumedWater from './ConsumedWater';
 
 export default class User {
   constructor(
@@ -30,13 +31,13 @@ export default class User {
     this.password = password;
     this.phone = phone;
     this.profilePicture = profilePicture;
-    this.consumedWater = 0;
     this.favoriteFoods = [];
     this.dishes = [];
     this.totalWater = 0;
     this.type = type;
     this.username = username;
     this.createdAt = createdAt;
+    this.consumedWater = new ConsumedWater([]);
   }
 
   setTotalWater() {
@@ -45,8 +46,9 @@ export default class User {
     }
   }
 
-  async getDailyWaterConsume() {
-    this.consumedWater = await fetchUserDailyWaterConsume(this.id);
+  async setWaterConsume() {
+    const arr = await getWaterConsume(this.id);
+    this.consumedWater.consumedWater = arr;
   }
 
   async getFavoriteFoods() {

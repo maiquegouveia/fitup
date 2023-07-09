@@ -1,12 +1,12 @@
-import { forwardRef } from 'react';
+import { useEffect } from 'react';
 import { StyleSheet, View, Dimensions } from 'react-native';
 import { Text } from 'native-base';
-import { Modalize } from 'react-native-modalize';
+import { Modalize, useModalize } from 'react-native-modalize';
 import { useHeaderHeight } from '@react-navigation/elements';
 import Chat from './Chat';
 
-export default forwardRef((props, ref) => {
-  const { dish, theme } = props;
+export default ({ dish, theme, showModalize, setShowModalize }) => {
+  const { ref, open, close } = useModalize();
   const headerHeight = useHeaderHeight();
   const windowHeight = Dimensions.get('window').height;
   const maxModalizeHeight = windowHeight - headerHeight;
@@ -42,19 +42,24 @@ export default forwardRef((props, ref) => {
     );
   };
 
+  useEffect(() => {
+    if (showModalize) open();
+  }, [showModalize]);
+
   return (
     <Modalize
       ref={ref}
-      snapPoint={maxModalizeHeight / 2}
+      snapPoint={maxModalizeHeight}
       modalHeight={maxModalizeHeight}
       avoidKeyboardLikeIOS={true}
       HeaderComponent={Header}
+      onClosed={() => setShowModalize(false)}
     >
       <ContentHeader />
-      <Chat />
+      <Chat data={dish.dishComments} />
     </Modalize>
   );
-});
+};
 
 const styles = StyleSheet.create({
   contentHeader: {

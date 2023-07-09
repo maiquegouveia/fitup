@@ -7,7 +7,7 @@ import { useState, useContext } from 'react';
 import DishCardInfo from './DishCardInfo';
 import { ThemeContext } from '../../../../contexts/ThemeProvider';
 
-const DishCard = ({ style, dish, onDeleteDish, openChat }) => {
+const DishCard = ({ style, dish, onDeleteDish, handlerOpenModalize }) => {
   const navigation = useNavigation();
   const { theme } = useContext(ThemeContext);
   const [seeMore, setSeeMore] = useState(false);
@@ -47,8 +47,12 @@ const DishCard = ({ style, dish, onDeleteDish, openChat }) => {
           <Text style={[styles.dishOthers, { fontFamily: theme.font.semiBold }]}>Criado em: {dish.getCreatedAt()}</Text>
         </View>
         <View style={styles.dishFeatures}>
-          <FontAwesome5 onPress={alertShow} name="trash" size={24} color="#FF7900" />
-          <Ionicons onPress={() => openChat(dish)} name="chatbox" size={26} color="#FF7900" />
+          <TouchableOpacity activeOpacity={0.5} onPress={alertShow}>
+            <FontAwesome5 name="trash" size={24} color="#FF7900" />
+          </TouchableOpacity>
+          <TouchableOpacity activeOpacity={0.5} onPress={() => handlerOpenModalize(dish)}>
+            <Ionicons name="chatbox" size={30} color="#FF7900" />
+          </TouchableOpacity>
         </View>
       </View>
       <View style={styles.dishDetails}>

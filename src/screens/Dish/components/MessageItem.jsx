@@ -2,6 +2,7 @@ import { StyleSheet, View, Image } from 'react-native';
 import { useContext } from 'react';
 import { Text } from 'native-base';
 import { ThemeContext } from '../../../../contexts/ThemeProvider';
+import timestampToDateTime from '../../../../utilities/timestampToDateTime';
 
 const MessageItem = ({ item, user, createdAt }) => {
   const { theme } = useContext(ThemeContext);
@@ -17,21 +18,17 @@ const MessageItem = ({ item, user, createdAt }) => {
   return (
     <View style={styles.messageContainer}>
       <View style={styles.imageContainer}>
-        <Image
-          style={{ width: 30, height: 30 }}
-          resizeMode="contain"
-          source={{ uri: 'https://i.ibb.co/tJBC4C4/default-profile.png' }}
-        />
+        <Image style={{ width: 30, height: 30 }} resizeMode="contain" source={{ uri: item.user.profilePicture }} />
       </View>
       <View style={styles.triangleMessage}></View>
       <View style={styles.messageBubble}>
         <View style={styles.userName}>
-          <Text fontFamily={theme.font.bold}>{item.name}</Text>
+          <Text fontFamily={theme.font.bold}>{item.user.name}</Text>
         </View>
         <Text lineBreakMode="head">{renderWrappedText(item.text)}</Text>
         <View style={styles.dateContainer}>
           <Text fontSize={12} fontFamily={theme.font.semiBold}>
-            {item.createdAt}
+            {timestampToDateTime(item.createdAt)}
           </Text>
         </View>
       </View>

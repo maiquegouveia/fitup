@@ -20,7 +20,7 @@ const UserItem = ({ user, style }) => {
       await Promise.allSettled(
         new Promise.resolve(await user.getFavoriteFoods()),
         new Promise.resolve(await user.getDishes()),
-        new Promise.resolve(await user.getDailyWaterConsume())
+        new Promise.resolve(await user.setWaterConsume())
       );
       user.setTotalWater();
       const updatedUser = user.clone();

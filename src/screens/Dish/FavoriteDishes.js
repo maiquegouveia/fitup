@@ -15,7 +15,7 @@ const FavoriteDishes = ({ navigation }) => {
   const [filteredData, setFilteredData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [dishChat, setDishChat] = useState(null);
-  const modalizeRef = useRef(null);
+  const [showModalize, setShowModalize] = useState(false);
   const { userObject, setUserObject } = useContext(AppContext);
   const { theme } = useContext(ThemeContext);
   const isFocused = useIsFocused();
@@ -56,18 +56,17 @@ const FavoriteDishes = ({ navigation }) => {
     getDishesData();
   };
 
-  const onOpenModalize = (dish) => {
+  const handlerOpenModalize = (dish) => {
     setDishChat(dish);
-    modalizeRef.current?.open();
+    setShowModalize(true);
   };
 
   return (
     <>
-      {dishChat && <Modalize theme={theme} dish={dishChat} ref={modalizeRef} />}
-      <ScrollView
-        contentContainerStyle={[styles.mainContainer, { backgroundColor: theme.backgroundColor }]}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-      >
+      {showModalize && (
+        <Modalize showModalize={showModalize} setShowModalize={setShowModalize} theme={theme} dish={dishChat} />
+      )}
+      <View style={[styles.mainContainer, { backgroundColor: theme.backgroundColor }]}>
         <View style={styles.searchBarContainer}>
           <SearchBar
             placeholder="Busque um prato aqui..."
@@ -84,7 +83,7 @@ const FavoriteDishes = ({ navigation }) => {
           </Button>
         </View>
 
-        <ScrollView contentContainerStyle={styles.dishesScrollView} showsVerticalScrollIndicator={false}>
+        <View style={styles.dishesScrollView}>
           {isLoading && <ActivityIndicator animating={isLoading} color="white" />}
           {!isLoading && (
             <View style={styles.dishesTitleContainer}>
@@ -98,19 +97,22 @@ const FavoriteDishes = ({ navigation }) => {
             </View>
           )}
 
-          {!isLoading &&
-            filteredData?.length > 0 &&
-            filteredData?.map((dish, index) => (
-              <DishCard
-                key={index}
-                dish={dish}
-                style={{ marginTop: 10 }}
-                onDeleteDish={onDeleteDish}
-                openChat={onOpenModalize}
-              />
-            ))}
-        </ScrollView>
-      </ScrollView>
+          {!isLoading && (
+            <FlatList
+              data={filteredData}
+              keyExtractor={(item, index) => index}
+              renderItem={({ item, index }) => (
+                <DishCard
+                  onDeleteDish={onDeleteDish}
+                  handlerOpenModalize={handlerOpenModalize}
+                  dish={item}
+                  style={{ marginBottom: index === filteredData.length - 1 ? 0 : 10 }}
+                />
+              )}
+            />
+          )}
+        </View>
+      </View>
     </>
   );
 };
