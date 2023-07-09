@@ -45,7 +45,7 @@ const ChatScreen = ({ route, navigation }) => {
       <View style={styles.dishInformationContainer}>
         <View style={styles.dishTitleContainer}>
           <Text style={styles.dishTitle}>{dish.name}</Text>
-          <Text style={styles.dishCategory}>{dish.category}</Text>
+          <Text style={styles.dishCategory}>{dish.category.name}</Text>
           <View style={styles.dishNutrientsContainer}>
             <Text style={styles.dishNutrientText}>Calorias: {dish.kcal}g</Text>
             <Text style={styles.dishNutrientText}>Carboidratos: {dish.carbohydrates}g</Text>

@@ -3,6 +3,7 @@ import { StyleSheet, View, Dimensions } from 'react-native';
 import { Text } from 'native-base';
 import { Modalize } from 'react-native-modalize';
 import { useHeaderHeight } from '@react-navigation/elements';
+import Chat from './Chat';
 
 export default forwardRef((props, ref) => {
   const { dish, theme } = props;
@@ -50,6 +51,7 @@ export default forwardRef((props, ref) => {
       HeaderComponent={Header}
     >
       <ContentHeader />
+      <Chat />
     </Modalize>
   );
 });
@@ -73,6 +75,7 @@ const styles = StyleSheet.create({
   subHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    paddingVertical: 5,
   },
   dishName: {
     fontSize: 20,

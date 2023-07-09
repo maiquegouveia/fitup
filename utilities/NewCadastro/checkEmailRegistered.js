@@ -4,6 +4,7 @@ export default async (email) => {
     const response = await fetch(url, {
       method: 'GET',
     });
+    if (response.ok) return;
     const data = await response.json();
     if (response.status === 409) {
       return { error: data.message };

@@ -50,6 +50,7 @@ export const ThemeProvider = ({ children }) => {
     fontColor: {
       title: isDarkMode ? 'white' : '#0B5563',
       text: isDarkMode ? 'white' : 'black',
+      textBlack: isDarkMode ? 'black' : 'white',
     },
     iconColor: isDarkMode ? 'white' : 'black',
     drawer: {
@@ -74,7 +75,7 @@ export const ThemeProvider = ({ children }) => {
     },
     createDish: {
       foodCard: {
-        backgroundColor: isDarkMode ? 'white' : '#303030',
+        backgroundColor: isDarkMode ? 'white' : '#b2b2b2',
         fontColor: isDarkMode ? '#303030' : 'white',
       },
     },

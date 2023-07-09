@@ -138,7 +138,7 @@ const EditDish = ({ route, navigation }) => {
                 <FontAwesome5 name="trash" size={20} color="red" />
               </TouchableOpacity>
             </View>
-            <View style={{ backgroundColor: '#CD853F', marginBottom: 10, padding: 10, borderRadius: 5 }}>
+            <View style={{ backgroundColor: 'white', marginBottom: 10, padding: 10, borderRadius: 5 }}>
               <DishCardInfo label="Categoria" value={dish.category.name} />
               <DishCardInfo label="Carboidratos" value={getTotal('carbohydrates')} suffix="g" />
               <DishCardInfo label="Proteínas" value={getTotal('protein')} suffix="g" />

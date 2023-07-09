@@ -25,6 +25,7 @@ const styles = StyleSheet.create({
   },
   dishProperties: {
     fontSize: 14,
+    lineHeight: 20,
   },
   dishDescription: {
     fontSize: 14,

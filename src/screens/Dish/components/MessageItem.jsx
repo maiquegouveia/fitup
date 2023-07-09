@@ -1,26 +1,82 @@
-import { StyleSheet, Text, View } from 'react-native';
-import React from 'react';
+import { StyleSheet, View, Image } from 'react-native';
+import { useContext } from 'react';
+import { Text } from 'native-base';
+import { ThemeContext } from '../../../../contexts/ThemeProvider';
 
-const MessageItem = ({ item }) => {
+const MessageItem = ({ item, user, createdAt }) => {
+  const { theme } = useContext(ThemeContext);
+
+  const renderWrappedText = (text) => {
+    return Array.from(text).map((char, index) => (
+      <View key={index}>
+        <Text fontFamily={theme.font.regular}>{char}</Text>
+      </View>
+    ));
+  };
+
   return (
     <View style={styles.messageContainer}>
+      <View style={styles.imageContainer}>
+        <Image
+          style={{ width: 30, height: 30 }}
+          resizeMode="contain"
+          source={{ uri: 'https://i.ibb.co/tJBC4C4/default-profile.png' }}
+        />
+      </View>
+      <View style={styles.triangleMessage}></View>
       <View style={styles.messageBubble}>
-        <Text>{item.text}</Text>
+        <View style={styles.userName}>
+          <Text fontFamily={theme.font.bold}>{item.name}</Text>
+        </View>
+        <Text lineBreakMode="head">{renderWrappedText(item.text)}</Text>
+        <View style={styles.dateContainer}>
+          <Text fontSize={12} fontFamily={theme.font.semiBold}>
+            {item.createdAt}
+          </Text>
+        </View>
       </View>
     </View>
   );
 };
-
 export default MessageItem;
 
 const styles = StyleSheet.create({
   messageContainer: {
     marginBottom: 10,
-    alignSelf: 'flex-start',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    marginBottom: 10,
+    flexDirection: 'row',
+    width: '100%',
   },
   messageBubble: {
-    backgroundColor: '#e5e5e5',
-    borderRadius: 10,
+    backgroundColor: '#ccc',
     padding: 10,
+    maxWidth: '80%',
+    borderRadius: 12,
+    borderTopLeftRadius: 0,
+  },
+  imageContainer: {
+    alignItems: 'center',
+    borderWidth: 1,
+    borderRadius: 16,
+    borderColor: '#ccc',
+  },
+  dateContainer: {
+    marginTop: 5,
+    alignItems: 'flex-end',
+  },
+  userName: {
+    alignItems: 'flex-start',
+  },
+  triangleMessage: {
+    width: 0,
+    height: 0,
+    borderLeftWidth: 10,
+    borderTopWidth: 10,
+    borderColor: '#ccc',
+    borderStyle: 'solid',
+    borderStartColor: 'transparent',
+    // transform: [{ rotate: '180deg' }],
   },
 });

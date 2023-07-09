@@ -43,7 +43,6 @@ export default StyleSheet.create({
   },
   nameText: {
     fontSize: 20,
-    fontWeight: 'bold',
     flexWrap: 'wrap',
   },
   dishesContainer: {
@@ -52,5 +51,16 @@ export default StyleSheet.create({
     borderRadius: 10,
     marginTop: 20,
     padding: 10,
+  },
+  waterContainer: {
+    width: '50%',
+  },
+  subWaterContainer: {
+    width: '50%',
+    justifyContent: 'center',
+  },
+  subWaterContainerTitle: {
+    fontSize: 24,
+    lineHeight: 30,
   },
 });

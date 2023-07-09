@@ -13,9 +13,11 @@ const FoodItem = ({ food, showRemoveConfirmationModalHandler, theme }) => {
   return (
     <View style={styles.container}>
       <View style={{ width: '80%' }}>
-        <Text style={[styles.foodName, { fontFamily: theme.font.bold }]}>{food.name}</Text>
-        <Text style={[styles.foodCategory, { fontFamily: theme.font.semiBold }]}>{food.category}</Text>
-        <View style={{ backgroundColor: '#ccc', padding: 10, marginVertical: 5, borderRadius: 10 }}>
+        <View style={{ marginVertical: 5 }}>
+          <Text style={[styles.foodName, { fontFamily: theme.font.bold }]}>{food.name}</Text>
+          <Text style={[styles.foodCategory, { fontFamily: theme.font.semiBold }]}>{food.category}</Text>
+        </View>
+        <View style={{ backgroundColor: '#ccc', padding: 10, borderRadius: 5 }}>
           <View style={styles.detailContainer}>
             <Text style={[styles.topicTitle, { fontFamily: theme.font.semiBold }]}>
               Calorias: <Text style={{ fontFamily: theme.font.regular }}>{food.kcal}kcal</Text>
@@ -112,7 +114,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     width: '100%',
     padding: 10,
-    borderRadius: 10,
+    borderRadius: 5,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -127,7 +129,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: '100%',
   },
-  topicTitle: {},
+  topicTitle: {
+    fontSize: 14,
+  },
   seeMore: {
     fontSize: 16,
   },

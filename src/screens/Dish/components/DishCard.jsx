@@ -1,5 +1,5 @@
 import { StyleSheet, View, TouchableOpacity, Alert } from 'react-native';
-import { Text } from 'native-base';
+import { Text } from 'react-native-paper';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
@@ -39,14 +39,15 @@ const DishCard = ({ style, dish, onDeleteDish, openChat }) => {
       style={[styles.dishContainer, style]}
     >
       <View style={styles.mainContainer}>
-        <View style={{ width: '75%' }}>
+        <View style={{ width: '75%', marginVertical: 5 }}>
           <Text style={[styles.dishName, { fontFamily: theme.font.bold }]}>{dish.name}</Text>
-          <Text style={{ fontFamily: theme.font.semiBold, fontSize: 12 }}>Qtd. Alimentos: {dish.dishItems.length}</Text>
-          <Text style={{ fontFamily: theme.font.semiBold, fontSize: 12 }}>Criado em: {dish.getCreatedAt()}</Text>
+          <Text style={[styles.dishOthers, { fontFamily: theme.font.semiBold }]}>
+            Qtd. Alimentos: {dish.dishItems.length}
+          </Text>
+          <Text style={[styles.dishOthers, { fontFamily: theme.font.semiBold }]}>Criado em: {dish.getCreatedAt()}</Text>
         </View>
         <View style={styles.dishFeatures}>
           <FontAwesome5 onPress={alertShow} name="trash" size={24} color="#FF7900" />
-
           <Ionicons onPress={() => openChat(dish)} name="chatbox" size={26} color="#FF7900" />
         </View>
       </View>
@@ -93,6 +94,11 @@ const styles = StyleSheet.create({
   },
   dishName: {
     fontSize: 18,
+    lineHeight: 20,
+  },
+  dishOthers: {
+    fontSize: 12,
+    lineHeight: 17,
   },
   dishDetails: {
     padding: 10,
@@ -105,6 +111,7 @@ const styles = StyleSheet.create({
   },
   seeMore: {
     fontSize: 16,
+    lineHeight: 20,
   },
   seeMoreContainer: {
     flex: 1,
@@ -112,7 +119,6 @@ const styles = StyleSheet.create({
   },
   dishFeatures: {
     flexDirection: 'row',
-
     width: '20%',
     justifyContent: 'space-between',
   },

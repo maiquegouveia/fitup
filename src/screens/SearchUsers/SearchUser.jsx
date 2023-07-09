@@ -1,6 +1,6 @@
-import { StyleSheet, View, Alert, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet, View, TouchableWithoutFeedback } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
-import { Text, NativeBaseProvider } from 'native-base';
+import { Text } from 'native-base';
 import UsersList from './components/UsersList';
 import searchUsers from '../../../utilities/SearchUsers/searchUsers';
 import { useState, useEffect, useRef } from 'react';
@@ -76,34 +76,32 @@ const SearchUser = ({ theme }) => {
   };
 
   return (
-    <NativeBaseProvider>
-      <TouchableWithoutFeedback onPress={handlerBlurInput}>
-        <View style={[styles.mainContainer, { backgroundColor: theme.backgroundColor }]}>
-          <View style={styles.container}></View>
-          <TextInput
-            ref={inputRef}
-            onChangeText={(text) => setInputValue(text)}
-            value={inputValue}
-            right={<TextInput.Icon icon="account-search" size={24} color="black" />}
-            style={styles.textInput}
-            mode="outlined"
-            activeOutlineColor="gray"
-            placeholder="Digite o nome do usuário"
-          />
-          <Button loading={isLoading} onPress={handlerSearch} textColor="white" style={styles.btn}>
-            Buscar
-          </Button>
-          {showError && (
-            <View style={{ alignItems: 'center' }}>
-              <Text fontWeight="semibold" marginTop={5} color="red.600">
-                {errorMessage}
-              </Text>
-            </View>
-          )}
-          {showList && <UsersList theme={theme} usersList={data} />}
-        </View>
-      </TouchableWithoutFeedback>
-    </NativeBaseProvider>
+    <TouchableWithoutFeedback onPress={handlerBlurInput}>
+      <View style={[styles.mainContainer, { backgroundColor: theme.backgroundColor }]}>
+        <View style={styles.container}></View>
+        <TextInput
+          ref={inputRef}
+          onChangeText={(text) => setInputValue(text)}
+          value={inputValue}
+          right={<TextInput.Icon icon="account-search" size={24} color="black" />}
+          style={styles.textInput}
+          mode="outlined"
+          activeOutlineColor="gray"
+          placeholder="Digite o nome do usuário"
+        />
+        <Button loading={isLoading} onPress={handlerSearch} textColor="white" style={styles.btn}>
+          Buscar
+        </Button>
+        {showError && (
+          <View style={{ alignItems: 'center' }}>
+            <Text fontWeight="semibold" marginTop={5} color="red.600">
+              {errorMessage}
+            </Text>
+          </View>
+        )}
+        {showList && <UsersList theme={theme} usersList={data} />}
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 

@@ -1,16 +1,14 @@
 import { View, SafeAreaView, Image, ScrollView } from 'react-native';
-import { Provider, Text, Button } from 'react-native-paper';
+import { Provider, Text } from 'react-native-paper';
 import { useState, useContext, useEffect } from 'react';
 import CircularProgress from 'react-native-circular-progress-indicator';
 import styles from './ProfileSearch.style';
-import AppContext from '../../../AppContext';
 import { ThemeContext } from '../../../contexts/ThemeProvider';
 import Card from './components/Card';
 import FoodItem from './components/FoodItem';
 import DishItem from './components/DishItem';
 
 const ProfileSearch = ({ route, navigation }) => {
-  const { userObject } = useContext(AppContext);
   const { theme } = useContext(ThemeContext);
   const { user } = route.params;
 
@@ -39,44 +37,57 @@ const ProfileSearch = ({ route, navigation }) => {
               <Image source={{ uri: `${user.profilePicture}` }} resizeMode="contain" style={styles.image} />
             </View>
 
-            <Text style={[styles.nameText, { color: theme.fontColor.title }]}>{user.name}</Text>
-            <Text style={[styles.nameText, { color: theme.fontColor.title }]}>{user.username}</Text>
+            <Text
+              style={[styles.nameText, { lineHeight: 22, color: theme.fontColor.title, fontFamily: theme.font.bold }]}
+            >
+              {user.name}
+            </Text>
+            <Text
+              style={[{ lineHeight: 22, color: theme.fontColor.title, fontFamily: theme.font.regular, fontSize: 14 }]}
+            >
+              {user.username}
+            </Text>
           </View>
 
-          <Card title="Estatísticas" style={{ marginTop: 50 }}>
+          <Card title="Estatísticas" style={{ marginTop: 50, padding: 10 }}>
             <View
               style={{
                 flexDirection: 'row',
                 width: '100%',
-                height: 100,
-                alignItems: 'center',
                 justifyContent: 'space-between',
-                paddingBottom: 20,
-                marginTop: 30,
+                padding: 10,
               }}
             >
-              <View style={{ width: '55%' }}>
-                <Text style={{ fontSize: 34, fontWeight: 'bold', color: theme.profile.card.fontColor }}>
+              <View style={styles.waterContainer}>
+                <CircularProgress
+                  value={waterProgress}
+                  radius={60}
+                  progressValueColor={theme.profile.card.fontColor}
+                  activeStrokeColor={'#16B6E9'}
+                  inActiveStrokeColor={'#D9D9D9'}
+                  inActiveStrokeOpacity={0.5}
+                  inActiveStrokeWidth={10}
+                  activeStrokeWidth={10}
+                  valueSuffix="%"
+                  duration={400}
+                />
+              </View>
+              <View style={styles.subWaterContainer}>
+                <Text
+                  style={[
+                    styles.subWaterContainerTitle,
+                    { fontFamily: theme.font.bold, color: theme.fontColor.textBlack },
+                  ]}
+                >
                   Água Consumida
                 </Text>
               </View>
-              <CircularProgress
-                value={waterProgress}
-                radius={60}
-                progressValueColor={theme.profile.card.fontColor}
-                activeStrokeColor={'#16B6E9'}
-                inActiveStrokeColor={'#D9D9D9'}
-                inActiveStrokeOpacity={0.5}
-                inActiveStrokeWidth={10}
-                activeStrokeWidth={10}
-                valueSuffix="%"
-                duration={400}
-              />
             </View>
           </Card>
-          <Card title={`Pratos (${user.dishes.length})`}>
+          <Card style={{ marginTop: 10, padding: 10 }} title={`Pratos (${user.dishes.length})`}>
             {user.dishes.map((dish, index) => (
               <DishItem
+                theme={theme}
                 dish={dish}
                 key={dish.id}
                 user={user}
@@ -85,9 +96,14 @@ const ProfileSearch = ({ route, navigation }) => {
             ))}
           </Card>
 
-          <Card title={`Alimentos Favoritos (${user.favoriteFoods.length})`} style={{ marginBottom: 10 }}>
+          <Card style={{ marginTop: 10, padding: 10 }} title={`Alimentos Favoritos (${user.favoriteFoods.length})`}>
             {user.favoriteFoods.map((food, index) => (
-              <FoodItem food={food} key={food.id} style={{ marginTop: user.favoriteFoods.length !== index ? 10 : 0 }} />
+              <FoodItem
+                theme={theme}
+                food={food}
+                key={food.id}
+                style={{ marginTop: user.favoriteFoods.length !== index ? 10 : 0 }}
+              />
             ))}
           </Card>
         </ScrollView>

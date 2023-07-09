@@ -1,10 +1,7 @@
-import { useContext } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import { ThemeContext } from '../../../../contexts/ThemeProvider';
 import { useNavigation } from '@react-navigation/native';
 
-const DishItem = ({ style, dish, user }) => {
-  const { theme } = useContext(ThemeContext);
+const DishItem = ({ style, dish, user, theme }) => {
   const navigation = useNavigation();
   return (
     <TouchableOpacity
@@ -14,22 +11,25 @@ const DishItem = ({ style, dish, user }) => {
     >
       <View style={{ paddingLeft: 5, paddingBottom: 5, flexDirection: 'row', justifyContent: 'space-between' }}>
         <View style={{ width: '90%' }}>
-          <Text style={[styles.dishName, { color: theme.fontColor.text }]}>{dish.name}</Text>
-          <Text style={[styles.dishDescription, { color: theme.fontColor.text }]}>{dish.category}</Text>
+          <Text style={[styles.dishName, { color: theme.fontColor.text }]}>{dish?.name}</Text>
+          <Text style={[styles.dishDescription, { color: theme.fontColor.text }]}>{dish?.category.name}</Text>
         </View>
       </View>
       <View style={styles.dishDetails}>
         <View style={{ flexDirection: 'row' }}>
-          <Text style={styles.dishProperties}>Calorias: </Text>
-          <Text style={styles.dishDescription}>{dish.kcal.toFixed(2)}kcal</Text>
+          <Text style={styles.dishProperties}>
+            Calorias: <Text style={styles.dishDescription}>{dish?.kcal}kcal</Text>
+          </Text>
         </View>
         <View style={{ flexDirection: 'row' }}>
-          <Text style={styles.dishProperties}>Carboidratos: </Text>
-          <Text style={styles.dishDescription}>{dish.carbohydrates.toFixed(2)}g</Text>
+          <Text style={styles.dishProperties}>
+            Carboidratos: <Text style={styles.dishDescription}>{dish?.carbohydrates}g</Text>
+          </Text>
         </View>
         <View style={{ flexDirection: 'row' }}>
-          <Text style={styles.dishProperties}>Proteínas: </Text>
-          <Text style={styles.dishDescription}>{dish.protein.toFixed(2)}g</Text>
+          <Text style={styles.dishProperties}>
+            Proteínas: <Text style={styles.dishDescription}>{dish?.protein}g</Text>
+          </Text>
         </View>
       </View>
     </TouchableOpacity>

@@ -13,11 +13,10 @@ const Card = ({ title, children, style }) => {
           width: '100%',
           alignItems: 'center',
           borderBottomWidth: 1,
-          paddingBottom: 10,
           borderColor: theme.profile.card.fontColor,
         }}
       >
-        <Text style={{ fontSize: 24, fontWeight: 'bold', color: theme.profile.card.fontColor }}>{title}</Text>
+        <Text style={{ fontSize: 24, fontFamily: theme.font.bold, color: theme.profile.card.fontColor }}>{title}</Text>
       </View>
       {children}
     </View>
@@ -30,7 +29,5 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     borderRadius: 10,
-    marginTop: 20,
-    padding: 10,
   },
 });
