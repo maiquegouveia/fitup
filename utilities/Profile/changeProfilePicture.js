@@ -1,13 +1,14 @@
-export default async (userId, value) => {
+export default async (userId, imageUrl) => {
   try {
-    const url = `https://fitup-api-production.up.railway.app/api/v1/users/${userId}/profile-picture`;
+    const url = `https://fitup-api-sequelize.vercel.app/api/v3/users/profilePicture`;
     const response = await fetch(url, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        url: value,
+        url: imageUrl,
+        userId,
       }),
     });
 

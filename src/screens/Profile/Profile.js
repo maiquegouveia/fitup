@@ -1,4 +1,4 @@
-import { View, SafeAreaView, Image, ScrollView, TouchableOpacity } from 'react-native';
+import { View, SafeAreaView, Image, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { Provider, Text, Button } from 'react-native-paper';
 import { useState, useContext, useEffect } from 'react';
 import { useNavigation, useIsFocused, StackActions } from '@react-navigation/native';
@@ -26,6 +26,8 @@ const ProfileScreen = () => {
     base64: '',
   });
 
+  const showAlert = (title, message) => Alert.alert(title, message);
+
   const navigation = useNavigation();
 
   const handleShowContainer = () => {
@@ -52,7 +54,7 @@ const ProfileScreen = () => {
       let url = await postImage(base64);
       const response = await changeProfilePicture(userObject.id, url);
       if (response?.error) {
-        console.log('ERROR');
+        showAlert('ERRO', 'Não foi possível alterar a foto de perfil. Tente novamente mais tarde!');
       } else {
         userObject.profilePicture = url;
         const updatedUserObject = userObject.clone();
