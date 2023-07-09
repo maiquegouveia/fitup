@@ -7,26 +7,19 @@ import { ThemeContext } from '../../../contexts/ThemeProvider';
 import Card from './components/Card';
 import FoodItem from './components/FoodItem';
 import DishItem from './components/DishItem';
+import { useIsFocused } from '@react-navigation/native';
 
 const ProfileSearch = ({ route, navigation }) => {
+  const [waterProgress, setWaterProgress] = useState(0);
   const { theme } = useContext(ThemeContext);
   const { user } = route.params;
-
-  const getWaterProgress = () => {
-    if (user.consumedWater > 0) {
-      const progress = (user.consumedWater / user.totalWater) * 100;
-      if (progress > 100) return 100;
-      else return progress;
-    }
-    return 0;
-  };
-
-  const [waterProgress, setWaterProgress] = useState(getWaterProgress());
+  const isFocused = useIsFocused();
 
   useEffect(() => {
-    const progress = getWaterProgress();
-    setWaterProgress(progress);
-  }, [user.consumedWater]);
+    if (isFocused) {
+      setWaterProgress(user.consumedWater.getDailyProgress(user.totalWater));
+    }
+  }, [isFocused]);
 
   return (
     <SafeAreaView style={[styles.mainContainer, { backgroundColor: theme.backgroundColor }]}>

@@ -1,5 +1,4 @@
-import { StyleSheet, View, ScrollView } from 'react-native';
-import { React, useState } from 'react';
+import { StyleSheet, View, FlatList } from 'react-native';
 import UserItem from './UserItem';
 import { Text } from 'native-base';
 
@@ -11,11 +10,13 @@ const UsersList = ({ usersList, theme }) => {
           {usersList.length > 1 ? `Resultados (${usersList.length})` : `Resultado (${usersList.length})`}
         </Text>
       </View>
-      <ScrollView persistentScrollbar={true} contentContainerStyle={{ marginRight: 10 }}>
-        {usersList?.map((user, index) => (
-          <UserItem style={{ marginBottom: index === usersList.length - 1 ? 0 : 10 }} key={index} user={user} />
-        ))}
-      </ScrollView>
+      <FlatList
+        data={usersList}
+        keyExtractor={(item, index) => index}
+        renderItem={({ item, index }) => (
+          <UserItem user={item} style={{ marginBottom: index === usersList.length - 1 ? 0 : 10 }} />
+        )}
+      />
     </View>
   );
 };
