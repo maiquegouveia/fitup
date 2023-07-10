@@ -1,20 +1,19 @@
-import { StyleSheet, Text, View, SafeAreaView, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, FlatList } from 'react-native';
 import { TextInput, Button, Provider } from 'react-native-paper';
-import { useState, useCallback, useContext } from 'react';
+import { useState, useContext } from 'react';
 import SearchFoodListItem from './components/SearchFoodListItem';
-import { useFocusEffect, useIsFocused } from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native';
 import getFoodByName from '../../../utilities/SearchFood/getFoodByName';
 import FoodDetailsModal from './components/FoodDetailsModal';
 import AppContext from '../../../AppContext';
 import MenuCategory from './components/MenuCategory';
 import changeFavoriteStatus from '../../../utilities/changeFavoriteStatus';
-import { ThemeContext } from '../../../contexts/ThemeProvider';
 import Food from '../../../models/Food';
 import { useEffect } from 'react';
 
-const SearchFood = () => {
+const SearchFood = ({ theme }) => {
   const isFocused = useIsFocused();
-  const { userObject, setUserObject } = useContext(AppContext);
+  const { userObject, setUserObject, setActiveScreen } = useContext(AppContext);
   const [inputValue, setInputValue] = useState('');
   const [showResults, setShowResults] = useState(false);
   const [results, setResults] = useState([]);
@@ -26,17 +25,27 @@ const SearchFood = () => {
   const [showFoodDetailsModal, setShowFoodDetailsModal] = useState(false);
   const [modalDetails, setModalDetails] = useState({});
   const [errorMessage, setErrorMessage] = useState(null);
-  const { theme } = useContext(ThemeContext);
+  const [favoriteFoodsId, setFavoriteFoodsId] = useState([]);
 
   const updateFavoriteFoodsList = async () => {
-    await userObject.getFavoriteFoods();
+    await userObject.setFavoriteFoods();
     const updatedUserObject = userObject.clone();
     setUserObject(updatedUserObject);
   };
 
+  const resetStates = () => {
+    setInputValue('');
+    setShowResults('');
+    setFilteredResults([]);
+  };
+
   useEffect(() => {
     if (!isFocused) {
+      resetStates();
       updateFavoriteFoodsList();
+    } else {
+      setActiveScreen('SearchFood');
+      setFavoriteFoodsId(userObject.getFavoriteFoodsId());
     }
   }, [isFocused]);
 
@@ -50,29 +59,21 @@ const SearchFood = () => {
     }
   };
 
-  const resetStates = () => {
-    setInputValue('');
-    setShowResults('');
-    setFilteredResults([]);
-  };
-
-  useFocusEffect(useCallback(resetStates, []));
-
   const onChangeInputHandler = (text) => {
     setInputValue(text);
   };
 
   const onSubmitInputHandler = async () => {
-    setErrorMessage(null);
-    const favoriteFoodsId = userObject.getFavoriteFoodsId();
-
     setIsLoading(true);
+    setErrorMessage(null);
+
     const data = await getFoodByName(inputValue);
     setIsLoading(false);
 
     if (data.error_message) {
       setErrorMessage(data.error_message);
     } else {
+      setSelectedCategory('Todas');
       const dataWithFavoriteStatus = data.map((food) => {
         const index = favoriteFoodsId.findIndex((curr) => curr.foodId === food.food_id);
 
@@ -146,9 +147,18 @@ const SearchFood = () => {
     }
   };
 
+  const _renderItem = ({ item, index }) => (
+    <SearchFoodListItem
+      theme={theme}
+      style={{ marginBottom: index !== filteredResults.length - 1 ? 10 : 0 }}
+      food={item}
+      onPress={onShowModalDetails}
+    />
+  );
+
   return (
     <Provider>
-      <SafeAreaView style={[styles.mainContainer, { backgroundColor: theme.backgroundColor }]}>
+      <View style={[styles.mainContainer, { backgroundColor: theme.backgroundColor }]}>
         <View style={styles.searchContainer}>
           <FoodDetailsModal
             setModalDetails={setModalDetails}
@@ -156,7 +166,9 @@ const SearchFood = () => {
             visible={showFoodDetailsModal}
             onDismiss={onDismissModal}
           />
-          <Text style={[styles.inputLabel, { color: theme.fontColor.title }]}>Buscar Alimento</Text>
+          <Text style={[styles.inputLabel, { color: theme.fontColor.title, fontFamily: theme.font.bold }]}>
+            Buscar Alimento
+          </Text>
           <TextInput
             cursorColor="green"
             activeOutlineColor="green"
@@ -166,31 +178,22 @@ const SearchFood = () => {
             mode="outlined"
             style={styles.input}
           />
-          <Button loading={isLoading} textColor="white" style={styles.inputBtn} onPress={onSubmitInputHandler}>
+          <Button
+            loading={isLoading}
+            disabled={isLoading}
+            textColor="white"
+            labelStyle={[styles.btnLabel, { fontFamily: theme.font.semiBold }]}
+            style={styles.inputBtn}
+            onPress={onSubmitInputHandler}
+          >
             Buscar
           </Button>
           {showResults && errorMessage && <Text style={styles.errorText}>{errorMessage}</Text>}
           {showResults && !errorMessage && filteredResults?.length > 0 && (
-            <ScrollView
-              style={{
-                marginTop: 10,
-                borderRadius: 10,
-                backgroundColor: 'orange',
-                width: '100%',
-                height: 250,
-                paddingHorizontal: 10,
-              }}
-              showsVerticalScrollIndicator={false}
-            >
-              <View
-                style={{
-                  alignItems: 'center',
-                  flexDirection: 'row',
-                  justifyContent: 'center',
-                }}
-              >
-                <Text style={{ fontSize: 18, fontWeight: 'bold', marginVertical: 10, color: 'white' }}>
-                  {filteredResults?.length > 1 ? `Resultados (${filteredResults?.length})` : `Resultado (1)`}
+            <View style={styles.mainResultsContainer}>
+              <View style={styles.resultsTitleContainer}>
+                <Text style={[styles.resultsTitle, { fontFamily: theme.font.bold }]}>
+                  Resultados ({filteredResults?.length})
                 </Text>
                 <MenuCategory
                   categories={categories}
@@ -200,15 +203,18 @@ const SearchFood = () => {
                   categoryModalVisible={categoryModalVisible}
                 />
               </View>
-
-              {!errorMessage &&
-                filteredResults?.map((food) => (
-                  <SearchFoodListItem key={food.id} food={food} onPress={onShowModalDetails} />
-                ))}
-            </ScrollView>
+              <View style={styles.subResultsContainer}>
+                <FlatList
+                  showsVerticalScrollIndicator={false}
+                  data={filteredResults}
+                  keyExtractor={(item, index) => index}
+                  renderItem={_renderItem}
+                />
+              </View>
+            </View>
           )}
         </View>
-      </SafeAreaView>
+      </View>
     </Provider>
   );
 };
@@ -217,30 +223,51 @@ export default SearchFood;
 
 const styles = StyleSheet.create({
   mainContainer: {
-    flex: 1,
-    justifyContent: 'center',
+    minHeight: '100%',
+    padding: 15,
   },
   searchContainer: {
     width: '100%',
-    padding: 10,
-    alignItems: 'center',
     borderRadius: 10,
+    alignItems: 'center',
   },
   input: {
     width: '100%',
   },
   inputLabel: {
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontSize: 24,
   },
   inputBtn: {
     width: '100%',
     marginVertical: 10,
     backgroundColor: 'green',
-    borderRadius: 10,
+    borderRadius: 5,
   },
   errorText: {
     color: 'red',
     fontWeight: 'bold',
+  },
+  mainResultsContainer: {
+    alignItems: 'center',
+    backgroundColor: 'green',
+    width: '100%',
+    borderRadius: 5,
+  },
+  subResultsContainer: {
+    maxHeight: 400,
+    minHeight: 300,
+    paddingHorizontal: 10,
+    paddingBottom: 10,
+  },
+  resultsTitleContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginVertical: 10,
+    width: '100%',
+  },
+  resultsTitle: {
+    fontSize: 20,
+    color: 'white',
+    lineHeight: 30,
   },
 });

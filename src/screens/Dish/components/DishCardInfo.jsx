@@ -2,11 +2,11 @@ import { useContext } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { ThemeContext } from '../../../../contexts/ThemeProvider';
 
-const DishCardInfo = ({ label, value, suffix }) => {
+const DishCardInfo = ({ label, value, suffix, style }) => {
   const { theme } = useContext(ThemeContext);
   return (
     <View style={styles.container}>
-      <Text style={[styles.dishProperties, { fontFamily: theme.font.semiBold }]}>
+      <Text style={[styles.dishProperties, { fontFamily: theme.font.semiBold }, style]}>
         {`${label}: `}
         <Text style={{ fontFamily: theme.font.regular }}>
           {value}

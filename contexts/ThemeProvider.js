@@ -18,15 +18,17 @@ export const ThemeContext = createContext();
 // // Dark indigo: #4B0082
 
 export const ThemeProvider = ({ children }) => {
-  const [isDarkMode, setIsDarkMode] = useState(null);
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const { setIsLoadingTheme } = useContext(AppContext);
 
   useEffect(() => {
     (async () => {
       try {
         const data = await AsyncStorage.getItem('fitupData');
-        const { isDarkMode: darkMode } = JSON.parse(data);
-        setIsDarkMode(darkMode);
+        if (data !== null) {
+          const { isDarkMode: darkMode } = JSON.parse(data);
+          setIsDarkMode(darkMode);
+        }
         setIsLoadingTheme(false);
       } catch (error) {
         console.log(error);

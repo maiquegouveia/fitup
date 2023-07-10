@@ -18,8 +18,8 @@ const UserItem = ({ user, style }) => {
       navigation.navigate('Profile');
     } else {
       await Promise.allSettled(
-        new Promise.resolve(await user.getFavoriteFoods()),
-        new Promise.resolve(await user.getDishes()),
+        new Promise.resolve(await user.setFavoriteFoods()),
+        new Promise.resolve(await user.setDishes()),
         new Promise.resolve(await user.setWaterConsume())
       );
       user.setTotalWater();
@@ -44,10 +44,10 @@ const UserItem = ({ user, style }) => {
           >
             {user.name}
           </Text>
-          <Text lineHeight="sm" fontSize={12} fontFamilt={theme.font.regular}>
+          <Text lineHeight="sm" fontSize={12} fontFamily={theme.font.regular}>
             {user.username}
           </Text>
-          <Text lineHeight="sm" fontSize={12} fontFamilt={theme.font.regular}>
+          <Text lineHeight="sm" fontSize={12} fontFamily={theme.font.regular}>
             Membro desde: {user.getCreatedAt()}
           </Text>
           {user.type === 2 && (

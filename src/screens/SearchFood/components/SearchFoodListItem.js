@@ -1,44 +1,38 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
-const SearchFoodListItem = (props) => {
-  const { food } = props;
+import { memo } from 'react';
 
-  const onPressDelete = () => {
-    props.showRemoveConfirmationModalHandler(food.id, food.name);
-  };
-
+const SearchFoodListItem = ({ food, style, onPress, theme }) => {
   const onShowModalDetails = () => {
-    props.onPress(food);
+    onPress(food);
   };
 
   return (
-    <TouchableOpacity
-      activeOpacity={1}
-      onPress={onShowModalDetails}
-      style={{
-        marginVertical: 5,
-        backgroundColor: 'white',
-        width: '100%',
-        padding: 10,
-        borderRadius: 10,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-      }}
-    >
-      <View style={{ width: '80%' }}>
-        <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 18 }}>{food.name}</Text>
-        <Text style={{ color: 'black', fontSize: 14 }}>{food.category} </Text>
+    <TouchableOpacity activeOpacity={0.5} onPress={onShowModalDetails} style={[styles.container, style]}>
+      <View>
+        <Text style={[styles.foodName, { fontFamily: theme.font.semiBold }]}>{food.name}</Text>
+        <Text style={[styles.foodCategory, { fontFamily: theme.font.regular }]}>{food.category} </Text>
       </View>
-      {props.isFavorite && (
-        <TouchableOpacity onPress={onPressDelete} activeOpacity={0.7} style={{ padding: 10 }}>
-          <FontAwesome name="window-close" size={26} color="red" />
-        </TouchableOpacity>
-      )}
     </TouchableOpacity>
   );
 };
 
-export default SearchFoodListItem;
+export default memo(SearchFoodListItem);
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: 'white',
+    minWidth: '100%',
+    padding: 10,
+    borderRadius: 5,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  foodName: {
+    fontSize: 16,
+    lineHeight: 20,
+  },
+  foodCategory: {
+    fontSize: 12,
+  },
+});

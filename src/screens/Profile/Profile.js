@@ -12,6 +12,7 @@ import removeAsyncStorage from '../../../utilities/removeAsyncStorage';
 import changeProfilePicture from '../../../utilities/Profile/changeProfilePicture';
 import postImage from '../../../utilities/Cadastro/postImage';
 import { ActivityIndicator } from 'react-native-paper';
+import LogoutIcon from '../../../global/icons/LogoutIcon';
 
 const ProfileScreen = () => {
   const { setUserIsAuthenticated, userObject, setUserObject, setActiveScreen } = useContext(AppContext);
@@ -63,6 +64,10 @@ const ProfileScreen = () => {
     }
     setChangingPicture(false);
   };
+
+  navigation.setOptions({
+    headerRight: () => <LogoutIcon onPress={onLogoutHandler} activeOpacity={0.5} iconColor="black" />,
+  });
 
   useEffect(() => {
     if (isFocused) {
@@ -164,13 +169,6 @@ const ProfileScreen = () => {
                   onPress={() => setShowEditContainer(true)}
                 >
                   Editar Perfil
-                </Button>
-                <Button
-                  labelStyle={[styles.btnText, { fontFamily: theme.font.semiBold }]}
-                  style={styles.btn}
-                  onPress={onLogoutHandler}
-                >
-                  Sair
                 </Button>
               </>
             )}

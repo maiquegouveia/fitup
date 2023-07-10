@@ -6,7 +6,7 @@ const UsersList = ({ usersList, theme }) => {
   return (
     <View style={styles.container}>
       <View style={{ alignItems: 'center', marginBottom: 10 }}>
-        <Text fontFamily={theme.font.bold} fontSize={18}>
+        <Text color="white" fontFamily={theme.font.bold} fontSize={18}>
           {usersList.length > 1 ? `Resultados (${usersList.length})` : `Resultado (${usersList.length})`}
         </Text>
       </View>
@@ -25,9 +25,11 @@ export default UsersList;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#ccc',
-    maxHeight: 520,
+    backgroundColor: '#FF7900',
+    maxHeight: 500,
+    minHeight: 300,
     padding: 10,
     marginTop: 30,
+    borderRadius: 5,
   },
 });

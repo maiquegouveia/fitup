@@ -78,77 +78,79 @@ function RootStack() {
         setUserObject,
         activeScreen,
         setActiveScreen,
+        isLoadingTheme,
+        setIsLoadingTheme,
       }}
     >
-      <NavigationContainer>
-        <Stack.Navigator
-          onLayout={onLayoutRootView}
-          initialRouteName="InitialScreen"
-          screenOptions={{
-            headerTransparent: true,
-            headerTintColor: '#FF7900',
-            title: '',
-          }}
-        >
-          <Stack.Screen name="InitialScreen" component={InitialScreen} options={{}} />
-          <Stack.Screen
-            name="AccountRecovery"
-            component={AccountRecovery}
-            options={{
+      <ThemeProvider>
+        <NavigationContainer>
+          <Stack.Navigator
+            onLayout={onLayoutRootView}
+            initialRouteName="InitialScreen"
+            screenOptions={{
+              headerTransparent: true,
+              headerTintColor: '#FF7900',
               title: '',
-            }}
-          />
-
-          <Stack.Screen name="ChangePassword" component={ChangePassword} />
-
-          <Stack.Screen name="NewCadastro" component={NewCadastro} />
-
-          <Stack.Screen
-            name="Login"
-            component={Login}
-            options={{
-              headerRight: () => (
-                <Entypo
-                  onPress={() => {}}
-                  style={{ marginRight: 20 }}
-                  name="help-with-circle"
-                  size={24}
-                  color="#FF7900"
-                />
-              ),
-              title: '',
-            }}
-          />
-
-          <Stack.Screen
-            name="DrawerStack"
-            options={{
-              headerShown: false,
             }}
           >
-            {() => (
-              <AppContext.Provider
-                value={{
-                  params,
-                  setParams,
-                  userIsAuthenticated,
-                  setUserIsAuthenticated,
-                  userObject,
-                  setUserObject,
-                  activeScreen,
-                  setActiveScreen,
-                  setIsLoadingTheme,
-                  isLoadingTheme,
-                }}
-              >
-                <NativeBaseProvider>
-                  <ThemeProvider>{!isLoadingTheme && <DrawerStack userObject={userObject} />}</ThemeProvider>
-                </NativeBaseProvider>
-              </AppContext.Provider>
-            )}
-          </Stack.Screen>
-        </Stack.Navigator>
-      </NavigationContainer>
+            <Stack.Screen name="InitialScreen" component={InitialScreen} options={{}} />
+            <Stack.Screen
+              name="AccountRecovery"
+              component={AccountRecovery}
+              options={{
+                title: '',
+              }}
+            />
+
+            <Stack.Screen name="ChangePassword" component={ChangePassword} />
+
+            <Stack.Screen name="NewCadastro" component={NewCadastro} />
+
+            <Stack.Screen
+              name="Login"
+              component={Login}
+              options={{
+                headerRight: () => (
+                  <Entypo
+                    onPress={() => {}}
+                    style={{ marginRight: 20 }}
+                    name="help-with-circle"
+                    size={24}
+                    color="#FF7900"
+                  />
+                ),
+                title: '',
+              }}
+            />
+
+            <Stack.Screen
+              name="DrawerStack"
+              options={{
+                headerShown: false,
+              }}
+            >
+              {() => (
+                <AppContext.Provider
+                  value={{
+                    params,
+                    setParams,
+                    userIsAuthenticated,
+                    setUserIsAuthenticated,
+                    userObject,
+                    setUserObject,
+                    activeScreen,
+                    setActiveScreen,
+                    setIsLoadingTheme,
+                    isLoadingTheme,
+                  }}
+                >
+                  <NativeBaseProvider>{!isLoadingTheme && <DrawerStack userObject={userObject} />}</NativeBaseProvider>
+                </AppContext.Provider>
+              )}
+            </Stack.Screen>
+          </Stack.Navigator>
+        </NavigationContainer>
+      </ThemeProvider>
     </AppContext.Provider>
   );
 }
@@ -180,7 +182,6 @@ function DrawerStack({ userObject }) {
         name="Profile"
         options={{
           title: 'Meu Perfil',
-          headerRight: () => null,
         }}
         component={Profile}
       />
@@ -195,11 +196,12 @@ function DrawerStack({ userObject }) {
 
       <Drawer.Screen
         name="SearchFood"
-        component={SearchFood}
         options={{
           title: 'Buscar Alimentos',
         }}
-      />
+      >
+        {() => <SearchFood theme={theme} />}
+      </Drawer.Screen>
       <Drawer.Screen
         name="FavoriteFoods"
         options={{

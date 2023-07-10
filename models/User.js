@@ -51,7 +51,7 @@ export default class User {
     this.consumedWater.consumedWater = arr;
   }
 
-  async getFavoriteFoods() {
+  async setFavoriteFoods() {
     const foods = await fetchUserFavoriteFoods(this.id);
     if (foods.length > 0) {
       this.favoriteFoods = foods.map(
@@ -81,7 +81,7 @@ export default class User {
     }
   }
 
-  async getDishes() {
+  async setDishes() {
     const dishes = await fetchUserDishes(this.id);
     this.dishes = dishes.map((dish) => {
       const { DishItems, DishComments } = dish;

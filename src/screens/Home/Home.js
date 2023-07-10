@@ -4,33 +4,40 @@ import AppContext from '../../../AppContext';
 import CardFeature from './components/CardFeature';
 import { cardAguaFeature, cardAliments, cardBuscar, cardPratos } from '../../../constants/images';
 import { ProgressBar } from 'react-native-paper';
-import { useNavigation } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { ThemeContext } from '../../../contexts/ThemeProvider';
 
 const Home = () => {
   const { userObject, setUserObject, setActiveScreen } = useContext(AppContext);
   const { theme } = useContext(ThemeContext);
+  const isFocused = useIsFocused();
 
   const progressBar = userObject.getRegistrationProgress();
   const navigation = useNavigation();
 
+  const onPressCard = (screen) => {
+    navigation.navigate(screen);
+  };
+
+  const getData = async () => {
+    await userObject.setWaterConsume();
+    await userObject.setFavoriteFoods();
+    await userObject.setDishes();
+    const updatedUserObject = userObject.clone();
+    updatedUserObject.setTotalWater();
+    setUserObject(updatedUserObject);
+  };
+
   useEffect(() => {
-    const getData = async () => {
-      await userObject.setWaterConsume();
-      await userObject.getFavoriteFoods();
-      await userObject.getDishes();
-      const updatedUserObject = userObject.clone();
-      updatedUserObject.setTotalWater();
-      setUserObject(updatedUserObject);
-    };
     getData();
   }, []);
 
-  const onPressCard = (screen) => {
-    setActiveScreen(screen);
-    navigation.navigate(screen);
-  };
+  useEffect(() => {
+    if (isFocused) {
+      setActiveScreen('Home');
+    }
+  }, [isFocused]);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.backgroundColor }}>

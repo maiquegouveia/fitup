@@ -59,7 +59,7 @@ const FavoriteFoods = ({ theme }) => {
 
   const getData = async () => {
     setIsLoading(true);
-    await userObject.getFavoriteFoods();
+    await userObject.setFavoriteFoods();
     const updatedUserObject = userObject.clone();
     setFilteredFoodsData(updatedUserObject.favoriteFoods);
     setUserObject(updatedUserObject);

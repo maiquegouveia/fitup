@@ -40,19 +40,21 @@ const DishCard = ({ dish, theme }) => {
     <View style={styles.dishContainer}>
       <View style={styles.dishNameContainer}>
         <View style={{ width: '80%' }}>
-          <Text style={[styles.dishName, { fontFamily: theme.font.bold }]}>{dish.name}</Text>
-          <Text style={[styles.dishCategory, { fontFamily: theme.font.semiBold }]}>
+          <Text style={[styles.dishName, { fontFamily: theme.font.bold, color: theme.fontColor.text }]}>
+            {dish.name}
+          </Text>
+          <Text style={[styles.dishCategory, { fontFamily: theme.font.semiBold, color: theme.fontColor.text }]}>
             Categoria: <Text style={{ fontFamily: theme.font.regular }}>{dish.category.name}</Text>
           </Text>
-          <Text style={[styles.dishCategory, { fontFamily: theme.font.semiBold }]}>
+          <Text style={[styles.dishCategory, { fontFamily: theme.font.semiBold, color: theme.fontColor.text }]}>
             Qtd. Alimentos: <Text style={{ fontFamily: theme.font.regular }}>{dish.dishItems.length}</Text>
           </Text>
-          <Text style={[styles.dishCategory, { fontFamily: theme.font.semiBold }]}>
+          <Text style={[styles.dishCategory, { fontFamily: theme.font.semiBold, color: theme.fontColor.text }]}>
             Comentários: <Text style={{ fontFamily: theme.font.regular }}>{dish.dishComments.length}</Text>
           </Text>
         </View>
         <TouchableOpacity style={styles.chatIconContainer} activeOpacity={0.5} onPress={() => {}}>
-          <Ionicons name="chatbox" size={30} color="#FF7900" />
+          <Ionicons name="chatbox" size={30} color="skyblue" />
         </TouchableOpacity>
       </View>
       <DishInfo dish={dish} theme={theme} />
@@ -71,25 +73,26 @@ const FoodItem = ({ theme, item, style }) => {
           <Text style={[styles.foodName, { fontFamily: theme.font.bold }]}>{food.name}</Text>
           <Text style={[styles.foodCategory, { fontFamily: theme.font.semiBold }]}>{food.FoodCategory.name}</Text>
         </View>
-        <View style={{ backgroundColor: '#ccc', padding: 10, borderRadius: 5 }}>
+        <View style={{ backgroundColor: 'skyblue', padding: 10, borderRadius: 5 }}>
           <View style={styles.detailContainer}>
             <Text style={[styles.topicTitle, { fontFamily: theme.font.semiBold }]}>
-              Calorias: <Text style={{ fontFamily: theme.font.regular }}>{food.kcal}kcal</Text>
+              Calorias: <Text style={{ fontFamily: theme.font.regular }}>{item.getInformation('kcal')}kcal</Text>
             </Text>
           </View>
           <View style={styles.detailContainer}>
             <Text style={[styles.topicTitle, { fontFamily: theme.font.semiBold }]}>
-              Carboidratos: <Text style={{ fontFamily: theme.font.regular }}>{food.carbohydrates}g</Text>
+              Carboidratos:{' '}
+              <Text style={{ fontFamily: theme.font.regular }}>{item.getInformation('carbohydrates')}g</Text>
             </Text>
           </View>
           <View style={styles.detailContainer}>
             <Text style={[styles.topicTitle, { fontFamily: theme.font.semiBold }]}>
-              Proteínas: <Text style={{ fontFamily: theme.font.regular }}>{food.protein}g</Text>
+              Proteínas: <Text style={{ fontFamily: theme.font.regular }}>{item.getInformation('protein')}g</Text>
             </Text>
           </View>
           <View style={styles.detailContainer}>
             <Text style={[styles.topicTitle, { fontFamily: theme.font.semiBold }]}>
-              Sódio: <Text style={{ fontFamily: theme.font.regular }}>{food.sodium}mg</Text>
+              Sódio: <Text style={{ fontFamily: theme.font.regular }}>{item.getInformation('sodium')}mg</Text>
             </Text>
           </View>
 
@@ -97,49 +100,51 @@ const FoodItem = ({ theme, item, style }) => {
             <>
               <View style={styles.detailContainer}>
                 <Text style={[styles.topicTitle, { fontFamily: theme.font.semiBold }]}>
-                  Ferro: <Text style={{ fontFamily: theme.font.regular }}>{food.iron}mg</Text>
+                  Ferro: <Text style={{ fontFamily: theme.font.regular }}>{item.getInformation('iron')}mg</Text>
                 </Text>
               </View>
               <View style={styles.detailContainer}>
                 <Text style={[styles.topicTitle, { fontFamily: theme.font.semiBold }]}>
-                  Cálcio: <Text style={{ fontFamily: theme.font.regular }}>{food.calcium}mg</Text>{' '}
+                  Cálcio: <Text style={{ fontFamily: theme.font.regular }}>{item.getInformation('calcium')}mg</Text>{' '}
                 </Text>
               </View>
               <View style={styles.detailContainer}>
                 <Text style={[styles.topicTitle, { fontFamily: theme.font.semiBold }]}>
-                  Magnésio: <Text style={{ fontFamily: theme.font.regular }}>{food.magnesium}mg</Text>
+                  Magnésio: <Text style={{ fontFamily: theme.font.regular }}>{item.getInformation('magnesium')}mg</Text>
                 </Text>
               </View>
               <View style={styles.detailContainer}>
                 <Text style={[styles.topicTitle, { fontFamily: theme.font.semiBold }]}>
-                  Potássio: <Text style={{ fontFamily: theme.font.regular }}>{food.potassium}mg</Text>
+                  Potássio: <Text style={{ fontFamily: theme.font.regular }}>{item.getInformation('potassium')}mg</Text>
                 </Text>
               </View>
               <View style={styles.detailContainer}>
                 <Text style={[styles.topicTitle, { fontFamily: theme.font.semiBold }]}>
-                  Vitamina C: <Text style={{ fontFamily: theme.font.regular }}>{food.vitaminC}mg</Text>
+                  Vitamina C:{' '}
+                  <Text style={{ fontFamily: theme.font.regular }}>{item.getInformation('vitaminC')}mg</Text>
                 </Text>
               </View>
               <View style={styles.detailContainer}>
                 <Text style={[styles.topicTitle, { fontFamily: theme.font.semiBold }]}>
-                  Zinco: <Text style={{ fontFamily: theme.font.regular }}>{food.zinc}mg</Text>
+                  Zinco: <Text style={{ fontFamily: theme.font.regular }}>{item.getInformation('zinc')}mg</Text>
                 </Text>
               </View>
               <View style={styles.detailContainer}>
                 <Text style={[styles.topicTitle, { fontFamily: theme.font.semiBold }]}>
-                  Gordura Saturada: <Text style={{ fontFamily: theme.font.regular }}>{food.saturated}g</Text>
+                  Gordura Saturada:{' '}
+                  <Text style={{ fontFamily: theme.font.regular }}>{item.getInformation('saturated')}g</Text>
                 </Text>
               </View>
               <View style={styles.detailContainer}>
                 <Text style={[styles.topicTitle, { fontFamily: theme.font.semiBold }]}>
                   Gordura Monoinsaturada:{' '}
-                  <Text style={{ fontFamily: theme.font.regular }}>{food.monounsaturated}g</Text>
+                  <Text style={{ fontFamily: theme.font.regular }}>{item.getInformation('monounsaturated')}g</Text>
                 </Text>
               </View>
               <View style={styles.detailContainer}>
                 <Text style={[styles.topicTitle, { fontFamily: theme.font.semiBold }]}>
                   Gordura Poli-insaturada:{' '}
-                  <Text style={{ fontFamily: theme.font.regular }}>{food.polyunsaturated}g</Text>
+                  <Text style={{ fontFamily: theme.font.regular }}>{item.getInformation('polyunsaturated')}g</Text>
                 </Text>
               </View>
             </>
@@ -161,10 +166,18 @@ const ChatScreen = ({ route, navigation }) => {
   const { theme } = useContext(ThemeContext);
 
   return (
-    <ScrollView persistentScrollbar={true} contentContainerStyle={styles.mainContainer} nestedScrollEnabled={true}>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      contentContainerStyle={[styles.mainContainer, { backgroundColor: theme.backgroundColor }]}
+      nestedScrollEnabled={true}
+    >
       <DishCard dish={dish} theme={theme} />
       <View style={{ maxHeight: 400, marginTop: 15 }}>
-        <ScrollView nestedScrollEnabled={true} showsVerticalScrollIndicator={false}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingRight: 5 }}
+          nestedScrollEnabled={true}
+        >
           {dish.dishItems.map((item, index) => (
             <FoodItem
               key={index}
@@ -184,10 +197,9 @@ export default ChatScreen;
 const styles = StyleSheet.create({
   mainContainer: {
     padding: 15,
+    minHeight: '100%',
   },
   dishContainer: {
-    backgroundColor: '#ccc',
-    padding: 10,
     borderRadius: 5,
   },
   dishNameContainer: {
@@ -206,14 +218,14 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   dishCardInfoContainer: {
-    backgroundColor: '#FF7900',
+    backgroundColor: 'skyblue',
     padding: 10,
     borderRadius: 5,
   },
   chatIconContainer: {},
 
   foodContainer: {
-    backgroundColor: '#FF7900',
+    backgroundColor: 'green',
     borderRadius: 5,
     padding: 10,
   },
@@ -224,9 +236,12 @@ const styles = StyleSheet.create({
   foodName: {
     fontSize: 16,
     lineHeight: 20,
+    color: 'white',
   },
   foodCategory: {
     fontSize: 14,
     lineHeight: 20,
+    color: 'white',
   },
+  seeMore: {},
 });

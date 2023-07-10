@@ -14,7 +14,6 @@ export default function DrawerContent() {
   const navigation = useNavigation();
 
   const onNavigate = (screen) => {
-    setActiveScreen(screen);
     navigation.navigate(screen);
   };
 

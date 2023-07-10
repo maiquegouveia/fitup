@@ -6,6 +6,8 @@ import searchUsers from '../../../utilities/SearchUsers/searchUsers';
 import { useState, useEffect, useRef } from 'react';
 import { useIsFocused } from '@react-navigation/native';
 import User from '../../../models/User';
+import { FontAwesome } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 
 const SearchUser = ({ theme }) => {
   const [data, setData] = useState([]);
@@ -78,27 +80,38 @@ const SearchUser = ({ theme }) => {
   return (
     <TouchableWithoutFeedback onPress={handlerBlurInput}>
       <View style={[styles.mainContainer, { backgroundColor: theme.backgroundColor }]}>
-        <View style={styles.container}></View>
+        <View style={styles.inputLabelContainer}>
+          <Text style={[styles.inputLabel, { fontFamily: theme.font.bold, color: theme.fontColor.text }]}>
+            Encontrar Usuários
+          </Text>
+        </View>
         <TextInput
           ref={inputRef}
           onChangeText={(text) => setInputValue(text)}
           value={inputValue}
-          right={<TextInput.Icon icon="account-search" size={24} color="black" />}
+          right={<TextInput.Icon icon={() => <FontAwesome name="search" size={24} color="#FF7900" />} />}
           style={styles.textInput}
           mode="outlined"
           activeOutlineColor="gray"
           placeholder="Digite o nome do usuário"
         />
-        <Button loading={isLoading} onPress={handlerSearch} textColor="white" style={styles.btn}>
-          Buscar
-        </Button>
         {showError && (
-          <View style={{ alignItems: 'center' }}>
-            <Text fontWeight="semibold" marginTop={5} color="red.600">
+          <View style={styles.errorContainer}>
+            <MaterialIcons name="error" size={18} color="red" />
+            <Text fontSize={12} marginLeft={2} fontFamily={theme.font.semiBold} color="red.600">
               {errorMessage}
             </Text>
           </View>
         )}
+        <Button
+          loading={isLoading}
+          onPress={handlerSearch}
+          labelStyle={[styles.btnLabel, { fontFamily: theme.font.semiBold }]}
+          style={styles.btn}
+        >
+          Buscar
+        </Button>
+
         {showList && <UsersList theme={theme} usersList={data} />}
       </View>
     </TouchableWithoutFeedback>
@@ -110,18 +123,34 @@ export default SearchUser;
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    padding: 10,
+    padding: 15,
   },
   container: {
     alignItems: 'center',
     width: '100%',
   },
-  textInput: {
-    marginVertical: 20,
-  },
+  textInput: {},
   btn: {
     borderRadius: 5,
     width: '100%',
-    backgroundColor: 'green',
+    backgroundColor: '#FF7900',
+    marginTop: 10,
+  },
+  inputLabel: {
+    fontSize: 28,
+    lineHeight: 35,
+  },
+  inputLabelContainer: {
+    width: '100%',
+    alignItems: 'center',
+    marginVertical: 10,
+  },
+  btnLabel: {
+    color: 'white',
+  },
+  errorContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 5,
   },
 });

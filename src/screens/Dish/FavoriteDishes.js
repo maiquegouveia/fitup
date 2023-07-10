@@ -30,7 +30,7 @@ const FavoriteDishes = ({ navigation }) => {
 
   const getDishesData = async () => {
     setIsLoading(true);
-    await userObject.getDishes();
+    await userObject.setDishes();
     const updatedUserObject = userObject.clone();
     setUserObject(updatedUserObject);
     setFilteredData(updatedUserObject.dishes);
