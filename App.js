@@ -110,15 +110,6 @@ function RootStack() {
               name="Login"
               component={Login}
               options={{
-                headerRight: () => (
-                  <Entypo
-                    onPress={() => {}}
-                    style={{ marginRight: 20 }}
-                    name="help-with-circle"
-                    size={24}
-                    color="#FF7900"
-                  />
-                ),
                 title: '',
               }}
             />

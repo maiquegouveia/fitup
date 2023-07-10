@@ -14,7 +14,7 @@ import postImage from '../../../utilities/Cadastro/postImage';
 import { ActivityIndicator } from 'react-native-paper';
 import LogoutIcon from '../../../global/icons/LogoutIcon';
 
-const ProfileScreen = () => {
+const Profile = () => {
   const { setUserIsAuthenticated, userObject, setUserObject, setActiveScreen } = useContext(AppContext);
   const { theme } = useContext(ThemeContext);
   const isFocused = useIsFocused();
@@ -65,9 +65,11 @@ const ProfileScreen = () => {
     setChangingPicture(false);
   };
 
-  navigation.setOptions({
-    headerRight: () => <LogoutIcon onPress={onLogoutHandler} activeOpacity={0.5} iconColor="black" />,
-  });
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => <LogoutIcon onPress={onLogoutHandler} activeOpacity={0.5} iconColor="black" />,
+    });
+  }, []);
 
   useEffect(() => {
     if (isFocused) {
@@ -182,4 +184,4 @@ const ProfileScreen = () => {
   );
 };
 
-export default ProfileScreen;
+export default Profile;

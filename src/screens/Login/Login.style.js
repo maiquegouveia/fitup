@@ -36,9 +36,9 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   btnText: {
-    color: 'rgba(29, 29, 41, 0.6)',
-    fontSize: 18,
-    fontFamily: 'DMBold',
+    color: 'white',
+    fontSize: 16,
+    fontFamily: 'PoppinsSemiBold',
   },
   container: {
     flex: 1,
