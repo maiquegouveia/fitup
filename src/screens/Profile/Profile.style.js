@@ -8,6 +8,8 @@ export default StyleSheet.create({
   container: {
     width: '100%',
     alignItems: 'center',
+    backgroundColor: 'white',
+    height: 300,
   },
   profileImageContainer: {
     width: 150,
@@ -52,7 +54,7 @@ export default StyleSheet.create({
   btn: {
     width: '40%',
     borderRadius: 5,
-    backgroundColor: '#FF7900',
+    backgroundColor: '#262626',
   },
   btnText: {
     fontSize: 16,

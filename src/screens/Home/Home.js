@@ -45,11 +45,8 @@ const Home = () => {
         <View style={styles.welcomeContainer}>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <Text style={[styles.welcomeText, { color: theme.fontColor.title, fontFamily: theme.font.bold }]}>
-              Home
+              Bem Vindo
             </Text>
-            <TouchableOpacity onPress={() => console.log(userObject.consumedWater.getDaily())}>
-              <Ionicons name="notifications" size={26} color={theme.iconColor} />
-            </TouchableOpacity>
           </View>
           {progressBar !== 1 && (
             <View style={styles.registrationProgressContainer}>

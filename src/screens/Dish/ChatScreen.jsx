@@ -1,8 +1,106 @@
-import { StyleSheet, Text, View, TouchableOpacity, FlatList, ScrollView } from 'react-native';
-import { useContext, useState } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { useContext, useEffect, useState } from 'react';
 import { ThemeContext } from '../../../contexts/ThemeProvider';
+import AppContext from '../../../AppContext';
 import DishCardInfo from './components/DishCardInfo';
 import { Ionicons } from '@expo/vector-icons';
+import { Button, Dialog, PaperProvider, Portal, TextInput } from 'react-native-paper';
+import publishComment from '../../../utilities/Dish/publishComment';
+import { useIsFocused } from '@react-navigation/native';
+
+const Modal = ({ visible, hideDialog, dishId }) => {
+  const { theme } = useContext(ThemeContext);
+  const { userObject } = useContext(AppContext);
+  const [charsLeft, setCharsLeft] = useState(100);
+  const [inputValue, setInputValue] = useState('');
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    if (!isFocused) {
+      setInputValue('');
+      hideDialog();
+    }
+  }, [isFocused]);
+
+  useEffect(() => {
+    setInputValue('');
+  }, [visible]);
+
+  const handlerSend = async () => {
+    const text = inputValue.trim();
+    if (text.length === 0) {
+      showAlert('Comentário em branco!', 'Digite algum comentário para enviar!');
+      return;
+    } else if (text.length < 10) {
+      showAlert('Comentário inválido!', 'O comentário deve ter no mínimo 10 caracteres!');
+      return;
+    }
+    const result = await publishComment(userObject.id, dishId, text);
+    if (result?.error) {
+      showAlert('ERRO!', 'Tente novamente mais tarde!');
+      return;
+    } else {
+      showAlert('SUCESSO!', 'Comentário enviado com sucesso!');
+      hideDialog();
+      return;
+    }
+  };
+
+  const showAlert = (title, message) => Alert.alert(title, message);
+
+  const onChange = (text) => {
+    const value = text;
+    const valueLength = value.length;
+    const charsLeft = 100 - valueLength;
+    if (valueLength <= 100) {
+      setCharsLeft(charsLeft);
+      setInputValue(value);
+    } else {
+      setCharsLeft(0);
+    }
+  };
+
+  return (
+    <Dialog style={styles.dialogContainer} visible={visible} onDismiss={hideDialog}>
+      <Dialog.Content style={styles.contentContainer}>
+        <View style={styles.titleDialogContainer}>
+          <Text style={[styles.titleDialog, { fontFamily: theme.font.bold }]}>Faça um comentário</Text>
+        </View>
+        <TextInput
+          placeholder="Digite seu comentário aqui..."
+          value={inputValue}
+          onChangeText={onChange}
+          maxLength={100}
+          multiline={true}
+          numberOfLines={4}
+          mode="outlined"
+          activeOutlineColor="gray"
+        />
+        <View style={{ alignItems: 'flex-end' }}>
+          <Text style={{ fontFamily: theme.font.semiBold, lineHeight: 20 }}>{charsLeft}/100</Text>
+        </View>
+      </Dialog.Content>
+      <Dialog.Actions>
+        <View style={styles.btnContainer}>
+          <Button
+            labelStyle={[styles.btnLabel, { fontFamily: theme.font.semiBold }]}
+            style={styles.btn}
+            onPress={handlerSend}
+          >
+            Enviar
+          </Button>
+          <Button
+            labelStyle={[styles.btnLabel, { fontFamily: theme.font.semiBold }]}
+            style={[styles.btn, { marginTop: 10, backgroundColor: 'green' }]}
+            onPress={hideDialog}
+          >
+            Fechar
+          </Button>
+        </View>
+      </Dialog.Actions>
+    </Dialog>
+  );
+};
 
 const DishInfo = ({ dish, theme }) => {
   const [seeMore, setSeeMore] = useState(false);
@@ -35,7 +133,7 @@ const DishInfo = ({ dish, theme }) => {
   );
 };
 
-const DishCard = ({ dish, theme }) => {
+const DishCard = ({ dish, theme, showDialog }) => {
   return (
     <View style={styles.dishContainer}>
       <View style={styles.dishNameContainer}>
@@ -53,7 +151,7 @@ const DishCard = ({ dish, theme }) => {
             Comentários: <Text style={{ fontFamily: theme.font.regular }}>{dish.dishComments.length}</Text>
           </Text>
         </View>
-        <TouchableOpacity style={styles.chatIconContainer} activeOpacity={0.5} onPress={() => {}}>
+        <TouchableOpacity style={styles.chatIconContainer} activeOpacity={0.5} onPress={showDialog}>
           <Ionicons name="chatbox" size={30} color="skyblue" />
         </TouchableOpacity>
       </View>
@@ -164,31 +262,38 @@ const FoodItem = ({ theme, item, style }) => {
 const ChatScreen = ({ route, navigation }) => {
   const { dish } = route.params;
   const { theme } = useContext(ThemeContext);
+  const [visible, setVisible] = useState(false);
+  const showDialog = () => setVisible(true);
 
   return (
-    <ScrollView
-      showsVerticalScrollIndicator={false}
-      contentContainerStyle={[styles.mainContainer, { backgroundColor: theme.backgroundColor }]}
-      nestedScrollEnabled={true}
-    >
-      <DishCard dish={dish} theme={theme} />
-      <View style={{ maxHeight: 400, marginTop: 15 }}>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingRight: 5 }}
-          nestedScrollEnabled={true}
-        >
-          {dish.dishItems.map((item, index) => (
-            <FoodItem
-              key={index}
-              style={{ marginBottom: index === dish.dishItems.length - 1 ? 0 : 10 }}
-              theme={theme}
-              item={item}
-            />
-          ))}
-        </ScrollView>
-      </View>
-    </ScrollView>
+    <PaperProvider>
+      <Portal>
+        <Modal dishId={dish.id} visible={visible} hideDialog={() => setVisible(false)} />
+      </Portal>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={[styles.mainContainer, { backgroundColor: theme.backgroundColor }]}
+        nestedScrollEnabled={true}
+      >
+        <DishCard dish={dish} theme={theme} showDialog={showDialog} />
+        <View style={{ maxHeight: 400, marginTop: 15 }}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ paddingRight: 5 }}
+            nestedScrollEnabled={true}
+          >
+            {dish.dishItems.map((item, index) => (
+              <FoodItem
+                key={index}
+                style={{ marginBottom: index === dish.dishItems.length - 1 ? 0 : 10 }}
+                theme={theme}
+                item={item}
+              />
+            ))}
+          </ScrollView>
+        </View>
+      </ScrollView>
+    </PaperProvider>
   );
 };
 
@@ -244,4 +349,29 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   seeMore: {},
+  titleDialog: {
+    fontSize: 20,
+    color: '#FF7900',
+  },
+  titleDialogContainer: {
+    width: '100%',
+    alignItems: 'center',
+  },
+  dialogContainer: {
+    borderRadius: 10,
+  },
+  btnContainer: {
+    width: '100%',
+    flexDirection: 'column',
+
+    alignItems: 'center',
+  },
+  btn: {
+    width: '100%',
+    backgroundColor: '#FF7900',
+    borderRadius: 5,
+  },
+  btnLabel: {
+    color: 'white',
+  },
 });

@@ -45,6 +45,9 @@ const DishCard = ({ style, dish, onDeleteDish, handlerOpenModalize }) => {
             Qtd. Alimentos: {dish.dishItems.length}
           </Text>
           <Text style={[styles.dishOthers, { fontFamily: theme.font.semiBold }]}>Criado em: {dish.getCreatedAt()}</Text>
+          <Text style={[styles.dishOthers, { fontFamily: theme.font.semiBold }]}>
+            Comentários: {dish.getCreatedAt()}
+          </Text>
         </View>
         <View style={styles.dishFeatures}>
           <TouchableOpacity activeOpacity={0.5} onPress={alertShow}>

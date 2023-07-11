@@ -47,8 +47,10 @@ export const ThemeProvider = ({ children }) => {
       regular: 'PoppinsRegular',
     },
     backgroundColor: isDarkMode ? '#2C3539' : 'white',
-    backgroundTest: isDarkMode ? '#808080' : 'white',
+    waterContainerBackground: isDarkMode ? 'white' : '#ccc',
+    backgroundTest: isDarkMode ? 'white' : '#262626',
     backgroundLine: isDarkMode ? 'white' : '#303030',
+    backgroundModal: isDarkMode ? 'rgba(0, 0, 0, 0.6)' : 'rgba(255, 255, 255, 0.6)',
     fontColor: {
       title: isDarkMode ? 'white' : '#0B5563',
       text: isDarkMode ? 'white' : 'black',

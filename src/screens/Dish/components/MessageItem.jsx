@@ -18,7 +18,11 @@ const MessageItem = ({ item, user, createdAt }) => {
   return (
     <View style={styles.messageContainer}>
       <View style={styles.imageContainer}>
-        <Image style={{ width: 30, height: 30 }} resizeMode="contain" source={{ uri: item.user.profilePicture }} />
+        <Image
+          style={{ width: 30, height: 30, borderRadius: 100 }}
+          resizeMode="contain"
+          source={{ uri: item.user.profilePicture }}
+        />
       </View>
       <View style={styles.triangleMessage}></View>
       <View style={styles.messageBubble}>
@@ -56,7 +60,7 @@ const styles = StyleSheet.create({
   imageContainer: {
     alignItems: 'center',
     borderWidth: 1,
-    borderRadius: 16,
+    borderRadius: 100,
     borderColor: '#ccc',
   },
   dateContainer: {
