@@ -4,9 +4,9 @@ import { Text } from 'native-base';
 
 const UsersList = ({ usersList, theme }) => {
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.profile.card.backgroundColor }]}>
       <View style={{ alignItems: 'center', marginBottom: 10 }}>
-        <Text color="white" fontFamily={theme.font.bold} fontSize={18}>
+        <Text style={{ color: theme.fontColor.textBlack }} fontFamily={theme.font.bold} fontSize={18}>
           {usersList.length > 1 ? `Resultados (${usersList.length})` : `Resultado (${usersList.length})`}
         </Text>
       </View>
@@ -25,7 +25,6 @@ export default UsersList;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#FF7900',
     maxHeight: 500,
     minHeight: 300,
     padding: 10,

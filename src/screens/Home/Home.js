@@ -1,5 +1,5 @@
 import { useContext, useEffect } from 'react';
-import { View, Text, SafeAreaView, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, SafeAreaView, StyleSheet, ScrollView, TouchableOpacity, ImageBackground } from 'react-native';
 import AppContext from '../../../AppContext';
 import CardFeature from './components/CardFeature';
 import { cardAguaFeature, cardAliments, cardBuscar, cardPratos } from '../../../constants/images';
@@ -7,6 +7,7 @@ import { ProgressBar } from 'react-native-paper';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { ThemeContext } from '../../../contexts/ThemeProvider';
+import { useState } from 'react';
 
 const Home = () => {
   const { userObject, setUserObject, setActiveScreen } = useContext(AppContext);
@@ -42,16 +43,30 @@ const Home = () => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.backgroundColor }}>
       <ScrollView contentContainerStyle={styles.mainContainer} showsVerticalScrollIndicator={false}>
-        <View style={styles.welcomeContainer}>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-            <Text style={[styles.welcomeText, { color: theme.fontColor.title, fontFamily: theme.font.bold }]}>
-              Bem Vindo
-            </Text>
-          </View>
+        <View style={[styles.welcomeContainer]}>
+          {progressBar !== 1 && (
+            <View style={[styles.news, { height: 25, backgroundColor: theme.backgroundNews }]}>
+              <Text style={[styles.newsText, { color: theme.fontColor.textBlack, fontFamily: theme.font.bold }]}>
+                Novidades
+              </Text>
+            </View>
+          )}
+          {progressBar == 1 && (
+            <View style={[styles.news, { height: '75%', backgroundColor: theme.backgroundNews, marginTop: 15 }]}>
+              <Text
+                style={[
+                  styles.newsText,
+                  { color: theme.fontColor.textBlack, fontFamily: theme.font.bold, fontSize: 20 },
+                ]}
+              >
+                Novidades
+              </Text>
+            </View>
+          )}
           {progressBar !== 1 && (
             <View style={styles.registrationProgressContainer}>
               <Text style={[styles.progressBarText, { fontFamily: theme.font.bold }]}>Complete o seu cadastro...</Text>
-              <ProgressBar progress={progressBar} color="#E57A44" style={{ height: 5 }} />
+              <ProgressBar progress={progressBar} color="#05F26C" style={{ height: 5 }} />
             </View>
           )}
         </View>
@@ -80,10 +95,9 @@ const styles = StyleSheet.create({
   },
   welcomeContainer: {
     padding: 5,
-    marginBottom: '10%',
-  },
-  welcomeText: {
-    fontSize: 34,
+    marginBottom: 2,
+    height: 100,
+    borderRadius: 12,
   },
   nutriContainer: {
     backgroundColor: 'green',
@@ -92,10 +106,25 @@ const styles = StyleSheet.create({
     backgroundColor: '#DFD9E2',
     padding: 10,
     borderRadius: 5,
-    marginTop: 10,
+    marginTop: 35,
+    width: 355,
+    position: 'absolute',
+    marginLeft: 5,
   },
   progressBarText: {
     fontSize: 18,
-    color: '#0B5563',
+    color: 'white',
+  },
+  news: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 12,
+    backgroundColor: 'white',
+  },
+  newsText: {
+    color: 'black',
+  },
+  newsImage: {
+    flex: 1,
   },
 });

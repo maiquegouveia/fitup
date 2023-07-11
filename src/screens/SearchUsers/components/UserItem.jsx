@@ -29,29 +29,25 @@ const UserItem = ({ user, style }) => {
   };
 
   return (
-    <TouchableOpacity onPress={handlerOnPress} activeOpacity={0.8} style={[styles.container, style]}>
+    <TouchableOpacity
+      onPress={handlerOnPress}
+      activeOpacity={0.8}
+      style={[styles.container, style, { backgroundColor: theme.fontColor.textBlack }]}
+    >
       <View style={styles.imageContainer}>
         <Avatar.Image size={50} source={{ uri: user.profilePicture }} />
       </View>
       <View style={styles.mainDetailsContainer}>
         <View style={styles.detailsContainer}>
-          <Text
-            flexWrap="wrap"
-            lineHeight="sm"
-            fontSize={16}
-            color={user.type === 3 ? 'red.600' : 'black'}
-            fontFamily={theme.font.bold}
-          >
-            {user.name}
-          </Text>
-          <Text lineHeight="sm" fontSize={12} fontFamily={theme.font.regular}>
+          <Text style={[styles.name, { fontFamily: theme.font.bold, color: theme.fontColor.text }]}>{user.name}</Text>
+          <Text style={[styles.userName, { fontFamily: theme.font.regular, color: theme.fontColor.text }]}>
             {user.username}
           </Text>
-          <Text lineHeight="sm" fontSize={12} fontFamily={theme.font.regular}>
+          <Text style={[styles.userName, { fontFamily: theme.font.regular, color: theme.fontColor.text }]}>
             Membro desde: {user.getCreatedAt()}
           </Text>
           {user.type === 2 && (
-            <Text lineHeight="sm" fontSize={12} fontFamily={theme.font.semiBold}>
+            <Text style={[styles.userName, { fontFamily: theme.font.semiBold, color: theme.fontColor.text }]}>
               NUTRICIONISTA
             </Text>
           )}
@@ -70,7 +66,6 @@ export default UserItem;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
     padding: 10,
     borderRadius: 5,
     flexDirection: 'row',
@@ -94,5 +89,12 @@ const styles = StyleSheet.create({
   verifiedContainer: {
     width: '20%',
     alignItems: 'center',
+  },
+  name: {
+    flexWrap: 'wrap',
+    fontSize: 16,
+  },
+  userName: {
+    fontSize: 12,
   },
 });

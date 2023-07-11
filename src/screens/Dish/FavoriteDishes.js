@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   dishesScrollView: {
-    backgroundColor: '#FF7900',
+    backgroundColor: '#256D1B',
     padding: 10,
     borderRadius: 5,
   },
@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   btn: {
-    backgroundColor: '#FF7900',
+    backgroundColor: '#256D1B',
     borderRadius: 5,
     marginTop: 10,
   },

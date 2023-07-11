@@ -89,7 +89,7 @@ const SearchUser = ({ theme }) => {
           ref={inputRef}
           onChangeText={(text) => setInputValue(text)}
           value={inputValue}
-          right={<TextInput.Icon icon={() => <FontAwesome name="search" size={24} color="#FF7900" />} />}
+          right={<TextInput.Icon icon={() => <FontAwesome name="search" size={24} color="black" />} />}
           style={styles.textInput}
           mode="outlined"
           activeOutlineColor="gray"
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
   btn: {
     borderRadius: 5,
     width: '100%',
-    backgroundColor: '#FF7900',
+    backgroundColor: '90F041',
     marginTop: 10,
   },
   inputLabel: {

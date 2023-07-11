@@ -8,7 +8,6 @@ export default StyleSheet.create({
   container: {
     width: '100%',
     alignItems: 'center',
-    backgroundColor: 'white',
     height: 300,
   },
   profileImageContainer: {

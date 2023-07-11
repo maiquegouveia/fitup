@@ -51,6 +51,8 @@ export const ThemeProvider = ({ children }) => {
     backgroundTest: isDarkMode ? 'white' : '#262626',
     backgroundLine: isDarkMode ? 'white' : '#303030',
     backgroundModal: isDarkMode ? 'rgba(0, 0, 0, 0.6)' : 'rgba(255, 255, 255, 0.6)',
+    backgroundNews: isDarkMode ? '#05F26C' : '#82EE5D',
+    backgroundProfile: isDarkMode ? '#303030' : 'white',
     fontColor: {
       title: isDarkMode ? 'white' : '#0B5563',
       text: isDarkMode ? 'white' : 'black',

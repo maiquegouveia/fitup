@@ -230,7 +230,7 @@ const styles = StyleSheet.create({
   },
   btn: {
     marginTop: 15,
-    backgroundColor: '#FF7900',
+    backgroundColor: '#256D1B',
     borderRadius: 5,
   },
   foodsContainer: {},

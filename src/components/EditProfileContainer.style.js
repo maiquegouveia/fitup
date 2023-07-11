@@ -19,7 +19,7 @@ export default StyleSheet.create({
     marginTop: 10,
     width: '40%',
     borderRadius: 5,
-    backgroundColor: '#FF7900',
+    backgroundColor: 'green',
   },
   btnClose: {
     marginTop: 10,

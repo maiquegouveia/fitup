@@ -51,10 +51,10 @@ const DishCard = ({ style, dish, onDeleteDish, handlerOpenModalize }) => {
         </View>
         <View style={styles.dishFeatures}>
           <TouchableOpacity activeOpacity={0.5} onPress={alertShow}>
-            <FontAwesome5 name="trash" size={24} color="#FF7900" />
+            <FontAwesome5 name="trash" size={24} color="black" />
           </TouchableOpacity>
           <TouchableOpacity activeOpacity={0.5} onPress={() => handlerOpenModalize(dish)}>
-            <Ionicons name="chatbox" size={30} color="#FF7900" />
+            <Ionicons name="chatbox" size={30} color="black" />
           </TouchableOpacity>
         </View>
       </View>
